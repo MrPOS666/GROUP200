@@ -1,4 +1,4 @@
 package interface_adapter.result;
 
-public class SearchedViewModel {
+public class ResultViewModel {
 }
