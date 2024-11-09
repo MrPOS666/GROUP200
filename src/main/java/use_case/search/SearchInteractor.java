@@ -16,7 +16,7 @@ public class SearchInteractor implements SearchInputBoundary {
     }
 
     @Override
-    public void excute(SearchInputData searchInputData) {
+    public void execute(SearchInputData searchInputData) {
         final String cocktailName = searchInputData.getCocktailName();
         if (!searchDataAccessObject.existsByName(cocktailName)) {
             searchPresenter.prepareFailView(cocktailName + ": does not exist.");
