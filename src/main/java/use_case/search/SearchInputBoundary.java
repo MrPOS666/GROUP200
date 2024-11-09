@@ -9,5 +9,6 @@ public interface SearchInputBoundary {
      * Executes the search use case.
      * @param searchInputData the input data
      */
-    void excute(SearchInputData searchInputData);
+    void execute(SearchInputData searchInputData);
+
 }

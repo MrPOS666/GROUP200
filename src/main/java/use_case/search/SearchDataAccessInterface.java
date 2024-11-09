@@ -27,7 +27,7 @@ public interface SearchDataAccessInterface {
      * @param cocktailName the username to look up
      * @return the user with the given username
      */
-    User get(String cocktailName);
+    Cocktail get(String cocktailName);
 
     /**
      * Returns the username of the curren user of the application.
