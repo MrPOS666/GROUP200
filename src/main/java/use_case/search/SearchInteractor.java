@@ -32,3 +32,4 @@ public class SearchInteractor implements SearchInputBoundary {
     }
 }
 
+
