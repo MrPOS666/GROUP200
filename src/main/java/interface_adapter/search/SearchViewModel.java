@@ -1,9 +1,11 @@
 package interface_adapter.search;
 
-import interface_adapter.login.LoginState;
+import interface_adapter.ViewModel;
 
-public class SearchViewModel {
+public class SearchViewModel extends ViewModel<SearchState> {
 
-    super("search");
-    setState(new SearchState());
+    public SearchViewModel(String viewName) {
+        super("search");
+        setState(new SearchState());
+    }
 }
