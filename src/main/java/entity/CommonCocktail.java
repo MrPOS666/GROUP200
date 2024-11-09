@@ -6,21 +6,21 @@ import java.util.List;
  * The representation of a cocktail in our program.
  */
 public class CommonCocktail implements Cocktail {
-    private final String name;
+    private final String cocktailName;
     private final String recipe;
     private final List<String> ingredients;
     private final String photolink;
 
-    public CommonCocktail(String name, String recipe, List<String> ingredients, String photolink) {
-        this.name = name;
+    public CommonCocktail(String cocktailName, String recipe, List<String> ingredients, String photolink) {
+        this.cocktailName = cocktailName;
         this.recipe = recipe;
         this.ingredients = ingredients;
         this.photolink = photolink;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getCocktailName() {
+        return cocktailName;
     }
 
     @Override
