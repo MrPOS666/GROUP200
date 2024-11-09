@@ -10,5 +10,4 @@ public interface SearchInputBoundary {
      * @param searchInputData the input data
      */
     void execute(SearchInputData searchInputData);
-
 }

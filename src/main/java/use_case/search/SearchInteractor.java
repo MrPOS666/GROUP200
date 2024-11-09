@@ -1,7 +1,6 @@
 package use_case.search;
 
 import entity.Cocktail;
-import interface_adapter.search.SearchPresenter;
 
 /**
  * The Search Interactor.
@@ -23,7 +22,14 @@ public class SearchInteractor implements SearchInputBoundary {
             searchPresenter.prepareFailView(cocktailName + ": does not exist.");
         }
         else {
+
+            final Cocktail cocktail = searchDataAccessObject.get(searchInputData.getCocktailName());
+
+            searchDataAccessObject.setCurrentCocktail(cocktail.getCocktailName());
+            final SearchOutputData searchOutputData = new SearchOutputData(cocktail.getCocktailName(), false);
+            searchPresenter.prepareSuccessView(searchOutputData);
         }
     }
+}
 
 
