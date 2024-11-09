@@ -10,7 +10,7 @@ public interface Cocktail {
      * Returns the information of the cocktail.
      * @return the name of the user.
      */
-    String getName();
+    String getCocktailName();
 
     /**
      * Returns the recipe of the cocktail.
