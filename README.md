@@ -1,181 +1,175 @@
-# Lab 5: Logout
+# CSC207 Cocktail Application
 
-## Preamble
+## Fall 2024
 
-In the current homework, you added code to the login use case to save the currently-logged-in
-user by saving the user in the Data Access Layer. You also added a unit test for this.
+## Team: GROUP 200
 
-In this lab, you will complete a logout use case as a team. You will also begin to discuss your project
-and the use cases that need to be implemented. 
+- Stanway Cen
+- Yuxin Li
+- Qianwen Wang
+- Martin ZOU
 
-We have created all the Clean Architecture classes necessary for the logout use case.
+## Project Description
+By this program, users can get recommendations, recipes, and components of cocktails and save them in their “favorite” 
+if they really like the cocktail. The user should create an account before using the actual application; once one is 
+logged in, a daily recommendation will be shown. A user can search a cocktail by its name or components. A user can save
+a cocktail file into the “favorite” file belonging to each user. A user can generate a list of items and pricing they 
+need to get a cocktail by themselves. 
 
-By Friday, your team will submit:
-- your completed lab code [for credit]
-- a draft of your project blueprint proposal. [required, but not for credit]
+### Views
 
-# Phase 2 [for credit]
-_(recall, Phase 1 was your solo task of adding the storage of the currently-logged-in user)_
+#### 1. SignUp
 
-## Task 0: Fork this repo on GitHub
-**To get started, one team member should fork this repo on GitHub and share it with the team. 
-All of you should then clone it.**
+##### Purpose:
+Allow user to create an account.
+##### Elements:
+- [TextField] Choose username
+- [TextField] Choose password
+- [TextField] Enter password again
+- [button] Go to Login
+- [button] Sign up
+- [button] Cancel
 
-* * *
+#### 2. Login
 
-Suggested logistics: One of you should invite the others to collaborate on their fork of the
-original repo on GitHub. You can do this in your repo on GitHub under `Settings -> Collaborators`.
-This will allow you to push branches to a common repo and then use pull requests to contribute
-your code and review. To prevent others from pushing directly to the main branch,
-we recommend you set branch protection rules on GitHub. Below are how the settings might look if you
-add branch protection rules:
+##### Purpose:
+Allow user to access their account
+##### Elements:
+- [TextField] Username
+- [TextField] Password
+- [button] Log in
+- [button] Cancel
 
-![image of branch protection rules for main with the
-requirement of two approvers to merge in pull requests.
-](images/branch_protection_rules.png)
+#### 3. HomePage
 
-* * *
+##### Purpose:
+Main landing page, which may contain options for various actions, showing Recommendation
+##### Elements:
+- [button] Search
+- [button] Recommendation
+- [button] My Favourite
+- [button] Change Password
 
-Open the project in IntelliJ and make sure you can successfully run `app/Main.java`.
-Note: you may need to set the Project SDK in the `Project Structure...` menu, and possibly
-also manually link the Maven project, as you did in Phase 1.
+#### 4. Change Password
 
-## Task 1: Understanding the Program
+##### Purpose:
+Allows logged-in users to update their password.
+##### Elements
+- [TextField] New password
+- [button] Change password
+- [button] Cancel
 
-You may notice that we have refactored the CA engine code _slightly_ since Phase 1, but the
-way we build the engine is drastically different: we have switched from using Factories to
-using the Builder design pattern, which we'll be discussing in lecture soon. 
+#### 5. Search
 
-Open up `app.Main` and read it as a team.
-- What are the Views and what are the current Use Cases?
-- Which Uses Cases are triggered from each View?
-- Which version of the DAO is `app.Main` using?
+##### Purpose
+Allow user  to search for cocktails
+##### Elements
+- [TextField]
+- [button] Search
+- [List] Cocktail name and photo + [listener] Cocktail information
+- [button] Return 
 
-The major change since Phase 1 is that we have added the `app.AppBuilder` class which makes
-it easier to understand how our CA engine is being constructed — it also makes `app.Main` nice and concise!
-- Why do all those `addX` methods end in `return this;`? 
+#### 6. Recommendation
 
-Run the program and make sure the signup and login Use Cases work.
+##### Purpose
+Provides random recommendations of Cocktail to user
+##### Elements
+- [List] Cocktail name and photo + [listener] Cocktail information
+- [button] Return
 
-Currently, you'll notice that the "Log Out" button still doesn't actually log you out. It's time to fix
-that button, which is part of the `LoggedInView`.
-We have created all the classes for you, but some of the code is missing.
-As a team, your task is to fill in the missing code so that the Logout Use Case is implemented.
-**The next part of the readme describes how your team will do this.**
+#### 7. MyFavourite
 
-* * *
+##### Purpose
+Displays a list of items that user has marked as favorites
+##### Elements
+- [List] Cocktail name and photo + [button] delete + [listener] Cocktail information
+- [button] Return
 
-**Your team will know when you are done when:**
+#### 8. CocktailInfo
 
-- Clicking the "Log Out" button takes the user back to the Login View when you use the program.
-- The provided `LogoutInteractorTest` test passes.
+##### Purpose
+Shows detailed information about a selected cocktail, such as ingredients, recipe, or images.
+##### Elements
+- [Panel] Cocktail photo
+- [List] Cocktail name, ingredients, recipe
+- [button] Add to My Favourite
+- [button] Return
 
-The "Log Out" button is an instance variable in class `LoggedInVew`. Go find it.
-Also look at the `interface_adapter.change_password.LoggedInViewModel`, which contains any
-data showing on the `LoggedInVew`.
+### Use Cases
 
-* * *
+#### 1. signup
 
-## Task 2: Dividing up the work
+##### Goal 
+Allow a new user to create an account in the system. 
+##### Actors
+User
+##### Preconditions
+The user must need a new account
+##### Main Flow
+1. The user navigates to the signup page.
+2. The system displays the signup form with fields for username, password, re-enter password, 
+and buttons: turn to login, sign up, cancel.
+3. The system validates the user’s input.
+4. The system creates the user account and stores the information in the database.
+5. The user redirected to the login page and display a success message 
+##### Alternative Flows
+1. Invalid input: If any required fields are missing or invalid, 
+the system displays error messages and prompts the user to correct the errors.
+2. User Already Exists: If the email or username is already registered, 
+the system indicating that the account already exists
 
-There are `TODO` comments left in the files
-Recall that you can use the TODO tool window to conveniently pull up a complete list.
+#### 2. login
 
-Once the TODOs are all complete, the "Log Out" button _should_ work!
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-As a team, split up the TODOs (see below) between the members of your team.
+#### 3. change password
 
-There are TODOs in seven of the files.
-Make sure each member has at least one TODO which they will be responsible for completing.
-If your team prefers to work in pairs, that is fine too. Your individual branches
-will not be graded for this — only the final, working version.
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-The TODOs are summarized below (by file) to help your team decide how to split them up:
+#### 4. logout
 
-* * *
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-- `Main.java`
+#### 5. search
 
-  - [ ] TODO: add the Logout Use Case to the app using the appBuilder
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-* * *
+#### 6. recommend
 
-- `LoggedInView.java` (tip: refer to the other views for similar code)
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-  - [ ] TODO: save the logout controller in the instance variable.
-  - [ ] TODO: execute the logout use case through the Controller
+#### 7. add favourite
 
-* * *
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
 
-- `LogoutController.java` (tip: refer to the other controllers for similar code)
+#### 8. delete favourite
 
-  - [ ] TODO: Save the interactor in the instance variable.
-  - [ ] TODO: run the use case interactor for the logout use case
-
-* * *
-
-- `LogoutInputData.java` (should be done with the LogoutInteractor TODOs below)
-
-  - [ ] TODO: save the current username in an instance variable and add a getter.
-
-- `LogoutInteractor.java` (tip: refer to `ChangePasswordInteractor.java` for similar code)
-
-  - [ ] TODO: save the DAO and Presenter in the instance variables.
-  - [ ] TODO: implement the logic of the Logout Use Case
-
-* * *
-
-- `LogoutOutputData.java`
-
-  - [ ] TODO: save the parameters in the instance variables.
-
-* * *
-
-- `LogoutPresenter.java` (tip: refer to `SignupPresenter.java` for similar code)
-
-  - [ ] TODO: assign to the three instance variables.
-  - [ ] TODO: have prepareSuccessView update the LoggedInState
-  - [ ] TODO: have prepareSuccessView update the LoginState
-
-* * *
-
-1. Make a branch named the first part of your UofT email address, everything before the `@`.
-For example, if your email address is `paul.gries@mail.utoronto.ca`, then the branch name would
-be `paul.gries`.
-
-Make sure you switch to the new branch.
-
-In the terminal, this would look like below, but replaced with your own information:
-```
-git branch paul.gries
-git switch paul.gries
-```
-
-2. Complete your assigned TODOs and make a pull request on GitHub. In your pull request,
-   briefly describe what your TODOs were and how you implemented them. If you aren't sure
-   about part of it, include this in your pull request so everyone knows what to look
-   for when reviewing — or you can of course discuss with your team before making your
-   pull request since you are physically working in the same space.
-   - **Important: don't push any changes to the `.idea` folder, as that
-     may cause issues for your other teammates, as some files contain
-     configurations specific to your individual IntelliJ projects.**
-
-3. Review each other's pull requests to ensure each TODO is correctly implemented and that
-   there are no Checkstyle issues in the files that were modified.
-
-4. Once all TODOs are completed, your team should debug as needed to ensure the
-   correctness of the code. Setting a breakpoint where the log-out use case
-   interactor starts its work will likely be a great place to start when debugging.
-
-And that's it; you now have a working Logout Use Case! Instructions for
-how to submit your work on MarkUs will be posted later.
-
-Your team should spend the rest of the lab working on your project blueprint.
-
-* * *
-
-# Project Blueprint
-
-See Quercus for details about the project blueprint! By the end of the week,
-the goal is for your team to have a fully drafted blueprint so that your team
-will be ready to get started on your project after Reading Week.
+##### Goal
+##### Actors
+##### Preconditions
+##### Main Flow
+##### Alternative Flows
