@@ -1,8 +1,4 @@
-package interface_adapter.result;
-
-import interface_adapter.ViewModel;
-import interface_adapter.change_password.LoggedInState;
-import interface_adapter.search.SearchState;
+package interface_adapter.back;
 
 import java.util.List;
 
