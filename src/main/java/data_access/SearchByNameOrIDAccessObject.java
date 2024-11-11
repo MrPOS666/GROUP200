@@ -1,7 +1,9 @@
 package data_access;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -19,7 +21,7 @@ import use_case.search.SearchDataAccessInterface;
  */
 public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
 
-    public static final int MAXINGREDIENT = 15;
+    public static final int MAX_INGREDIENT = 15;
     private static final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
     private final OkHttpClient client = new OkHttpClient();
     private String currentCocktailName;
@@ -31,7 +33,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
 
     @Override
     public boolean existsByName(String cocktailName) {
-        return getByName(cocktailName) != null;
+        return !getByName(cocktailName).isEmpty();
     }
 
     @Override
@@ -40,15 +42,20 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
     }
 
     @Override
-    public Cocktail getByName(String cocktailName) {
+    public List<Cocktail> getByName(String cocktailName) {
         final String jsonResponse = searchByName(cocktailName);
-        return createCocktailFromJson(jsonResponse);
+        return createCocktailsFromJson(jsonResponse);
     }
 
     @Override
     public Cocktail getById(int cocktailId) {
         final String jsonResponse = searchByID(String.valueOf(cocktailId));
-        return createCocktailFromJson(jsonResponse);
+        final List<Cocktail> cocktails = createCocktailsFromJson(jsonResponse);
+        Cocktail result = null;
+        if (!cocktails.isEmpty()) {
+            result = cocktails.get(0);
+        }
+        return result;
     }
 
     @Override
@@ -61,51 +68,55 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
         this.currentCocktailName = cocktailName;
     }
 
-    // Factory method to create a Cocktail object from JSON response
-    private Cocktail createCocktailFromJson(String jsonResponse) {
+    // Factory method to create a list of Cocktail objects from JSON response
+    private List<Cocktail> createCocktailsFromJson(String jsonResponse) {
+        final List<Cocktail> cocktails = new ArrayList<>();
+
         if (jsonResponse == null) {
-            return null;
+            return cocktails;
         }
 
         final JSONObject jsonObject = new JSONObject(jsonResponse);
         final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
 
-        if (drinksArray != null && drinksArray.length() > 0) {
-            final JSONObject drinkObject = drinksArray.getJSONObject(0);
+        if (drinksArray != null) {
+            for (int i = 0; i < drinksArray.length(); i++) {
+                final JSONObject drinkObject = drinksArray.getJSONObject(i);
 
-            // Extract main fields
-            final int idDrink = drinkObject.optInt("idDrink");
-            final String strDrink = drinkObject.optString("strDrink");
-            final String strInstructions = drinkObject.optString("strInstructions");
-            final String photoUrl = drinkObject.optString("strDrinkThumb");
+                // Extract main fields
+                final int idDrink = drinkObject.optInt("idDrink");
+                final String strDrink = drinkObject.optString("strDrink");
+                final String strInstructions = drinkObject.optString("strInstructions");
+                final String photoUrl = drinkObject.optString("strDrinkThumb");
 
-            // Extract ingredients and measurements into a Map
-            final Map<String, String> ingredients = new HashMap<>();
-            // Loop through possible ingredient and measure fields
-            for (int i = 1; i <= MAXINGREDIENT; i++) {
-                final String ingredient = drinkObject.optString("strIngredient" + i);
-                final String measure = drinkObject.optString("strMeasure" + i);
+                // Extract ingredients and measurements into a Map
+                final Map<String, String> ingredients = new HashMap<>();
+                for (int j = 1; j <= MAX_INGREDIENT; j++) {
+                    final String ingredient = drinkObject.optString("strIngredient" + j);
+                    final String measure = drinkObject.optString("strMeasure" + j);
 
-                // Add only non-empty ingredients to the map
-                if (ingredient != null && !ingredient.isEmpty()) {
-                    // Add ingredient as key, measure as value
-                    if (measure != null && !measure.isEmpty()) {
-                        ingredients.put(ingredient, measure);
+                    // Add only non-empty ingredients to the map
+                    if (ingredient != null && !ingredient.isEmpty()) {
+                        if (measure != null && !measure.isEmpty()) {
+                            ingredients.put(ingredient, measure);
+                        }
+                        else {
+                            ingredients.put(ingredient, "");
+                        }
                     }
                     else {
-                        ingredients.put(ingredient, "");
+                        break;
                     }
                 }
-                else {
-                    break;
-                }
-            }
 
-            // Create and return Cocktail object
-            return cocktailFactory.create(idDrink, strDrink, strInstructions, photoUrl, ingredients);
+                // Create a Cocktail object and add it to the list
+                final Cocktail cocktail = cocktailFactory.create(idDrink,
+                        strDrink, strInstructions, photoUrl, ingredients);
+                cocktails.add(cocktail);
+            }
         }
 
-        return null;
+        return cocktails;
     }
 
     private String searchByName(String name) {

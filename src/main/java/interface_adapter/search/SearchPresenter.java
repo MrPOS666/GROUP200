@@ -16,8 +16,11 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void prepareSuccessView(SearchOutputData searchOutputData) {
         // On success, switch to the searched cocktail in view.
 
-        final SearchState
-        searchViewModel.firePropertyChanged
+    }
+
+    @Override
+    public void prepareFailView(String errorMessage) {
+
     }
 
 }
