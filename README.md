@@ -168,16 +168,25 @@ The user must be logged in at homepage
 2. the system display the search bar field and buttons
 3. The user enters name/id for the cocktail and click search button
 4. The system display a list of Panels containing Name and photo of each cocktail under the search bar
-5. 
 ##### Alternative Flows
 
 #### 6. search by ingredient
 ##### Goal
+Allow users to search for cocktails based on specific ingredients
 ##### Actors
+User: A logged-in user who wants to search for cocktails by ingredient
+Cocktail Database: Provides information about cocktails that contain specific ingredients
 ##### Preconditions
 The user must be logged in at homepage
 ##### Main Flow
+1. The user navigates to the search page.
+2. The system displays the search bar and an ingredient field.
+3. The user enters ingredients in the ingredient field and clicks the search button.
+4. The system retrieves cocktails containing the specified ingredient from the database.
+5. The system displays a list of panels with each cocktail's name and photo under the search bar.
 ##### Alternative Flows
+- Ingredient Not Found: If no cocktails contain the specified ingredient, 
+the system displays a message saying "No results found."
 
 #### 7. filter
 ##### Goal
@@ -188,23 +197,46 @@ The user must be logged in at homepage
 
 #### 8. recommend
 ##### Goal
+Provide a list of recommended cocktails for the user
 ##### Actors
+User: A logged-in user looking for cocktail recommendation
+Cocktail Database: Supplies popular or curated recommendations
 ##### Preconditions
 The user must be logged in at homepage
 ##### Main Flow
+1. The user navigates to the recommendation page.
+2. The system displays a list of recommended cocktails based on popular choices or user preferences.
+3. The user can refresh the list to see new recommendations.
+4. The user clicks on a cocktail panel to view more details
 ##### Alternative Flows
 
 #### 9. add favourite
 ##### Goal
+Allow users to save a cocktail to their list of favorites for easy access later
 ##### Actors
+User: A logged-in user who wants to add a cocktail to their favorites lis
 ##### Preconditions
-The user must be logged in at homepage
+The user must be logged in and viewing a cocktail’s detailed information
 ##### Main Flow
+1. The user views the details of a cocktail on the CocktailInfo page.
+2. The user clicks the "Add to Favourite" button.
+3. The system saves the cocktail to the user’s favorites list.
+4. The system confirms by displaying a success message.
 ##### Alternative Flows
+- Already in Favorites: If the cocktail is already in the user's favorites, 
+the system displays a failure message.
 
 #### 10. delete favourite
 ##### Goal
+Allow users to remove a cocktail from their favorites list
 ##### Actors
+User: A logged-in user who wants to delete a cocktail from their favorites list
 ##### Preconditions
+The user must be logged in and viewing their favorites list on the MyFavourite page
 ##### Main Flow
+1. The user navigates to the MyFavourite page.
+2. The system displays a list of the user's favorite cocktails.
+3. The user selects a cocktail and clicks the "Delete from Favourite" button.
+4. The system removes the cocktail from the user’s favorites list.
+5. The system confirms by displaying a success message.
 ##### Alternative Flows
