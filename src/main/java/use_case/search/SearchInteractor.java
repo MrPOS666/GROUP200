@@ -2,6 +2,8 @@ package use_case.search;
 
 import entity.Cocktail;
 
+import java.util.List;
+
 /**
  * The Search Interactor.
  */
@@ -23,6 +25,7 @@ public class SearchInteractor implements SearchInputBoundary {
      */
     @Override
     public void execute(SearchInputData searchInputData) {
+        final List<String> cocktailList;
         if (searchInputData.isSearchByName()) {
             if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
                 final Cocktail cocktail = searchDataAccessObject.getByName(searchInputData.getInput());
