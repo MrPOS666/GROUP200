@@ -21,7 +21,9 @@ public class SearchPresenter implements SearchOutputBoundary {
         // update the search state
         final SearchState searchState = searchViewModel.getState();
 
+        searchState.setCocktailName(searchOutputData.getCocktailName());
 
+        searchViewModel.firePropertyChanged();
     }
 
 }
