@@ -1,50 +1,40 @@
 package entity;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Cocktail implementation.
+ * The representation of a cocktail in our program.
  */
 public class CommonCocktail implements Cocktail {
+    private final String cocktailName;
+    private final String recipe;
+    private final List<String> ingredients;
+    private final String photolink;
 
-    private final int idDrink;
-    private final String strDrink;
-    private final String strInstructions;
-    private final String photoUrl;
-    // Ingredient name as key, measure as value
-    private final Map<String, String> ingredients;
-
-    // Constructor
-    public CommonCocktail(int idDrink,
-                          String strDrink,
-                          String strInstructions,
-                          String photoUrl,
-                          Map<String, String> ingredients) {
-        this.idDrink = idDrink;
-        this.strDrink = strDrink;
-        this.strInstructions = strInstructions;
-        this.photoUrl = photoUrl;
+    public CommonCocktail(String cocktailName, String recipe, List<String> ingredients, String photolink) {
+        this.cocktailName = cocktailName;
+        this.recipe = recipe;
         this.ingredients = ingredients;
+        this.photolink = photolink;
     }
 
-    // Getters for accessing fields
-    public int getIdDrink() {
-        return idDrink;
-    }
-
+    @Override
     public String getCocktailName() {
-        return strDrink;
+        return cocktailName;
     }
 
+    @Override
     public String getRecipe() {
-        return strInstructions;
+        return recipe;
     }
 
-    public String getPhotoLink() {
-        return photoUrl;
-    }
-
-    public Map<String, String> getIngredients() {
+    @Override
+    public List<String> getIngredients() {
         return ingredients;
+    }
+
+    @Override
+    public String getPhotoLink() {
+        return photolink;
     }
 }
