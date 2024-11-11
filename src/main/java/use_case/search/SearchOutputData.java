@@ -1,19 +1,27 @@
 package use_case.search;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Output Data for the Search Use Case.
  */
 public class SearchOutputData {
 
-    private final String cocktailName;
+    private final List<String> cocktailNames;
+
     private final boolean useCaseFailed;
 
-    public SearchOutputData(String cocktailName, boolean useCaseFailed) {
-        this.cocktailName = cocktailName;
+    public SearchOutputData(List<String> cocktailNames, boolean useCaseFailed) {
+        this.cocktailNames = cocktailNames;
         this.useCaseFailed = useCaseFailed;
     }
 
-    public String getCocktailName() {
-        return cocktailName;
+    public List<String> getCocktailNames() {
+        return cocktailNames;
+    }
+
+    public boolean isUseCaseFailed() {
+        return useCaseFailed;
     }
 }
