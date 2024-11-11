@@ -23,6 +23,11 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
     private static final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
     private final OkHttpClient client = new OkHttpClient();
     private String currentCocktailName;
+    private final CocktailFactory cocktailFactory;
+
+    public SearchByNameOrIDAccessObject(CocktailFactory cocktailFactory) {
+        this.cocktailFactory = cocktailFactory;
+    }
 
     @Override
     public boolean existsByName(String cocktailName) {
@@ -84,7 +89,12 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
                 // Add only non-empty ingredients to the map
                 if (ingredient != null && !ingredient.isEmpty()) {
                     // Add ingredient as key, measure as value
-                    ingredients.put(ingredient, measure != null ? measure : "");
+                    if (measure != null && !measure.isEmpty()) {
+                        ingredients.put(ingredient, measure);
+                    }
+                    else {
+                        ingredients.put(ingredient, "");
+                    }
                 }
                 else {
                     break;
@@ -92,7 +102,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
             }
 
             // Create and return Cocktail object
-            return new CocktailFactory().create(idDrink, strDrink, strInstructions, photoUrl, ingredients);
+            return cocktailFactory.create(idDrink, strDrink, strInstructions, photoUrl, ingredients);
         }
 
         return null;
@@ -114,18 +124,18 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
                 .url(url)
                 .build();
 
+        String result = null;
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                return response.body().string();
+                result = response.body().string();
             }
             else {
                 System.err.println("Request failed with code: " + response.code());
-                return null;
             }
         }
         catch (IOException exception) {
             exception.printStackTrace();
-            return null;
         }
+        return result;
     }
 }
