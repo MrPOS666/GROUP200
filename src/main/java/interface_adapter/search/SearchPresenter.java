@@ -23,20 +23,16 @@ public class SearchPresenter implements SearchOutputBoundary {
 
     @Override
     public void prepareSuccessView(SearchOutputData response) {
-        // On success, switch to the result in view.
-
-        final ResultState resultState = resultViewModel.getState();
-        ResultState.setCocktailName(response.getCocktailName());
-        this.resultViewModel.setState(resultState);
-        this.resultViewModel.firePropertyChanged();
-
-        this.viewManagerModel.setState(ResultViewModel.giveViewName());
-        this.viewManagerModel.firePropertyChanged();
-
+        // On success, update the search view model with cocktail details
+        final SearchState searchState = searchViewModel.getState();
+        searchState.setCocktailName(response.getCocktailName());
+        searchState.setCocktailDetails(response.getCocktailDetails()); // Assuming response includes more details
+        searchViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
+        // On failure, set the error message in the search state
         final SearchState searchState = searchViewModel.getState();
         searchState.setSearchError(errorMessage);
         searchViewModel.firePropertyChanged();
