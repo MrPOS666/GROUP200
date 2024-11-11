@@ -1,4 +1,4 @@
-package interface_adapter.result;
+package interface_adapter.back;
 
 import interface_adapter.ViewModel;
 import interface_adapter.change_password.ResultState;
