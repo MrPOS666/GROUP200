@@ -1,4 +1,4 @@
-package interface_adapter.result;
+package interface_adapter.back;
 
 public class BackPresenter {
 }
