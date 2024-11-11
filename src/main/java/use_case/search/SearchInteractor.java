@@ -15,19 +15,35 @@ public class SearchInteractor implements SearchInputBoundary {
         this.searchPresenter = searchOutputBoundary;
     }
 
+
+    /**
+     * Executes the search use case.
+     *
+     * @param searchInputData the input data
+     */
     @Override
     public void execute(SearchInputData searchInputData) {
-        final String cocktailName = searchInputData.getCocktailName();
-        if (!searchDataAccessObject.existsByName(cocktailName)) {
-            searchPresenter.prepareFailView(cocktailName + ": does not exist.");
+        if (searchInputData.isSearchByName()) {
+            if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
+                final Cocktail cocktail = searchDataAccessObject.getByName(searchInputData.getInput());
+                searchPresenter.prepareSuccessView(new SearchOutputData(cocktail.getCocktailName(), false));
+            }
+            else {
+                searchPresenter.prepareFailView("Cocktail with name '" + searchInputData.getInput() + "' not found.");
+            }
+        }
+        else if (searchInputData.isSearchById()) {
+            final int cocktailId = Integer.parseInt(searchInputData.getInput());
+            if (searchDataAccessObject.existsById(cocktailId)) {
+                final Cocktail cocktail = searchDataAccessObject.getById(cocktailId);
+                searchPresenter.prepareSuccessView(new SearchOutputData(cocktail.getCocktailName(), true));
+            }
+            else {
+                searchPresenter.prepareFailView("Cocktail with ID '" + searchInputData.getInput() + "' not found.");
+            }
         }
         else {
-
-            final Cocktail cocktail = searchDataAccessObject.get(searchInputData.getCocktailName());
-
-            searchDataAccessObject.setCurrentCocktail(cocktail.getCocktailName());
-            final SearchOutputData searchOutputData = new SearchOutputData(cocktail.getCocktailName(), false);
-            searchPresenter.prepareSuccessView(searchOutputData);
+            searchPresenter.prepareFailView("Invalid search input. Please enter a valid name or ID.");
         }
     }
 }
