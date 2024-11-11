@@ -1,43 +1,49 @@
 package use_case.search;
 
 import entity.Cocktail;
-import entity.User;
 
 /**
  * DAO for the Search Use Case.
  */
-//TODO: modify the description.
 public interface SearchDataAccessInterface {
 
     /**
-     * Checks if the given username exists.
+     * Checks if a cocktail with the given name exists.
      * @param cocktailName the cocktail name to look for
-     * @return true if a user with the given cocktail exists; false otherwise
+     * @return true if a cocktail with the given name exists; false otherwise
      */
     boolean existsByName(String cocktailName);
 
     /**
-     * Saves the user.
-     * @param cocktail the user to save
+     * Checks if a cocktail with the given ID exists.
+     * @param cocktailId the cocktail ID to look for
+     * @return true if a cocktail with the given ID exists; false otherwise
      */
-    void save(Cocktail cocktail);
+    boolean existsById(int cocktailId);
 
     /**
-     * Returns the user with the given username.
-     * @param cocktailName the username to look up
-     * @return the user with the given username
+     * Returns the cocktail with the given name.
+     * @param cocktailName the name of the cocktail to look up
+     * @return the cocktail with the given name
      */
-    Cocktail get(String cocktailName);
+    Cocktail getByName(String cocktailName);
 
     /**
-     * Returns the username of the curren user of the application.
-     * @return the username of the current user; null indicates that no one is logged into the application.
+     * Returns the cocktail with the given ID.
+     * @param cocktailId the ID of the cocktail to look up
+     * @return the cocktail with the given ID
      */
-    String getCurrentCocktail();
+    Cocktail getById(int cocktailId);
 
     /**
-     * Sets the username indicating who is the current user of the application.
-     * @param cocktailName the new current username; null to indicate that no one is currently logged into the application.
+     * Returns the name of the current cocktail in focus within the application.
+     * @return the name of the current cocktail; null if no cocktail is currently in focus.
      */
-    void setCurrentCocktail(String cocktailName);
+    String getCurrentCocktailName();
+
+    /**
+     * Sets the name of the cocktail currently in focus within the application.
+     * @param cocktailName the new current cocktail name; null to indicate no cocktail is currently in focus.
+     */
+    void setCurrentCocktailName(String cocktailName);
 }
