@@ -3,6 +3,9 @@ package interface_adapter.search;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 import view.SearchView;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.search.SearchState;
+import interface_adapter.search.SearchViewModel;
 
 public class SearchPresenter implements SearchOutputBoundary {
 
@@ -15,9 +18,12 @@ public class SearchPresenter implements SearchOutputBoundary {
     @Override
     public void prepareSuccessView(SearchOutputData searchOutputData) {
         // On success, switch to the searched cocktail in view.
+        // update the search state
+        final SearchState searchState = searchViewModel.getState();
 
-        final SearchState
-        searchViewModel.firePropertyChanged
+        searchState.setCocktailName(searchOutputData.getCocktailName());
+
+        searchViewModel.firePropertyChanged();
     }
 
 }
