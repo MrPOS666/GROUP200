@@ -2,6 +2,7 @@ package interface_adapter.search;
 
 public class SearchState {
     private String cocktailName = "";
+    private String recipe = "";
     private String searchError;
 
     public String getCocktailName() {
@@ -19,5 +20,7 @@ public class SearchState {
     public void setSearchError(String searchError) {
         this.searchError = searchError;
     }
+
+
 
 }
