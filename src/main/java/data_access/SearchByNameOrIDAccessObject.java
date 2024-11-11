@@ -19,6 +19,7 @@ import use_case.search.SearchDataAccessInterface;
  */
 public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
 
+    public static final int MAXINGREDIENT = 15;
     private static final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
     private final OkHttpClient client = new OkHttpClient();
     private String currentCocktailName;
@@ -35,13 +36,13 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
 
     @Override
     public Cocktail getByName(String cocktailName) {
-        String jsonResponse = searchByName(cocktailName);
+        final String jsonResponse = searchByName(cocktailName);
         return createCocktailFromJson(jsonResponse);
     }
 
     @Override
     public Cocktail getById(int cocktailId) {
-        String jsonResponse = searchByID(String.valueOf(cocktailId));
+        final String jsonResponse = searchByID(String.valueOf(cocktailId));
         return createCocktailFromJson(jsonResponse);
     }
 
@@ -61,24 +62,24 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
             return null;
         }
 
-        JSONObject jsonObject = new JSONObject(jsonResponse);
-        JSONArray drinksArray = jsonObject.optJSONArray("drinks");
+        final JSONObject jsonObject = new JSONObject(jsonResponse);
+        final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
 
         if (drinksArray != null && drinksArray.length() > 0) {
-            JSONObject drinkObject = drinksArray.getJSONObject(0);
+            final JSONObject drinkObject = drinksArray.getJSONObject(0);
 
             // Extract main fields
-            int idDrink = drinkObject.optInt("idDrink");
-            String strDrink = drinkObject.optString("strDrink");
-            String strInstructions = drinkObject.optString("strInstructions");
-            String photoUrl = drinkObject.optString("strDrinkThumb");
+            final int idDrink = drinkObject.optInt("idDrink");
+            final String strDrink = drinkObject.optString("strDrink");
+            final String strInstructions = drinkObject.optString("strInstructions");
+            final String photoUrl = drinkObject.optString("strDrinkThumb");
 
             // Extract ingredients and measurements into a Map
-            Map<String, String> ingredients = new HashMap<>();
+            final Map<String, String> ingredients = new HashMap<>();
             // Loop through possible ingredient and measure fields
-            for (int i = 1; i <= 15; i++) {
-                String ingredient = drinkObject.optString("strIngredient" + i);
-                String measure = drinkObject.optString("strMeasure" + i);
+            for (int i = 1; i <= MAXINGREDIENT; i++) {
+                final String ingredient = drinkObject.optString("strIngredient" + i);
+                final String measure = drinkObject.optString("strMeasure" + i);
 
                 // Add only non-empty ingredients to the map
                 if (ingredient != null && !ingredient.isEmpty()) {
@@ -97,14 +98,12 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
         return null;
     }
 
-    @Override
-    public String searchByName(String name) {
+    private String searchByName(String name) {
         final String url = BASE_URL + "/search.php?s=" + name;
         return makeApiCall(url);
     }
 
-    @Override
-    public String searchByID(String id) {
+    private String searchByID(String id) {
         final String url = BASE_URL + "/lookup.php?i=" + id;
         return makeApiCall(url);
     }
