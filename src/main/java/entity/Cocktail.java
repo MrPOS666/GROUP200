@@ -1,6 +1,6 @@
 package entity;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * The representation of a cocktail in our program.
@@ -16,7 +16,7 @@ public interface Cocktail {
      * Returns the ingredient of the cocktail.
      * @return the ingredient of the cocktail.
      */
-    Map<String, String> getIngredients();
+    List<String> getIngredients();
 
     /**
      * Returns the photo link of the cocktail.
