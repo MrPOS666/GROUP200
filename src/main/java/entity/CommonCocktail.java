@@ -11,7 +11,6 @@ public class CommonCocktail implements Cocktail {
     private final String strDrink;
     private final String strInstructions;
     private final String photoUrl;
-    private final String strRecipe;
 
     // Ingredient name as key, measure as value
     private final Map<String, String> ingredients;
@@ -20,13 +19,12 @@ public class CommonCocktail implements Cocktail {
     public CommonCocktail(int idDrink,
                           String strDrink,
                           String strInstructions,
-                          String photoUrl, String strRecipe,
+                          String photoUrl,
                           Map<String, String> ingredients) {
         this.idDrink = idDrink;
         this.strDrink = strDrink;
         this.strInstructions = strInstructions;
         this.photoUrl = photoUrl;
-        this.strRecipe = strRecipe;
         this.ingredients = ingredients;
     }
 
@@ -41,10 +39,6 @@ public class CommonCocktail implements Cocktail {
 
     public String getCocktailName() {
         return strDrink;
-    }
-
-    public String getRecipe() {
-        return strRecipe;
     }
 
     public String getPhotoLink() {
