@@ -1,7 +1,6 @@
 package use_case.search;
 
 import java.util.List;
-import java.util.Map;
 
 import entity.Cocktail;
 
@@ -28,13 +27,15 @@ public class SearchInteractor implements SearchInputBoundary {
 
         if (searchInputData.isSearchByName()) {
             if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
-                final Cocktail cocktail = searchDataAccessObject.getByName(searchInputData.getInput());
-                searchPresenter.prepareSuccessView(new SearchOutputData(false,
-                        cocktail.getIdDrink(),
-                        cocktail.getCocktailName(),
-                        cocktail.getInstructions(),
-                        cocktail.getPhotoLink(),
-                        cocktail.getIngredients()));
+                final List<Cocktail> cocktails = searchDataAccessObject.getByName(searchInputData.getInput());
+                for (Cocktail cocktail : cocktails) {
+                    searchPresenter.prepareSuccessView(new SearchOutputData(false,
+                            cocktail.getIdDrink(),
+                            cocktail.getCocktailName(),
+                            cocktail.getInstructions(),
+                            cocktail.getPhotoLink(),
+                            cocktail.getIngredients()));
+                }
             }
             else {
                 searchPresenter.prepareFailView("Cocktail with name '" + searchInputData.getInput() + "' not found.");
