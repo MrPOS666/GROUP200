@@ -20,6 +20,7 @@ public interface Cocktail {
 
     /**
      * Returns the ingredient of the cocktail.
+     *
      * @return the ingredient of the cocktail.
      */
     Map<String, String> getIngredients();

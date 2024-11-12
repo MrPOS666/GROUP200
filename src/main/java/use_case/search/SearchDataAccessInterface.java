@@ -2,6 +2,8 @@ package use_case.search;
 
 import entity.Cocktail;
 
+import java.util.List;
+
 /**
  * DAO for the Search Use Case.
  */
@@ -23,10 +25,11 @@ public interface SearchDataAccessInterface {
 
     /**
      * Returns the cocktail with the given name.
+     *
      * @param cocktailName the name of the cocktail to look up
      * @return the cocktail with the given name
      */
-    Cocktail getByName(String cocktailName);
+    List<Cocktail> getByName(String cocktailName);
 
     /**
      * Returns the cocktail with the given ID.
