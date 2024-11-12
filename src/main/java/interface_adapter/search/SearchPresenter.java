@@ -9,7 +9,7 @@ import interface_adapter.search.SearchViewModel;
 
 public class SearchPresenter implements SearchOutputBoundary {
 
-    private SearchViewModel searchViewModel;
+    private final SearchViewModel searchViewModel;
 
     public SearchPresenter(SearchViewModel searchViewModel) {
         this.searchViewModel = searchViewModel;
@@ -22,8 +22,13 @@ public class SearchPresenter implements SearchOutputBoundary {
         final SearchState searchState = searchViewModel.getState();
 
         searchState.setCocktailName(searchOutputData.getCocktailName());
+        this.searchViewModel.setState(searchState);
 
         searchViewModel.firePropertyChanged();
+    }
+
+    @Override
+    public void prepareFailView(String error) {
     }
 
 }
