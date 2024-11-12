@@ -2,19 +2,22 @@ package interface_adapter.search;
 import java.util.List;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 public class SearchState {
     private String cocktailName = "";
-    private List<String> ingredients = new ArrayList<>();
+    private Map<String, String> ingredients;
     private String recipe = "";
     private List<String> cocktailNames;
+    private String photoLink;
     private String searchError;
 
     public SearchState(SearchState previousState) {
         this.cocktailName = previousState.cocktailName;
         this.ingredients = previousState.ingredients;
         this.recipe = previousState.recipe;
+        this.photoLink = previousState.photoLink;
         this.searchError = previousState.searchError;
     }
 
@@ -23,6 +26,11 @@ public class SearchState {
 
     public String getCocktailName() {
         return cocktailName;
+    }
+
+    public void setCocktailName(String cocktailName) {
+        this.cocktailName = cocktailName;
+    }
 
     public List<String> getCocktailNames() {
         return cocktailNames;
@@ -48,6 +56,21 @@ public class SearchState {
         this.recipe = recipe;
     }
 
+    public Map<String, String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Map<String, String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public String getPhotoLink() {
+        return photoLink;
+    }
+
+    public void setPhotoLink(String photoLink) {
+        this.photoLink = photoLink;
+    }
     /**
      * Clears the state to reset for the next search.
      */
