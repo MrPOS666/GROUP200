@@ -1,12 +1,14 @@
 package interface_adapter.search;
+import java.util.List;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class SearchState {
     private String cocktailName = "";
     private List<String> ingredients = new ArrayList<>();
     private String recipe = "";
+    private List<String> cocktailNames;
     private String searchError;
 
     public SearchState(SearchState previousState) {
@@ -21,14 +23,17 @@ public class SearchState {
 
     public String getCocktailName() {
         return cocktailName;
+
+    public List<String> getCocktailNames() {
+        return cocktailNames;
     }
 
     public String getSearchError() {
         return searchError;
     }
 
-    public void setCocktailName(String cocktailName) {
-        this.cocktailName = cocktailName;
+    public void setCocktailNames(List<String> cocktailNames) {
+        this.cocktailNames = cocktailNames;
     }
 
     public void setSearchError(String searchError) {
@@ -41,5 +46,13 @@ public class SearchState {
 
     public void setRecipe(String recipe) {
         this.recipe = recipe;
+    }
+
+    /**
+     * Clears the state to reset for the next search.
+     */
+    public void clearState() {
+        this.cocktailNames = null;
+        this.searchError = null;
     }
 }

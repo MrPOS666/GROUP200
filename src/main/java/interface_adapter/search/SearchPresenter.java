@@ -1,5 +1,8 @@
 package interface_adapter.search;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.back.ResultState;
+import interface_adapter.back.ResultViewModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 import view.SearchView;
@@ -7,15 +10,29 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 
+/**
+ * The Presenter for the Search Use Case.
+ */
 public class SearchPresenter implements SearchOutputBoundary {
 
     private final SearchViewModel searchViewModel;
+    private final SearchViewModel searchViewModel;
+    private final ResultViewModel resultViewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public SearchPresenter(SearchViewModel searchViewModel) {
+    public SearchPresenter(SearchViewModel searchViewModel, ViewManagerModel viewManagerModel) {
         this.searchViewModel = searchViewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
+    public void prepareSuccessView(SearchOutputData response) {
+        // On success, update the search view model with cocktail details
+        final SearchState searchState = searchViewModel.getState();
+        searchState.setCocktailName(response.getCocktailName());
+        searchState.setCocktailDetails(response.getCocktailDetails()); // Assuming response includes more details
+        searchViewModel.firePropertyChanged();
+
     public void prepareSuccessView(SearchOutputData searchOutputData) {
         // On success, switch to the searched cocktail in view.
         // update the search state
@@ -28,7 +45,10 @@ public class SearchPresenter implements SearchOutputBoundary {
     }
 
     @Override
-    public void prepareFailView(String error) {
+    public void prepareFailView(String errorMessage) {
+        // On failure, set the error message in the search state
+        final SearchState searchState = searchViewModel.getState();
+        searchState.setSearchError(errorMessage);
+        searchViewModel.firePropertyChanged();
     }
-
 }

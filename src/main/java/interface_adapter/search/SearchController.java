@@ -1,6 +1,5 @@
 package interface_adapter.search;
 
-import use_case.logout.LogoutInputData;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInputData;
 
@@ -17,7 +16,7 @@ public class SearchController {
      * @param cocktailName the username of the user logging in
      */
     public void execute(String cocktailName) {
-        SearchInputData inputData = new SearchInputData(cocktailName);
+        final SearchInputData inputData = new SearchInputData(cocktailName);
         searchInteractor.execute(inputData);
     }
 }
