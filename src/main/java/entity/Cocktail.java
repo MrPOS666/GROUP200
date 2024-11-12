@@ -12,15 +12,9 @@ public interface Cocktail {
      */
     String getCocktailName();
 
-    /**
-     * Returns the recipe of the cocktail.
-     * @return the name of the recipe.
-     */
-    String getRecipe();
 
     /**
      * Returns the ingredient of the cocktail.
-     *
      * @return the ingredient of the cocktail.
      */
     Map<String, String> getIngredients();
