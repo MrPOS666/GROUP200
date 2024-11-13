@@ -1,8 +1,6 @@
 package interface_adapter.search;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.back.ResultState;
-import interface_adapter.back.ResultViewModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 
@@ -12,12 +10,10 @@ import use_case.search.SearchOutputData;
 public class SearchPresenter implements SearchOutputBoundary {
 
     private final SearchViewModel searchViewModel;
-    private final ResultViewModel resultViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public SearchPresenter(SearchViewModel searchViewModel, ResultViewModel resultViewModel, ViewManagerModel viewManagerModel) {
+    public SearchPresenter(SearchViewModel searchViewModel, ViewManagerModel viewManagerModel) {
         this.searchViewModel = searchViewModel;
-        this.resultViewModel = resultViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
@@ -26,7 +22,6 @@ public class SearchPresenter implements SearchOutputBoundary {
         // On success, update the search view model with cocktail details
         final SearchState searchState = searchViewModel.getState();
         searchState.setCocktailName(response.getCocktailName());
-        searchState.setCocktailDetails(response.getCocktailDetails()); // Assuming response includes more details
         searchViewModel.firePropertyChanged();
     }
 
