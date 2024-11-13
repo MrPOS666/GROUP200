@@ -14,9 +14,12 @@ public class SearchController {
     /**
      * Executes the search Use Case.
      * @param cocktailName the username of the user logging in
+     * @param isSearchByName the user search by name
+     * @param isSearchByID the user search by ID
+     * @param input the user input
      */
-    public void execute(String cocktailName) {
-        final SearchInputData inputData = new SearchInputData(cocktailName);
+    public void execute(String cocktailName, boolean isSearchByName, boolean isSearchByID, String input) {
+        final SearchInputData inputData = new SearchInputData(cocktailName, isSearchByName, isSearchByID, input);
         searchInteractor.execute(inputData);
     }
 }

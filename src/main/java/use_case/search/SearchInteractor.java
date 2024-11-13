@@ -27,7 +27,7 @@ public class SearchInteractor implements SearchInputBoundary {
 
         if (searchInputData.isSearchByName()) {
             if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
-                final List<Cocktail> cocktails = searchDataAccessObject.getByName(searchInputData.getInput());
+                final List<Cocktail> cocktails = (List<Cocktail>) searchDataAccessObject.getByName(searchInputData.getInput());
                 for (Cocktail cocktail : cocktails) {
                     searchPresenter.prepareSuccessView(new SearchOutputData(false,
                             cocktail.getIdDrink(),

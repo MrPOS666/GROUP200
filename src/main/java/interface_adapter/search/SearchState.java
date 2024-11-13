@@ -7,18 +7,27 @@ import java.util.Map;
 
 public class SearchState {
     private String cocktailName = "";
+    private String id = "";
     private Map<String, String> ingredients;
     private String recipe = "";
     private List<String> cocktailNames;
     private String photoLink;
     private String searchError;
 
+    private boolean isSearchByName;
+    private boolean isSearchByID;
+    private String input;
+
     public SearchState(SearchState previousState) {
         this.cocktailName = previousState.cocktailName;
+        this.id = previousState.id;
         this.ingredients = previousState.ingredients;
         this.recipe = previousState.recipe;
         this.photoLink = previousState.photoLink;
         this.searchError = previousState.searchError;
+        this.isSearchByName = previousState.isSearchByName;
+        this.isSearchByID = previousState.isSearchByID;
+        this.input = previousState.input;
     }
 
     public SearchState() {
@@ -30,6 +39,14 @@ public class SearchState {
 
     public void setCocktailName(String cocktailName) {
         this.cocktailName = cocktailName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<String> getCocktailNames() {
@@ -77,5 +94,28 @@ public class SearchState {
     public void clearState() {
         this.cocktailNames = null;
         this.searchError = null;
+    }
+    public boolean isSearchByID() {
+        return isSearchByID;
+    }
+
+    public void setSearchByID(boolean searchByID) {
+        isSearchByID = searchByID;
+    }
+
+    public boolean isSearchByName() {
+        return isSearchByName;
+    }
+
+    public void setSearchByName(boolean searchByName) {
+        isSearchByName = searchByName;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
     }
 }
