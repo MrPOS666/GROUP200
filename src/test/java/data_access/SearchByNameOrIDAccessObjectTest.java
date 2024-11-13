@@ -46,7 +46,7 @@ class SearchByNameOrIDAccessObjectTest {
     // Helper method to print details of a Cocktail object
     private void printCocktailDetails(Cocktail cocktail) {
         System.out.println("Cocktail Name: " + cocktail.getCocktailName());
-        System.out.println("Recipe: " + cocktail.getRecipe());
+        System.out.println("Recipe: " + cocktail.getInstructions());
         System.out.println("Photo Link: " + cocktail.getPhotoLink());
         System.out.println("Ingredients:");
         cocktail.getIngredients().forEach((ingredient, measure) ->
