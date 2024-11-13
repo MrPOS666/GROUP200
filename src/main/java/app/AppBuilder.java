@@ -19,6 +19,8 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.myFavourite.MyFavouriteViewModel;
+import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -67,6 +69,7 @@ public class AppBuilder {
     private LoginView loginView;
     private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
+    private SearchViewModel searchViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -111,6 +114,9 @@ public class AppBuilder {
      */
     public AppBuilder addHomepageView() {
         homepageViewModel = new HomepageViewModel();
+        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
+        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
+        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
         homepageView = new HomepageView(homepageViewModel,
                 viewManagerModel,
                 loginViewModel,

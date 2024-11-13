@@ -60,6 +60,16 @@ public class HomepageView extends JPanel implements ActionListener {
 
         final JPanel buttons = new JPanel();
         toSearch = new JButton("Search");
+        buttons.add(toSearch);
+        toMyFavourites = new JButton("My Favourites");
+        buttons.add(toMyFavourites);
+        toRecommends = new JButton("Recommends");
+        buttons.add(toRecommends);
+        toChangePassword = new JButton("Change Password");
+        buttons.add(toChangePassword);
+        logout = new JButton("Logout");
+        buttons.add(logout);
+
         toSearch.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -70,7 +80,6 @@ public class HomepageView extends JPanel implements ActionListener {
                     }
                 });
 
-        toMyFavourites = new JButton("My Favourites");
         toMyFavourites.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -81,7 +90,6 @@ public class HomepageView extends JPanel implements ActionListener {
                     }
                 });
 
-        toRecommends = new JButton("Recommends");
         toRecommends.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -92,7 +100,6 @@ public class HomepageView extends JPanel implements ActionListener {
                     }
                 });
 
-        toChangePassword = new JButton("Change Password");
         toChangePassword.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
@@ -103,7 +110,6 @@ public class HomepageView extends JPanel implements ActionListener {
                     }
                 });
 
-        logout = new JButton("Logout");
         logout.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {

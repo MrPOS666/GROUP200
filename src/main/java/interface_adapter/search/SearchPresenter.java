@@ -4,6 +4,8 @@ import interface_adapter.ViewManagerModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 
+import java.util.ArrayList;
+
 /**
  * The Presenter for the Search Use Case.
  */
@@ -21,7 +23,7 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void prepareSuccessView(SearchOutputData response) {
         // On success, update the search view model with cocktail details
         final SearchState searchState = searchViewModel.getState();
-        searchState.setCocktailName(response.getCocktailName());
+        searchState.setCocktailName(new ArrayList<String>());
         searchViewModel.firePropertyChanged();
     }
 
