@@ -13,14 +13,13 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
-import interface_adapter.myFavourite.MyFavouriteViewModel;
-import interface_adapter.recommendation.RecommendationViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -34,6 +33,10 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search.SearchDataAccessInterface;
+import use_case.search.SearchInputBoundary;
+import use_case.search.SearchInteractor;
+import use_case.search.SearchOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -67,9 +70,9 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
-    private HomepageViewModel homepageViewModel;
-    private HomepageView homepageView;
+
     private SearchViewModel searchViewModel;
+    private SearchView searchView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -109,26 +112,6 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Homepage View to the application.
-     * @return this builder
-     */
-    public AppBuilder addHomepageView() {
-        homepageViewModel = new HomepageViewModel();
-        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
-        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
-        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
-        homepageView = new HomepageView(homepageViewModel,
-                viewManagerModel,
-                loginViewModel,
-                loggedInViewModel,
-                searchViewModel,
-                recommendationViewModel,
-                myFavouriteViewModel);
-        cardPanel.add(homepageView, homepageView.getViewName());
-        return this;
-    }
-
-    /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
@@ -149,7 +132,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                homepageViewModel, loginViewModel);
+                loggedInViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -206,4 +189,49 @@ public class AppBuilder {
 
         return application;
     }
+
+    /**
+     * Adds the LoggedIn View to the application.
+     * @return this builder
+     */
+    public AppBuilder addSearchView() {
+        searchViewModel = new SearchViewModel("search");
+        searchView = new SearchView(searchViewModel);
+        cardPanel.add(searchView, searchView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Signup Use Case to the application.
+     * @return this builder
+     */
+    /**
+    public AppBuilder addSearchCase() {
+        final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel,
+                viewManagerModel);
+        final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
+                searchOutputBoundary);
+
+        final SearchController controller = new SearchController(searchInteractor);
+        signupView.setSignupController(controller);
+        return this;
+    }
+    */
+
+    /**
+     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     * @return the application
+     */
+    public JFrame build_search() {
+        final JFrame application = new JFrame("Search Example");
+        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        application.add(cardPanel);
+
+        viewManagerModel.setState(searchView.getViewName());
+        viewManagerModel.firePropertyChanged();
+
+        return application;
+    }
+
 }
