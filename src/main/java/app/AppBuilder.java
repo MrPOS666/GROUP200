@@ -216,8 +216,7 @@ public class AppBuilder {
         signupView.setSignupController(controller);
         return this;
     }
-    */
-
+     */
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
