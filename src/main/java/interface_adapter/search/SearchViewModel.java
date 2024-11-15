@@ -3,7 +3,7 @@ package interface_adapter.search;
 import interface_adapter.ViewModel;
 
 /**
- * The View Model for the Search View.
+ * View Model of Search.
  */
 public class SearchViewModel extends ViewModel<SearchState> {
 

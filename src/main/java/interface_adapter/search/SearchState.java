@@ -57,7 +57,7 @@ public class SearchState {
         return searchError;
     }
 
-    public void setCocktailNames(List<String> cocktailNames) {
+    public void setCocktailName(List<String> cocktailNames) {
         this.cocktailNames = cocktailNames;
     }
 
