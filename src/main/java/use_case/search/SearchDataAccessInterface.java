@@ -1,5 +1,7 @@
 package use_case.search;
 
+import java.util.List;
+
 import entity.Cocktail;
 
 /**
@@ -26,7 +28,7 @@ public interface SearchDataAccessInterface {
      * @param cocktailName the name of the cocktail to look up
      * @return the cocktail with the given name
      */
-    Cocktail getByName(String cocktailName);
+    List<Cocktail> getByName(String cocktailName);
 
     /**
      * Returns the cocktail with the given ID.
