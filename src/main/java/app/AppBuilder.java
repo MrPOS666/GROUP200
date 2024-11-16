@@ -1,14 +1,15 @@
 package app;
 
 import java.awt.CardLayout;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.CommonUserFactory;
-import entity.UserFactory;
+import data_access.SearchByNameOrIDAccessObject;
+import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -49,8 +50,7 @@ import view.*;
  * This is done by adding each View and then adding related Use Cases.
  */
 // Checkstyle note: you can ignore the "Class Data Abstraction Coupling"
-//                  and the "Class Fan-Out Complexity" issues for this lab; we encourage
-//                  your team to think about ways to refactor the code to resolve these
+ //                  your team to think about ways to refactor the code to resolve these
 //                  if your team decides to work with this as your starter code
 //                  for your final project this term.
 public class AppBuilder {
@@ -63,6 +63,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -205,28 +206,26 @@ public class AppBuilder {
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
-    /**
-    public AppBuilder addSearchCase() {
+    public AppBuilder addSearchUseCase() {
         final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel,
                 viewManagerModel);
         final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
                 searchOutputBoundary);
 
         final SearchController controller = new SearchController(searchInteractor);
-        signupView.setSignupController(controller);
+        searchView.setSearchController(controller);
         return this;
     }
-     */
+
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build_search() {
         final JFrame application = new JFrame("Search Example");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         application.add(cardPanel);
-
+        application.setContentPane(cardPanel);
+        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         viewManagerModel.setState(searchView.getViewName());
         viewManagerModel.firePropertyChanged();
 

@@ -12,10 +12,8 @@ public interface Cocktail {
      */
     String getCocktailName();
 
-
     /**
      * Returns the ingredient of the cocktail.
-     *
      * @return the ingredient of the cocktail.
      */
     Map<String, String> getIngredients();
