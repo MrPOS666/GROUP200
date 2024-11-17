@@ -5,12 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -23,12 +20,11 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
 
-    private final JTextField cocktailInputField = new JTextField(15);
-    private final JTextField idInputField = new JTextField(15);
-    private final JLabel searchErrorField = new JLabel();
+    private final JTextField inputField = new JTextField(15);
+    private final JFrame frame = new JFrame("result");
+    private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
-    private final JButton cancel;
     private SearchController searchController;
 
     public SearchView(SearchViewModel searchViewModel) {
@@ -38,29 +34,18 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         final JLabel title = new JLabel("Search Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final LabelTextPanel cocktailName = new LabelTextPanel(
-                new JLabel("Search By Cocktail Name: "), cocktailInputField);
-        final LabelTextPanel cocktailID = new LabelTextPanel(
-                new JLabel("Search By ID: "), idInputField);
+        final LabelTextPanel input = new LabelTextPanel(
+                new JLabel("Search: "), inputField);
 
         final JPanel buttons = new JPanel();
         search = new JButton("search");
         buttons.add(search);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
 
-        cocktailInputField.getDocument().addDocumentListener(new DocumentListener() {
+        inputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
                 final SearchState currentState = searchViewModel.getState();
-                if (cocktailInputField.getText() != null) {
-                    currentState.setSearchByName(true);
-                    currentState.setCocktailName(cocktailInputField.getText());
-                }
-                if (idInputField.getText() != null) {
-                    currentState.setSearchByID(true);
-                    currentState.setId(idInputField.getText());
-                }
+                currentState.setInput(inputField.getText());
                 searchViewModel.setState(currentState);
             }
 
@@ -87,34 +72,36 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                             final SearchState currentState = searchViewModel.getState();
 
                             searchController.execute(
-                                    currentState.getCocktailName(),
-                                    currentState.isSearchByName(),
-                                    currentState.isSearchByID(),
                                     currentState.getInput()
                             );
                         }
                     }
                 }
         );
-        cancel.addActionListener(this);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(title);
-        this.add(cocktailName);
-        this.add(cocktailID);
-        this.add(searchErrorField);
+        this.add(input);
         this.add(buttons);
+        this.add(searchOutputField);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final SearchState state = (SearchState) evt.getNewValue();
         setFields(state);
-        searchErrorField.setText(state.getSearchError());
+        if (state.getSearchError() != null) {
+            searchOutputField.setText(state.getSearchError());
+        }
+        else {
+            searchOutputField.setText("success");
+            searchresults(state);
+            frame.setVisible(true);
+        }
     }
 
     private void setFields(SearchState state) {
-        cocktailInputField.setText(state.getCocktailName());
+        inputField.setText(state.getInput());
     }
 
     @Override
@@ -128,6 +115,36 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
     public void setSearchController(SearchController controller) {
         this.searchController = controller;
+    }
+
+    public void searchresults(SearchState state) {
+        String name = state.getCocktailName();
+        String ingredients = state.getIngredients();
+        int ID = state.getId();
+        String recipe = state.getRecipe();
+        String photoLink = state.getPhotoLink();
+
+        JLabel nameLabel = new JLabel();
+        JLabel IDLabel = new JLabel();
+        JLabel ingredientsLabel = new JLabel();
+        JLabel recipeLabel = new JLabel();
+        JLabel photoLabel = new JLabel();
+
+        nameLabel.setText(name);
+        IDLabel.setText(String.valueOf(ID));
+        ingredientsLabel.setText(ingredients);
+        recipeLabel.setText(recipe);
+        photoLabel.setText(photoLink);
+
+        JPanel panel = new JPanel();
+        panel.add(nameLabel);
+        panel.add(IDLabel);
+        panel.add(ingredientsLabel);
+        panel.add(recipeLabel);
+        panel.add(photoLabel);
+        frame.setSize(600, 300);
+        frame.setContentPane(panel);
+        ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
 }

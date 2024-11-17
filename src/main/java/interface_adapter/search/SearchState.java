@@ -1,4 +1,5 @@
 package interface_adapter.search;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 public class SearchState {
     private String cocktailName = "";
-    private String id = "";
+    private int id = 0;
     private Map<String, String> ingredients;
     private String recipe = "";
     private List<String> cocktailNames;
@@ -41,11 +42,11 @@ public class SearchState {
         this.cocktailName = cocktailName;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -73,7 +74,11 @@ public class SearchState {
         this.recipe = recipe;
     }
 
-    public Map<String, String> getIngredients() {
+    public String getIngredients() {
+        String ingredients = "";
+        for (Map.Entry<String, String> entry: this.ingredients.entrySet()) {
+            ingredients += entry.getKey() + ": " + entry.getValue() + "\n";
+        }
         return ingredients;
     }
 
