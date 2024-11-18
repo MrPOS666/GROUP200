@@ -39,11 +39,12 @@ public class Main {
         searchView.setSearchController(searchController);
         JPanel panel = new JPanel();
         panel.add(searchView, searchView.getViewName());
+        JScrollPane scrollPane = new JScrollPane(panel);
 
-        Frame frame = new JFrame("Simple Swing App");
-        frame.setSize(600, 300);
-        ((JFrame) frame).setContentPane(panel);
+        Frame frame = new JFrame("Search");
+        ((JFrame) frame).setContentPane(scrollPane);
         ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //frame.pack();
         frame.setVisible(true);
 
         final AppBuilder appBuilder = new AppBuilder();
@@ -59,7 +60,7 @@ public class Main {
                                             .addChangePasswordUseCase()
                                             .addLogoutUseCase()
                                             .build();
-
-        application.setVisible(true);
+        //application.pack();
+        //application.setVisible(true);
     }
 }

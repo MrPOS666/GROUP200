@@ -92,7 +92,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             searchOutputField.setText(state.getSearchError());
         }
         else {
-            searchOutputField.setText("success");
+            // searchOutputField.setText("success");
             searchresults(state);
         }
     }
@@ -115,7 +115,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     }
 
     public void searchresults(SearchState state) {
-        JFrame frame = new JFrame("result");
+        //JFrame frame = new JFrame("result");
         String name = state.getCocktailName();
         String ingredients = state.getIngredients();
         int ID = state.getId();
@@ -149,22 +149,22 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         photoLabel.setIcon(photoIcon);  // Display the image
 
         // Create a JPanel and set its layout (BoxLayout or GridLayout)
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+        JPanel resultPanel = new JPanel();
+        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
 
         // Add components to the panel
-        panel.add(nameLabel);
-        panel.add(IDLabel);
-        panel.add(photoLinkLabel);
-        panel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
-        panel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
-        panel.add(photoLabel);
+        resultPanel.add(nameLabel);
+        resultPanel.add(IDLabel);
+        resultPanel.add(photoLinkLabel);
+        resultPanel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
+        resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
+        resultPanel.add(photoLabel);
 
-        // Set up the frame
-        frame.setSize(500, 300);  // Adjust frame size if necessary
-        frame.setContentPane(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        this.add(resultPanel);
+
+        // Refresh the layout after adding new content
+        revalidate();
+        repaint();
     }
         /**
         JLabel ingredientsLabel = new JLabel();
