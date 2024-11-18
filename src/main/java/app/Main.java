@@ -60,7 +60,6 @@ public class Main {
                                             .addLogoutUseCase()
                                             .build();
 
-        //application.pack();
-        //application.setVisible(true);
+        application.setVisible(true);
     }
 }

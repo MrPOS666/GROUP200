@@ -21,7 +21,6 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     private final SearchViewModel searchViewModel;
 
     private final JTextField inputField = new JTextField(15);
-    private final JFrame frame = new JFrame("result");
     private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
@@ -70,7 +69,6 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(search)) {
                             final SearchState currentState = searchViewModel.getState();
-
                             searchController.execute(
                                     currentState.getInput()
                             );
@@ -96,7 +94,6 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         else {
             searchOutputField.setText("success");
             searchresults(state);
-            frame.setVisible(true);
         }
     }
 
@@ -118,14 +115,58 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     }
 
     public void searchresults(SearchState state) {
+        JFrame frame = new JFrame("result");
         String name = state.getCocktailName();
         String ingredients = state.getIngredients();
         int ID = state.getId();
         String recipe = state.getRecipe();
         String photoLink = state.getPhotoLink();
 
-        JLabel nameLabel = new JLabel();
-        JLabel IDLabel = new JLabel();
+        JLabel nameLabel = new JLabel("Cocktail Name: " + name);
+        JLabel IDLabel = new JLabel("ID: " + ID);
+        JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
+
+        JTextArea ingredientsArea = new JTextArea(5, 20); // 5 rows, 20 columns
+        JTextArea recipeArea = new JTextArea(5, 20);      // 5 rows, 20 columns
+
+        // Set the ingredients and recipe text (allow wrapping)
+        ingredientsArea.setText(ingredients);
+        recipeArea.setText(recipe);
+
+        // Make the JTextAreas non-editable since they are just for display
+        ingredientsArea.setEditable(false);
+        recipeArea.setEditable(false);
+
+        // Set line wrapping for JTextAreas
+        ingredientsArea.setWrapStyleWord(true);
+        ingredientsArea.setLineWrap(true);
+        recipeArea.setWrapStyleWord(true);
+        recipeArea.setLineWrap(true);
+
+        // Create JLabel for photo link or image
+        JLabel photoLabel = new JLabel();
+        ImageIcon photoIcon = new ImageIcon(photoLink);
+        photoLabel.setIcon(photoIcon);  // Display the image
+
+        // Create a JPanel and set its layout (BoxLayout or GridLayout)
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+
+        // Add components to the panel
+        panel.add(nameLabel);
+        panel.add(IDLabel);
+        panel.add(photoLinkLabel);
+        panel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
+        panel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
+        panel.add(photoLabel);
+
+        // Set up the frame
+        frame.setSize(500, 300);  // Adjust frame size if necessary
+        frame.setContentPane(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+        /**
         JLabel ingredientsLabel = new JLabel();
         JLabel recipeLabel = new JLabel();
         JLabel photoLabel = new JLabel();
@@ -142,9 +183,12 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         panel.add(ingredientsLabel);
         panel.add(recipeLabel);
         panel.add(photoLabel);
+
         frame.setSize(600, 300);
         frame.setContentPane(panel);
+        frame.pack();
         ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
-
+    */
 }
