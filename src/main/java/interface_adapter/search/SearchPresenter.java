@@ -35,7 +35,7 @@ public class SearchPresenter implements SearchOutputBoundary {
         searchState.setRecipe(searchOutputData.getRecipe());
         searchState.setIngredients(searchOutputData.getIngredients());
         searchState.setPhotoLink(searchOutputData.getPhotoLink());
-
+        searchState.setSearchError(null);
         this.searchViewModel.setState(searchState);
         searchViewModel.firePropertyChanged();
 

@@ -80,15 +80,21 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.add(title);
         this.add(input);
         this.add(buttons);
-        this.add(searchOutputField);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        resultPanel.removeAll();
+        this.remove(resultPanel);
+        searchOutputField.removeAll();
+        this.remove(searchOutputField);
         final SearchState state = (SearchState) evt.getNewValue();
         setFields(state);
         if (state.getSearchError() != null) {
             searchOutputField.setText(state.getSearchError());
+            this.add(searchOutputField);
+            revalidate();
+            repaint();
         }
         else {
             searchresults(state);

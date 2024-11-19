@@ -6,7 +6,7 @@ import java.util.Map;
 public class SearchState {
     private String cocktailName = "";
     private int id = 0;
-    private List<int> idList;
+    private List<Integer> idList;
     private Map<String, String> ingredients;
     private List<Map<String, String>> ingredientsList;
     private List<String> recipeList;
@@ -115,11 +115,11 @@ public class SearchState {
         this.input = input;
     }
 
-    public List<int> getIdList() {
+    public List<Integer> getIdList() {
         return idList;
     }
 
-    public void setIdList(List<int> idList) {
+    public void setIdList(List<Integer> idList) {
         this.idList = idList;
     }
 
