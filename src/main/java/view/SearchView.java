@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,13 +13,13 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
-import interface_adapter.signup.SignupController;
 
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
 
     private final JTextField inputField = new JTextField(15);
+    private final JPanel resultPanel = new JPanel();
     private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
@@ -92,8 +91,10 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             searchOutputField.setText(state.getSearchError());
         }
         else {
-            // searchOutputField.setText("success");
             searchresults(state);
+            this.add(resultPanel);
+            revalidate();
+            repaint();
         }
     }
 
@@ -114,10 +115,11 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.searchController = controller;
     }
 
+    //TODO: Add for loop
     public void searchresults(SearchState state) {
         //JFrame frame = new JFrame("result");
         String name = state.getCocktailName();
-        String ingredients = state.getIngredients();
+        String ingredients = state.getIngredientsToString();
         int ID = state.getId();
         String recipe = state.getRecipe();
         String photoLink = state.getPhotoLink();
@@ -149,7 +151,6 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         photoLabel.setIcon(photoIcon);  // Display the image
 
         // Create a JPanel and set its layout (BoxLayout or GridLayout)
-        JPanel resultPanel = new JPanel();
         resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
 
         // Add components to the panel
@@ -160,11 +161,11 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
         resultPanel.add(photoLabel);
 
-        this.add(resultPanel);
+        //this.add(resultPanel);
 
         // Refresh the layout after adding new content
-        revalidate();
-        repaint();
+        //revalidate();
+        //repaint();
     }
         /**
         JLabel ingredientsLabel = new JLabel();

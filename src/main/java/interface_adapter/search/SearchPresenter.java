@@ -29,6 +29,7 @@ public class SearchPresenter implements SearchOutputBoundary {
         // update the search state
         final SearchState searchState = searchViewModel.getState();
 
+        //TODO: searchoutput data become list
         searchState.setId(searchOutputData.getIdDrink());
         searchState.setCocktailName(searchOutputData.getCocktailName());
         searchState.setRecipe(searchOutputData.getRecipe());

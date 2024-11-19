@@ -1,36 +1,26 @@
 package interface_adapter.search;
-import java.util.HashMap;
 import java.util.List;
 
-import java.util.ArrayList;
 import java.util.Map;
-
 
 public class SearchState {
     private String cocktailName = "";
     private int id = 0;
+    private List<int> idList;
     private Map<String, String> ingredients;
+    private List<Map<String, String>> ingredientsList;
+    private List<String> recipeList;
     private String recipe = "";
-    private List<String> cocktailNames;
+    private List<String> cocktailNamesList;
     private String photoLink;
-    private String searchError;
+    private List<String> photoLinkList;
 
+    private String searchError;
     private boolean isSearchByName;
     private boolean isSearchByID;
     private String input;
 
-    public SearchState(SearchState previousState) {
-        this.cocktailName = previousState.cocktailName;
-        this.id = previousState.id;
-        this.ingredients = previousState.ingredients;
-        this.recipe = previousState.recipe;
-        this.photoLink = previousState.photoLink;
-        this.searchError = previousState.searchError;
-        this.isSearchByName = previousState.isSearchByName;
-        this.isSearchByID = previousState.isSearchByID;
-        this.input = previousState.input;
-    }
-
+    //TODO: make the instance variables be lists
     public SearchState() {
     }
 
@@ -50,16 +40,16 @@ public class SearchState {
         this.id = id;
     }
 
-    public List<String> getCocktailNames() {
-        return cocktailNames;
+    public List<String> getCocktailNamesList() {
+        return cocktailNamesList;
     }
 
     public String getSearchError() {
         return searchError;
     }
 
-    public void setCocktailName(List<String> cocktailNames) {
-        this.cocktailNames = cocktailNames;
+    public void setCocktailNamesList(List<String> cocktailNames) {
+        this.cocktailNamesList = cocktailNames;
     }
 
     public void setSearchError(String searchError) {
@@ -74,7 +64,8 @@ public class SearchState {
         this.recipe = recipe;
     }
 
-    public String getIngredients() {
+    //TODO: Fix once the instance variables become lists
+    public String getIngredientsToString() {
         String ingredients = "";
         for (Map.Entry<String, String> entry: this.ingredients.entrySet()) {
             ingredients += entry.getKey() + ": " + entry.getValue() + "\n";
@@ -97,7 +88,7 @@ public class SearchState {
      * Clears the state to reset for the next search.
      */
     public void clearState() {
-        this.cocktailNames = null;
+        this.cocktailNamesList = null;
         this.searchError = null;
     }
     public boolean isSearchByID() {
@@ -122,5 +113,41 @@ public class SearchState {
 
     public void setInput(String input) {
         this.input = input;
+    }
+
+    public List<int> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<int> idList) {
+        this.idList = idList;
+    }
+
+    public Map<String, String> getIngredients() {
+        return ingredients;
+    }
+
+    public List<Map<String, String>> getIngredientsList() {
+        return ingredientsList;
+    }
+
+    public void setIngredientsList(List<Map<String, String>> ingredientsList) {
+        this.ingredientsList = ingredientsList;
+    }
+
+    public List<String> getPhotoLinkList() {
+        return photoLinkList;
+    }
+
+    public void setPhotoLinkList(List<String> photoLinkList) {
+        this.photoLinkList = photoLinkList;
+    }
+
+    public List<String> getRecipeList() {
+        return recipeList;
+    }
+
+    public void setRecipeList(List<String> recipeList) {
+        this.recipeList = recipeList;
     }
 }

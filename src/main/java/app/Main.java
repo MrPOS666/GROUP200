@@ -44,7 +44,7 @@ public class Main {
         Frame frame = new JFrame("Search");
         ((JFrame) frame).setContentPane(scrollPane);
         ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //frame.pack();
+        frame.pack();
         frame.setVisible(true);
 
         final AppBuilder appBuilder = new AppBuilder();
