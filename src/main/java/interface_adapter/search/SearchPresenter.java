@@ -1,10 +1,11 @@
 package interface_adapter.search;
 
+import java.util.List;
+import java.util.Map;
+
 import interface_adapter.ViewManagerModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
-
-import java.util.ArrayList;
 
 /**
  * The Presenter for the Search Use Case.
@@ -23,7 +24,22 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void prepareSuccessView(SearchOutputData response) {
         // On success, update the search view model with cocktail details
         final SearchState searchState = searchViewModel.getState();
-        searchState.setCocktailName(new ArrayList<String>());
+        // Extract lists from the response
+        final List<Integer> ids = response.getIdDrink();
+        final List<String> names = response.getCocktailName();
+        final List<String> instructions = response.getInstructions();
+        final List<String> photoLinks = response.getPhotoLink();
+        final List<Map<String, String>> ingredients = response.getIngredients();
+        for (int i = 0; i < ids.size(); i++) {
+            searchState.addCocktail(
+                    ids.get(i),
+                    names.get(i),
+                    instructions.get(i),
+                    photoLinks.get(i),
+                    ingredients.get(i)
+            );
+        }
+
         searchViewModel.firePropertyChanged();
     }
 
