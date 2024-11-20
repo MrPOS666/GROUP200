@@ -4,32 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchState {
-    private String cocktailName = "";
     private int id = 0;
     private List<Integer> idList;
-    private Map<String, String> ingredients;
     private List<Map<String, String>> ingredientsList;
     private List<String> recipeList;
-    private String recipe = "";
     private List<String> cocktailNamesList;
-    private String photoLink;
     private List<String> photoLinkList;
 
     private String searchError;
-    private boolean isSearchByName;
-    private boolean isSearchByID;
     private String input;
 
-    //TODO: make the instance variables be lists
     public SearchState() {
-    }
-
-    public String getCocktailName() {
-        return cocktailName;
-    }
-
-    public void setCocktailName(String cocktailName) {
-        this.cocktailName = cocktailName;
     }
 
     public int getId() {
@@ -56,55 +41,20 @@ public class SearchState {
         this.searchError = searchError;
     }
 
-    public String getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(String recipe) {
-        this.recipe = recipe;
-    }
-
-    //TODO: Fix once the instance variables become lists
-    public String getIngredientsToString() {
+    public String getIngredientsToString(Map<String, String> ingredientsMap) {
         String ingredients = "";
-        for (Map.Entry<String, String> entry: this.ingredients.entrySet()) {
+        for (Map.Entry<String, String> entry: ingredientsMap.entrySet()) {
             ingredients += entry.getKey() + ": " + entry.getValue() + "\n";
         }
         return ingredients;
     }
 
-    public void setIngredients(Map<String, String> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public String getPhotoLink() {
-        return photoLink;
-    }
-
-    public void setPhotoLink(String photoLink) {
-        this.photoLink = photoLink;
-    }
     /**
      * Clears the state to reset for the next search.
      */
     public void clearState() {
         this.cocktailNamesList = null;
         this.searchError = null;
-    }
-    public boolean isSearchByID() {
-        return isSearchByID;
-    }
-
-    public void setSearchByID(boolean searchByID) {
-        isSearchByID = searchByID;
-    }
-
-    public boolean isSearchByName() {
-        return isSearchByName;
-    }
-
-    public void setSearchByName(boolean searchByName) {
-        isSearchByName = searchByName;
     }
 
     public String getInput() {
@@ -121,10 +71,6 @@ public class SearchState {
 
     public void setIdList(List<Integer> idList) {
         this.idList = idList;
-    }
-
-    public Map<String, String> getIngredients() {
-        return ingredients;
     }
 
     public List<Map<String, String>> getIngredientsList() {

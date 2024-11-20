@@ -52,14 +52,14 @@ public class Main {
         //final JFrame application1 = appBuilder.addSignupView().addSignupUseCase().build();
 
         final JFrame application = appBuilder
-                                            .addLoginView()
-                                            .addSignupView()
-                                            .addLoggedInView()
-                                            .addSignupUseCase()
-                                            .addLoginUseCase()
-                                            .addChangePasswordUseCase()
-                                            .addLogoutUseCase()
-                                            .build();
+                .addLoginView()
+                .addSignupView()
+                .addLoggedInView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addChangePasswordUseCase()
+                .addLogoutUseCase()
+                .build();
         //application.pack();
         //application.setVisible(true);
     }

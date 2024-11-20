@@ -14,6 +14,9 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 
+import java.util.List;
+import java.util.Map;
+
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
@@ -95,6 +98,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             this.add(searchOutputField);
             revalidate();
             repaint();
+            state.setSearchError(null);
         }
         else {
             searchresults(state);
@@ -121,81 +125,57 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.searchController = controller;
     }
 
-    //TODO: Add for loop
     public void searchresults(SearchState state) {
-        //JFrame frame = new JFrame("result");
-        String name = state.getCocktailName();
-        String ingredients = state.getIngredientsToString();
-        int ID = state.getId();
-        String recipe = state.getRecipe();
-        String photoLink = state.getPhotoLink();
 
-        JLabel nameLabel = new JLabel("Cocktail Name: " + name);
-        JLabel IDLabel = new JLabel("ID: " + ID);
-        JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
+        final List<String> nameList = state.getCocktailNamesList();
+        final List<Map<String, String>> ingredientsList = state.getIngredientsList();
+        final List<Integer> ID = state.getIdList();
+        final List<String> recipeList = state.getRecipeList();
+        final List<String> photoLinkList = state.getPhotoLinkList();
 
-        JTextArea ingredientsArea = new JTextArea(5, 20); // 5 rows, 20 columns
-        JTextArea recipeArea = new JTextArea(5, 20);      // 5 rows, 20 columns
+        for (int i = 0; i < nameList.size(); i++) {
+            String name = nameList.get(i);
+            int id = ID.get(i);
+            String recipe = recipeList.get(i);
+            String photoLink = photoLinkList.get(i);
+            String ingredients = state.getIngredientsToString(ingredientsList.get(i));
 
-        // Set the ingredients and recipe text (allow wrapping)
-        ingredientsArea.setText(ingredients);
-        recipeArea.setText(recipe);
+            JLabel nameLabel = new JLabel("Cocktail Name: " + name);
+            JLabel IDLabel = new JLabel("ID: " + id);
+            JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
 
-        // Make the JTextAreas non-editable since they are just for display
-        ingredientsArea.setEditable(false);
-        recipeArea.setEditable(false);
+            JTextArea ingredientsArea = new JTextArea(5, 20); // 5 rows, 20 columns
+            JTextArea recipeArea = new JTextArea(5, 20);      // 5 rows, 20 columns
 
-        // Set line wrapping for JTextAreas
-        ingredientsArea.setWrapStyleWord(true);
-        ingredientsArea.setLineWrap(true);
-        recipeArea.setWrapStyleWord(true);
-        recipeArea.setLineWrap(true);
+            // Set the ingredients and recipe text (allow wrapping)
+            ingredientsArea.setText(ingredients);
+            recipeArea.setText(recipe);
 
-        // Create JLabel for photo link or image
-        JLabel photoLabel = new JLabel();
-        ImageIcon photoIcon = new ImageIcon(photoLink);
-        photoLabel.setIcon(photoIcon);  // Display the image
+            // Make the JTextAreas non-editable since they are just for display
+            ingredientsArea.setEditable(false);
+            recipeArea.setEditable(false);
 
-        // Create a JPanel and set its layout (BoxLayout or GridLayout)
-        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+            // Set line wrapping for JTextAreas
+            ingredientsArea.setWrapStyleWord(true);
+            ingredientsArea.setLineWrap(true);
+            recipeArea.setWrapStyleWord(true);
+            recipeArea.setLineWrap(true);
 
-        // Add components to the panel
-        resultPanel.add(nameLabel);
-        resultPanel.add(IDLabel);
-        resultPanel.add(photoLinkLabel);
-        resultPanel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
-        resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
-        resultPanel.add(photoLabel);
+            // Create JLabel for photo link or image
+            JLabel photoLabel = new JLabel();
+            ImageIcon photoIcon = new ImageIcon(photoLink);
+            photoLabel.setIcon(photoIcon);  // Display the image
 
-        //this.add(resultPanel);
+            // Create a JPanel and set its layout (BoxLayout or GridLayout)
+            resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
 
-        // Refresh the layout after adding new content
-        //revalidate();
-        //repaint();
+            // Add components to the panel
+            resultPanel.add(nameLabel);
+            resultPanel.add(IDLabel);
+            resultPanel.add(photoLinkLabel);
+            resultPanel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
+            resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
+            resultPanel.add(photoLabel);
+        }
     }
-        /**
-        JLabel ingredientsLabel = new JLabel();
-        JLabel recipeLabel = new JLabel();
-        JLabel photoLabel = new JLabel();
-
-        nameLabel.setText(name);
-        IDLabel.setText(String.valueOf(ID));
-        ingredientsLabel.setText(ingredients);
-        recipeLabel.setText(recipe);
-        photoLabel.setText(photoLink);
-
-        JPanel panel = new JPanel();
-        panel.add(nameLabel);
-        panel.add(IDLabel);
-        panel.add(ingredientsLabel);
-        panel.add(recipeLabel);
-        panel.add(photoLabel);
-
-        frame.setSize(600, 300);
-        frame.setContentPane(panel);
-        frame.pack();
-        ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
-    */
 }
