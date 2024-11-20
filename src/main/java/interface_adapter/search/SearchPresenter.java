@@ -28,15 +28,22 @@ public class SearchPresenter implements SearchOutputBoundary {
         // On success, switch to the searched cocktail in view.
         // update the search state
         final SearchState searchState = searchViewModel.getState();
+        // Extract lists from the response
+        final List<Integer> ids = response.getIdDrink();
+        final List<String> names = response.getCocktailName();
+        final List<String> instructions = response.getInstructions();
+        final List<String> photoLinks = response.getPhotoLink();
+        final List<Map<String, String>> ingredients = response.getIngredients();
+        for (int i = 0; i < ids.size(); i++) {
+            searchState.addCocktail(
+                    ids.get(i),
+                    names.get(i),
+                    instructions.get(i),
+                    photoLinks.get(i),
+                    ingredients.get(i)
+            );
+        }
 
-        //TODO: searchoutput data become list
-        searchState.setId(searchOutputData.getIdDrink());
-        searchState.setCocktailName(searchOutputData.getCocktailName());
-        searchState.setRecipe(searchOutputData.getRecipe());
-        searchState.setIngredients(searchOutputData.getIngredients());
-        searchState.setPhotoLink(searchOutputData.getPhotoLink());
-        searchState.setSearchError(null);
-        this.searchViewModel.setState(searchState);
         searchViewModel.firePropertyChanged();
 
         this.viewManagerModel.setState(searchViewModel.getViewName());
