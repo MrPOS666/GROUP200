@@ -1,5 +1,6 @@
 package use_case.search;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,15 +10,15 @@ public class SearchOutputData {
 
     private final boolean useCaseFailed;
 
-    private final int idDrink;
-    private final String strDrink;
-    private final String strInstructions;
-    private final String photoUrl;
+    private final List<Integer> idDrink;
+    private final List<String> strDrink;
+    private final List<String> strInstructions;
+    private final List<String> photoUrl;
     // Ingredient name as key, measure as value
-    private final Map<String, String> ingredients;
+    private final List<Map<String, String>> ingredients;
 
     // Constructor
-    public SearchOutputData(boolean useCaseFailed, int idDrink, String strDrink, String strInstructions, String photoUrl, Map<String, String> ingredients) {
+    public SearchOutputData(boolean useCaseFailed, List<Integer> idDrink, List<String> strDrink, List<String> strInstructions, List<String> photoUrl, List<Map<String, String>> ingredients) {
         this.useCaseFailed = useCaseFailed;
         this.idDrink = idDrink;
         this.strDrink = strDrink;
@@ -27,23 +28,23 @@ public class SearchOutputData {
     }
 
     // Getters for accessing fields
-    public int getIdDrink() {
+    public List<Integer> getIdDrink() {
         return idDrink;
     }
 
-    public String getCocktailName() {
+    public List<String> getCocktailName() {
         return strDrink;
     }
 
-    public String getRecipe() {
+    public List<String> getInstructions() {
         return strInstructions;
     }
 
-    public String getPhotoLink() {
+    public List<String> getPhotoLink() {
         return photoUrl;
     }
 
-    public Map<String, String> getIngredients() {
+    public List<Map<String, String>> getIngredients() {
         return ingredients;
     }
 
