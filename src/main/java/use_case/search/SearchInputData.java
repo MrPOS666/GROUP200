@@ -13,6 +13,7 @@ public class SearchInputData {
     private final boolean isSearchByName;
     private final boolean isSearchByID;
     private final String input;
+
     public SearchInputData(String cocktailName, boolean isSearchByName, boolean isSearchByID, String input) {
         this.cocktailName = cocktailName;
         this.isSearchByName = isSearchByName;
