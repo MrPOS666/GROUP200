@@ -17,8 +17,10 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
-import interface_adapter.signup.SignupController;
 
+/**
+ * View for Search use case.
+ */
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
