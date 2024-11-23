@@ -1,6 +1,7 @@
 package interface_adapter.delete;
 
 import interface_adapter.ViewModel;
+import interface_adapter.search.SearchState;
 import interface_adapter.select.SelectState;
 import interface_adapter.select.SelectViewModel;
 import use_case.delete_favorite.DeleteOutputBoundary;
@@ -25,6 +26,14 @@ public class DeletePresenter implements DeleteOutputBoundary {
     public void prepareSuccessView(SearchOutputData response) {
         final SelectState selectState = selectViewModel.getState();
 
-
     }
+
+    @Override
+    public void prepareFailView(String errorMessage) {
+        // On failure, set the error message in the search state
+        final SelectState selectState = selectViewModel.getState();
+        selectState.setSelectError(errorMessage);
+        selectState.firePropertyChanged();
+    }
+
 }
