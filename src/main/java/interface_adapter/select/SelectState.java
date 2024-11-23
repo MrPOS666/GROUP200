@@ -18,4 +18,10 @@ public class SelectState {
 
     public List<Integer> getCocktailList() {
     }
+
+    public void firePropertyChanged() {
+    }
+
+    public void setSelectError(String errorMessage) {
+    }
 }
