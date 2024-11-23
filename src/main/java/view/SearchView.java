@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -16,6 +17,7 @@ import interface_adapter.search.SearchViewModel;
 
 import java.util.List;
 import java.util.Map;
+
 
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
@@ -140,42 +142,52 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             String photoLink = photoLinkList.get(i);
             String ingredients = state.getIngredientsToString(ingredientsList.get(i));
 
-            JLabel nameLabel = new JLabel("Cocktail Name: " + name);
+            // Create a new JPanel for each cocktail
+            JPanel cocktailPanel = new JPanel();
+            cocktailPanel.setLayout(new BoxLayout(cocktailPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+            cocktailPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding to the panel
+
+            // Set the background color for the cocktail panel to yellow
+            cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
+
+            // Create labels for cocktail details
+            JLabel nameLabel = new JLabel(name);
             JLabel IDLabel = new JLabel("ID: " + id);
-            JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
+            JLabel photoLinkLabel = new JLabel(photoLink);
 
-            JTextArea ingredientsArea = new JTextArea(5, 20); // 5 rows, 20 columns
-            JTextArea recipeArea = new JTextArea(5, 20);      // 5 rows, 20 columns
-
-            // Set the ingredients and recipe text (allow wrapping)
-            ingredientsArea.setText(ingredients);
-            recipeArea.setText(recipe);
-
-            // Make the JTextAreas non-editable since they are just for display
-            ingredientsArea.setEditable(false);
-            recipeArea.setEditable(false);
-
-            // Set line wrapping for JTextAreas
-            ingredientsArea.setWrapStyleWord(true);
-            ingredientsArea.setLineWrap(true);
-            recipeArea.setWrapStyleWord(true);
-            recipeArea.setLineWrap(true);
+            // Set color for labels
+            nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
+            IDLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
+            photoLinkLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
             // Create JLabel for photo link or image
             JLabel photoLabel = new JLabel();
             ImageIcon photoIcon = new ImageIcon(photoLink);
             photoLabel.setIcon(photoIcon);  // Display the image
 
-            // Create a JPanel and set its layout (BoxLayout or GridLayout)
-            resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+            // Optionally, set a background color for the photo label (for a border around the photo)
+            photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
+            photoLabel.setOpaque(true); // Make sure background color is visible
 
-            // Add components to the panel
-            resultPanel.add(nameLabel);
-            resultPanel.add(IDLabel);
-            resultPanel.add(photoLinkLabel);
-            resultPanel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
-            resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane
-            resultPanel.add(photoLabel);
+            // Add components to the cocktail panel
+            cocktailPanel.add(nameLabel);
+            cocktailPanel.add(IDLabel);
+            cocktailPanel.add(photoLinkLabel);
+            cocktailPanel.add(photoLabel);
+
+            // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
+            cocktailPanel.setPreferredSize(new Dimension(200, 200));
+
+            // Add the cocktail panel to the main result panel
+            resultPanel.add(cocktailPanel);
+
+            // Add space between each cocktail panel
+            resultPanel.add(Box.createVerticalStrut(10)); // Add space between cocktails
         }
+
+        // After all panels are added, update the layout to reflect changes
+        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+        resultPanel.revalidate();
+        resultPanel.repaint();
     }
 }
