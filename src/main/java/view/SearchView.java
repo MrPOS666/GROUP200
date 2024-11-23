@@ -17,7 +17,7 @@ import interface_adapter.search.SearchViewModel;
 import java.util.List;
 import java.util.Map;
 
-public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
+public class  SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
 
@@ -129,23 +129,23 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
         final List<String> nameList = state.getCocktailNamesList();
         final List<Map<String, String>> ingredientsList = state.getIngredientsList();
-        final List<Integer> ID = state.getIdList();
+        final List<Integer> ids = state.getIdList();
         final List<String> recipeList = state.getRecipeList();
         final List<String> photoLinkList = state.getPhotoLinkList();
 
         for (int i = 0; i < nameList.size(); i++) {
-            String name = nameList.get(i);
-            int id = ID.get(i);
-            String recipe = recipeList.get(i);
-            String photoLink = photoLinkList.get(i);
-            String ingredients = state.getIngredientsToString(ingredientsList.get(i));
+            final String name = nameList.get(i);
+            final int id = ids.get(i);
+            final String recipe = recipeList.get(i);
+            final String photoLink = photoLinkList.get(i);
+            final String ingredients = state.getIngredientsToString(ingredientsList.get(i));
 
-            JLabel nameLabel = new JLabel("Cocktail Name: " + name);
-            JLabel IDLabel = new JLabel("ID: " + id);
-            JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
+            final JLabel nameLabel = new JLabel("Cocktail Name: " + name);
+            final JLabel idlabel = new JLabel("ID: " + id);
+            final JLabel photoLinkLabel = new JLabel("Photolink: " + photoLink);
 
-            JTextArea ingredientsArea = new JTextArea(5, 20); // 5 rows, 20 columns
-            JTextArea recipeArea = new JTextArea(5, 20);      // 5 rows, 20 columns
+            final JTextArea ingredientsArea = new JTextArea(5, 20);
+            final JTextArea recipeArea = new JTextArea(5, 20);
 
             // Set the ingredients and recipe text (allow wrapping)
             ingredientsArea.setText(ingredients);
@@ -162,8 +162,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             recipeArea.setLineWrap(true);
 
             // Create JLabel for photo link or image
-            JLabel photoLabel = new JLabel();
-            ImageIcon photoIcon = new ImageIcon(photoLink);
+            final JLabel photoLabel = new JLabel();
+            final ImageIcon photoIcon = new ImageIcon(photoLink);
             photoLabel.setIcon(photoIcon);  // Display the image
 
             // Create a JPanel and set its layout (BoxLayout or GridLayout)
@@ -171,7 +171,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Add components to the panel
             resultPanel.add(nameLabel);
-            resultPanel.add(IDLabel);
+            resultPanel.add(idlabel);
             resultPanel.add(photoLinkLabel);
             resultPanel.add(new JScrollPane(ingredientsArea));  // Add JTextArea inside a JScrollPane
             resultPanel.add(new JScrollPane(recipeArea));      // Add JTextArea inside a JScrollPane

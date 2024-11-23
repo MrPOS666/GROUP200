@@ -9,16 +9,21 @@ import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchByNameOrIDAccessObject;
-import entity.*;
+import entity.CommonCocktailFactory;
+import entity.CommonUserFactory;
+import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.myFavourite.MyFavouriteViewModel;
+import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
@@ -50,7 +55,8 @@ import view.*;
  * This is done by adding each View and then adding related Use Cases.
  */
 // Checkstyle note: you can ignore the "Class Data Abstraction Coupling"
- //                  your team to think about ways to refactor the code to resolve these
+//                  and the "Class Fan-Out Complexity" issues for this lab; we encourage
+//                  your team to think about ways to refactor the code to resolve these
 //                  if your team decides to work with this as your starter code
 //                  for your final project this term.
 public class AppBuilder {
@@ -63,7 +69,8 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
+    private final SearchByNameOrIDAccessObject searchDataAccessObject =
+            new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -71,7 +78,8 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
-
+    private HomepageViewModel homepageViewModel;
+    private HomepageView homepageView;
     private SearchViewModel searchViewModel;
     private SearchView searchView;
 
@@ -109,6 +117,26 @@ public class AppBuilder {
         loggedInViewModel = new LoggedInViewModel();
         loggedInView = new LoggedInView(loggedInViewModel);
         cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Homepage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomepageView() {
+        homepageViewModel = new HomepageViewModel();
+        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
+        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
+        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
+        homepageView = new HomepageView(homepageViewModel,
+                viewManagerModel,
+                loginViewModel,
+                loggedInViewModel,
+                searchViewModel,
+                recommendationViewModel,
+                myFavouriteViewModel);
+        cardPanel.add(homepageView, homepageView.getViewName());
         return this;
     }
 
