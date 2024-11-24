@@ -1,15 +1,14 @@
 package interface_adapter.select;
 
-import view.MyFavouriteView;
+import interface_adapter.ViewModel;
 
-public class SelectViewModel {
-    public void addPropertyChangeListner(MyFavouriteView myFavouriteView) {
-    }
+/**
+ * The View Model for the Select View.
+ */
+public class SelectViewModel extends ViewModel<SelectState> {
 
-    public SelectState getState() {
-    }
-
-    public void setState(SelectState currentState) {
-
+    private SelectViewModel() {
+        super("MyFavourite");
+        setState(new SelectState());
     }
 }
