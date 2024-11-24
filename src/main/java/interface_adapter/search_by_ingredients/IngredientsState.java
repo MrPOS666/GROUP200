@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 public class IngredientsState {
-    private int id = 0;
+    private int id;
     private List<Integer> idList;
     private List<Map<String, String>> ingredientsList;
     private List<String> recipeList;
     private List<String> cocktailNamesList;
     private List<String> photoLinkList;
 
-    private String searchError;
+    private String ingredientsError;
     private String input;
 
     public IngredientsState() {
@@ -29,16 +29,16 @@ public class IngredientsState {
         return cocktailNamesList;
     }
 
-    public String getSearchError() {
-        return searchError;
+    public String getIngredientsError() {
+        return ingredientsError;
     }
 
     public void setCocktailNamesList(List<String> cocktailNames) {
         this.cocktailNamesList = cocktailNames;
     }
 
-    public void setSearchError(String searchError) {
-        this.searchError = searchError;
+    public void setIngredientsError(String error) {
+        this.ingredientsError = error;
     }
 
     public String getIngredientsToString(Map<String, String> ingredientsMap) {
@@ -54,7 +54,7 @@ public class IngredientsState {
      */
     public void clearState() {
         this.cocktailNamesList = null;
-        this.searchError = null;
+        this.ingredientsError = null;
     }
 
     public String getInput() {

@@ -1,22 +1,24 @@
 package interface_adapter.search_by_ingredients;
 
-import use_case.search.SearchInputBoundary;
-import use_case.search.SearchInputData;
+import use_case.search_by_ingredients.IngredientsInputBoundary;
+import use_case.search_by_ingredients.IngredientsInputData;
+
+import java.util.List;
 
 public class IngredientsController {
 
-    private SearchInputBoundary searchInteractor;
+    private IngredientsInputBoundary ingredientsInteractor;
 
-    public IngredientsController(SearchInputBoundary searchInteractor) {
-        this.searchInteractor = searchInteractor;
+    public IngredientsController(IngredientsInputBoundary ingredientsInteractor) {
+        this.ingredientsInteractor = ingredientsInteractor;
     }
 
     /**
      * Executes the search Use Case.
      * @param input the user input
      */
-    public void execute(String input) {
-        final SearchInputData inputData = new SearchInputData(input);
-        searchInteractor.execute(inputData);
+    public void execute(List<String> input) {
+        final IngredientsInputData inputData = new IngredientsInputData(input);
+        ingredientsInteractor.execute(inputData);
     }
 }
