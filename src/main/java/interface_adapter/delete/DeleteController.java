@@ -18,9 +18,10 @@ public class DeleteController {
     /**
      * Executes the Delete Use Case.
      * @param selectCocktail the selected cocktail ID.
+     * @param username the username.
      */
-    public void execute(List<Integer> selectCocktail) {
-        final DeleteInputData deleteInputData = new DeleteInputData(selectCocktail);
+    public void execute(List<Integer> selectCocktail, String username) {
+        final DeleteInputData deleteInputData = new DeleteInputData(selectCocktail, username);
 
         deleteInteractor.execute(deleteInputData);
     }
