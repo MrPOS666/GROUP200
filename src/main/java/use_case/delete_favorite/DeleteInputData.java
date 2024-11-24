@@ -8,12 +8,18 @@ import java.util.List;
 public class DeleteInputData {
 
     private final List<Integer> deleteCocktailNames;
+    private final String userName;
 
-    public DeleteInputData(List<Integer> deleteCocktailNames) {
+    public DeleteInputData(List<Integer> deleteCocktailNames, String userName) {
         this.deleteCocktailNames = deleteCocktailNames;
+        this.userName = userName;
     }
 
-    public List<Integer> getDeleteCocktailNames() {
+    public List<Integer> getDeleteCocktailId() {
         return deleteCocktailNames;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
