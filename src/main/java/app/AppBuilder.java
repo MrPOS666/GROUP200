@@ -13,6 +13,8 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.delete.DeleteController;
+import interface_adapter.delete.DeletePresenter;
 import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -22,12 +24,17 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
 import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.select.SelectViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.delete_favorite.DeleteDataAccessInterface;
+import use_case.delete_favorite.DeleteInputBoundary;
+import use_case.delete_favorite.DeleteInteractor;
+import use_case.delete_favorite.DeleteOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -70,6 +77,8 @@ public class AppBuilder {
     private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
     private SearchViewModel searchViewModel;
+    private MyFavouriteView myFavouriteView;
+    private SelectViewModel selectViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -188,6 +197,17 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        return this;
+    }
+
+    public AppBuilder addDeleteUseCase() {
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(viewManagerModel,
+                searchViewModel);
+        final DeleteInputBoundary deleteInteractor =
+                new DeleteInteractor(DeleteDataAccessInterface, deleteOutputBoundary);
+
+        final DeleteController deleteController = new DeleteController(deleteInteractor);
+        myFavouriteView.setDeleteController(deleteController);
         return this;
     }
 

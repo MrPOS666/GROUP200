@@ -3,6 +3,9 @@ package data_access;
 import entity.User;
 import use_case.delete_favorite.DeleteDataAccessInterface;
 
+/**
+ * DAO for delete.
+ */
 public class DeleteAccessObject implements DeleteDataAccessInterface {
     /**
      * Returns the user by its name.
