@@ -5,6 +5,7 @@ import interface_adapter.search.SearchState;
 import interface_adapter.select.SelectState;
 import interface_adapter.select.SelectViewModel;
 import use_case.delete_favorite.DeleteOutputBoundary;
+import use_case.delete_favorite.DeleteOutputData;
 import use_case.search.SearchOutputData;
 
 import javax.swing.text.View;
@@ -22,9 +23,13 @@ public class DeletePresenter implements DeleteOutputBoundary {
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepares the success view for the Delete Use Case.
+     *
+     * @param deleteOutputData the output data
+     */
     @Override
-    public void prepareSuccessView(SearchOutputData response) {
-        final SelectState selectState = selectViewModel.getState();
+    public void prepareSuccessView(DeleteOutputData deleteOutputData) {
 
     }
 
