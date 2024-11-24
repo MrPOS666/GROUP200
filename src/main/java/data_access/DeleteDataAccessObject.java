@@ -6,7 +6,7 @@ import use_case.delete_favorite.DeleteDataAccessInterface;
 /**
  * DAO for delete.
  */
-public class DeleteAccessObject implements DeleteDataAccessInterface {
+public class DeleteDataAccessObject implements DeleteDataAccessInterface {
     /**
      * Returns the user by its name.
      *
