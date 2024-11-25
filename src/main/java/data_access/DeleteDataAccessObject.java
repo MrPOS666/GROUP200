@@ -3,6 +3,8 @@ package data_access;
 import entity.User;
 import use_case.delete_favorite.DeleteDataAccessInterface;
 
+import java.util.List;
+
 /**
  * DAO for delete.
  */
@@ -24,7 +26,7 @@ public class DeleteDataAccessObject implements DeleteDataAccessInterface {
      * @param user user
      */
     @Override
-    public void updateFavorite(User user) {
+    public void updateFavorite(User user, List<Integer> deleteIds) {
 
     }
 }
