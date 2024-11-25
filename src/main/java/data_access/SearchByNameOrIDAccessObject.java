@@ -1,10 +1,7 @@
 package data_access;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,11 +12,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import use_case.search.SearchDataAccessInterface;
+import use_case.search_by_ingredients.IngredientsDataAccessInterface;
 
 /**
  * DAO of SearchByNameOrID.
  */
-public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
+public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, IngredientsDataAccessInterface {
 
     public static final int MAX_INGREDIENT = 15;
     private static final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
@@ -59,8 +57,29 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
     }
 
     @Override
+    public boolean existsByIngredients(List<String> ingredients) {
+        return getByIngredients(ingredients) != null;
+    }
+
+    @Override
     public String getCurrentCocktailName() {
         return currentCocktailName;
+    }
+
+    @Override
+    public List<Cocktail> getByIngredients(List<String> ingredients) {
+        List<Cocktail> cocktails = new ArrayList<Cocktail>();
+        for (String i: ingredients) {
+            final String jsonResponse = searchByIngredient(i);
+            List<Cocktail> result = createCocktailsFromJson(jsonResponse);
+            final Set<Cocktail> set = new HashSet<Cocktail>();
+
+            set.addAll(cocktails);
+            set.addAll(result);
+
+            cocktails = new ArrayList<>(set);
+        }
+        return cocktails;
     }
 
     @Override
@@ -117,6 +136,11 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface {
         }
 
         return cocktails;
+    }
+
+    private String searchByIngredient(String ingredient) {
+        final String url = BASE_URL + "/filter.php?i=" + ingredient;
+        return makeApiCall(url);
     }
 
     private String searchByName(String name) {
