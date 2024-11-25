@@ -3,6 +3,7 @@ package data_access;
 import java.io.IOException;
 import java.util.*;
 
+import entity.CommonUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 
 /**
@@ -22,7 +24,7 @@ import use_case.detailPage.DetailPageDataAccessException;
  * <p>This class demonstrates how your group can use the password-protected user
  * endpoints of the API to store persistent data about users and their cocktails.</p>
  */
-public class DBUserDataAccessObject2 {
+public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
 
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
@@ -32,6 +34,12 @@ public class DBUserDataAccessObject2 {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String MESSAGE = "message";
+
+    private final OkHttpClient client;
+
+    public DBUserDataAccessObject2(OkHttpClient client) {
+        this.client = client;
+    }
 
     /**
      * Saves a list of cocktails for a user in the database.
@@ -134,6 +142,82 @@ public class DBUserDataAccessObject2 {
         catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Returns the user by its name.
+     *
+     * @param username the username
+     * @return user
+     */
+    @Override
+    public User getUserByUsername(String username) {
+        final Request request = new Request.Builder()
+                .url(String.format(API_BASE_URL + "/user?username=%s", username))
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+
+        try (Response response = this.client.newCall(request).execute()) {
+            if (response.body() == null) {
+                throw new DetailPageDataAccessException("Response body is null.");
+            }
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+
+                return new CommonUser(
+                        userJSONObject.getString(USERNAME),
+                        userJSONObject.getString(PASSWORD)
+                );
+            }
+            else {
+                throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
+            }
+        }
+        catch (IOException | JSONException ex) {
+            throw new RuntimeException("Error fetching user data: " + ex.getMessage(), ex);
+        }
+    }
+
+    /**
+     * Updates the user favorite cocktail list.
+     *
+     * @param user      user
+     * @param deleteIds the list of cocktail IDs to be removed from the user's favorites.
+     */
+    @Override
+    public void updateFavorite(User user, List<Integer> deleteIds) {
+        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+
+        // Create JSON request body
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
+        requestBody.put(COCKTAILS, new JSONArray(deleteIds)); // Cocktails to remove
+
+        // Create HTTP DELETE request
+        final Request request = new Request.Builder()
+                .url(API_BASE_URL + "/modifyUserInfo")
+                .method("DELETE", RequestBody.create(requestBody.toString(), mediaType))
+                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.body() == null) {
+                throw new DetailPageDataAccessException("Response body is null.");
+            }
+
+            final JSONObject responseBody = new JSONObject(response.body().string());
+
+            if (responseBody.getInt(STATUS_CODE_LABEL) != SUCCESS_CODE) {
+                throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
+            }
+        } catch (IOException | JSONException ex) {
+            throw new RuntimeException("Error updating user favorites: " + ex.getMessage(), ex);
+        }
+    }
     }
 }
 
