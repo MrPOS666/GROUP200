@@ -38,7 +38,7 @@ public class DeletePresenter implements DeleteOutputBoundary {
         // On failure, set the error message in the search state
         final SelectState selectState = selectViewModel.getState();
         selectState.setSelectError(errorMessage);
-        selectState.firePropertyChanged();
+        selectViewModel.firePropertyChanged();
     }
 
 }
