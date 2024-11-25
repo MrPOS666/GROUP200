@@ -48,9 +48,9 @@ public class DeleteInteractor implements DeleteInputBoundary {
         if (deleted) {
             user.getMyFavourite().clear();
             user.getMyFavourite().addAll(updateFavourites);
-            deleteDataAccessObject.updateFavorite(user);
-
             final DeleteOutputData outputData = createOutputData(updateFavourites);
+            deleteDataAccessObject.updateFavorite(user, outputData.getIdDrink());
+
             deletePresenter.prepareSuccessView(outputData);
         }
         else {
