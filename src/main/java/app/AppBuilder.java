@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DeleteDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -200,11 +201,13 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Delete Use Case to the application.
+     * @return this builder.
+     */
     public AppBuilder addDeleteUseCase() {
-        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(viewManagerModel,
-                searchViewModel);
-        final DeleteInputBoundary deleteInteractor =
-                new DeleteInteractor(DeleteDataAccessInterface, deleteOutputBoundary);
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(selectViewModel, viewManagerModel);
+        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteOutputBoundary, DeleteDataAccessObject);
 
         final DeleteController deleteController = new DeleteController(deleteInteractor);
         myFavouriteView.setDeleteController(deleteController);
