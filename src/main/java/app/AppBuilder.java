@@ -3,9 +3,7 @@ package app;
 import java.awt.CardLayout;
 import java.util.Map;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchByNameOrIDAccessObject;
@@ -199,6 +197,7 @@ public class AppBuilder {
         searchViewModel = new SearchViewModel("search");
         searchView = new SearchView(searchViewModel);
         cardPanel.add(searchView, searchView.getViewName());
+
         return this;
     }
 
@@ -218,13 +217,14 @@ public class AppBuilder {
     }
 
     /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     * Creates the JFrame for the application and initially sets the SearchView to be displayed.
      * @return the application
      */
     public JFrame build_search() {
-        final JFrame application = new JFrame("Search Example");
-        application.add(cardPanel);
-        application.setContentPane(cardPanel);
+        final JFrame application = new JFrame("Search");
+        final JScrollPane scrollPane = new JScrollPane(cardPanel);
+        application.add(scrollPane);
+        application.setContentPane(scrollPane);
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         viewManagerModel.setState(searchView.getViewName());
         viewManagerModel.firePropertyChanged();
