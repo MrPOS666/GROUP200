@@ -26,41 +26,22 @@ public class Main {
      */
 
     public static void main(String[] args) {
-        final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
-        final SearchViewModel searchViewModel = new SearchViewModel("search");
-        final SearchView searchView = new SearchView(searchViewModel);
-        final ViewManagerModel viewManagerModel = new ViewManagerModel();
-        final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel,
-                viewManagerModel);
-        final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
-                searchOutputBoundary);
-
-        final SearchController searchController = new SearchController(searchInteractor);
-        searchView.setSearchController(searchController);
-        JPanel panel = new JPanel();
-        panel.add(searchView, searchView.getViewName());
-        JScrollPane scrollPane = new JScrollPane(panel);
-
-        Frame frame = new JFrame("Search");
-        ((JFrame) frame).setContentPane(scrollPane);
-        ((JFrame) frame).setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-
         final AppBuilder appBuilder = new AppBuilder();
-
-        //final JFrame application1 = appBuilder.addSignupView().addSignupUseCase().build();
 
         final JFrame application = appBuilder
                 .addLoginView()
                 .addSignupView()
                 .addLoggedInView()
+                .addSearchView()
+                .addHomepageView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
+                .addSearchUseCase()
                 .build();
-        //application.pack();
-        //application.setVisible(true);
+
+        application.pack();
+        application.setVisible(true);
     }
 }

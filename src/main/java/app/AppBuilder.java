@@ -12,6 +12,9 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.homepage.HomepageViewModel;
+import interface_adapter.myFavourite.MyFavouriteViewModel;
+import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -73,6 +76,9 @@ public class AppBuilder {
     private SearchViewModel searchViewModel;
     private SearchView searchView;
 
+    private HomepageViewModel homepageViewModel;
+    private HomepageView homepageView;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
     }
@@ -131,7 +137,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+                homepageViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -181,7 +187,8 @@ public class AppBuilder {
         final JFrame application = new JFrame("Login Example");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        application.add(cardPanel);
+        final JScrollPane scrollPane = new JScrollPane(cardPanel);
+        application.setContentPane(scrollPane);
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
@@ -211,8 +218,28 @@ public class AppBuilder {
         final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
                 searchOutputBoundary);
 
-        final SearchController controller = new SearchController(searchInteractor);
-        searchView.setSearchController(controller);
+        final SearchController searchController = new SearchController(searchInteractor);
+        searchView.setSearchController(searchController);
+        return this;
+    }
+
+    /**
+     * Adds the Homepage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomepageView() {
+        homepageViewModel = new HomepageViewModel();
+        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
+        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
+        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
+        homepageView = new HomepageView(homepageViewModel,
+                viewManagerModel,
+                loginViewModel,
+                loggedInViewModel,
+                searchViewModel,
+                recommendationViewModel,
+                myFavouriteViewModel);
+        cardPanel.add(homepageView, homepageView.getViewName());
         return this;
     }
 
