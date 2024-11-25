@@ -7,7 +7,7 @@ import interface_adapter.ViewModel;
  */
 public class SelectViewModel extends ViewModel<SelectState> {
 
-    private SelectViewModel() {
+    public SelectViewModel(String viewName) {
         super("MyFavourite");
         setState(new SelectState());
     }
