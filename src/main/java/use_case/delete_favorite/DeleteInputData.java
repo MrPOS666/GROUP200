@@ -7,16 +7,16 @@ import java.util.List;
  */
 public class DeleteInputData {
 
-    private final List<Integer> deleteCocktailNames;
+    private final List<Integer> deleteCocktailIds;
     private final String userName;
 
     public DeleteInputData(List<Integer> deleteCocktailNames, String userName) {
-        this.deleteCocktailNames = deleteCocktailNames;
+        this.deleteCocktailIds = deleteCocktailNames;
         this.userName = userName;
     }
 
     public List<Integer> getDeleteCocktailId() {
-        return deleteCocktailNames;
+        return deleteCocktailIds;
     }
 
     public String getUserName() {
