@@ -1,16 +1,13 @@
 package view;
 
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -18,19 +15,19 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 
-/**
- * View for Search use case.
- */
+import java.util.List;
+import java.util.Map;
+
+
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
 
-    private final JTextField cocktailInputField = new JTextField(15);
-    private final JTextField idInputField = new JTextField(15);
-    private final JLabel searchErrorField = new JLabel();
+    private final JTextField inputField = new JTextField(15);
+    private final JPanel resultPanel = new JPanel();
+    private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
-    private final JButton cancel;
     private SearchController searchController;
 
     public SearchView(SearchViewModel searchViewModel) {
@@ -40,29 +37,18 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         final JLabel title = new JLabel("Search Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final LabelTextPanel cocktailName = new LabelTextPanel(
-                new JLabel("Search By Cocktail Name: "), cocktailInputField);
-        final LabelTextPanel cocktailID = new LabelTextPanel(
-                new JLabel("Search By ID: "), idInputField);
+        final LabelTextPanel input = new LabelTextPanel(
+                new JLabel("Search: "), inputField);
 
         final JPanel buttons = new JPanel();
         search = new JButton("search");
         buttons.add(search);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
 
-        cocktailInputField.getDocument().addDocumentListener(new DocumentListener() {
+        inputField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {
                 final SearchState currentState = searchViewModel.getState();
-                if (cocktailInputField.getText() != null) {
-                    currentState.setSearchByName(true);
-                    currentState.setCocktailName(cocktailInputField.getText());
-                }
-                if (idInputField.getText() != null) {
-                    currentState.setSearchByID(true);
-                    currentState.setId(idInputField.getText());
-                }
+                currentState.setInput(inputField.getText());
                 searchViewModel.setState(currentState);
             }
 
@@ -87,36 +73,45 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(search)) {
                             final SearchState currentState = searchViewModel.getState();
-
                             searchController.execute(
-                                    currentState.getCocktailName(),
-                                    currentState.isSearchByName(),
-                                    currentState.isSearchByID(),
                                     currentState.getInput()
                             );
                         }
                     }
                 }
         );
-        cancel.addActionListener(this);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(title);
-        this.add(cocktailName);
-        this.add(cocktailID);
-        this.add(searchErrorField);
+        this.add(input);
         this.add(buttons);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        resultPanel.removeAll();
+        this.remove(resultPanel);
+        searchOutputField.removeAll();
+        this.remove(searchOutputField);
         final SearchState state = (SearchState) evt.getNewValue();
         setFields(state);
-        searchErrorField.setText(state.getSearchError());
+        if (state.getSearchError() != null) {
+            searchOutputField.setText(state.getSearchError());
+            this.add(searchOutputField);
+            revalidate();
+            repaint();
+            state.setSearchError(null);
+        }
+        else {
+            searchresults(state);
+            this.add(resultPanel);
+            revalidate();
+            repaint();
+        }
     }
 
     private void setFields(SearchState state) {
-        cocktailInputField.setText(state.getCocktailName());
+        inputField.setText(state.getInput());
     }
 
     @Override
@@ -132,4 +127,67 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.searchController = controller;
     }
 
+    public void searchresults(SearchState state) {
+
+        final List<String> nameList = state.getCocktailNamesList();
+        final List<Map<String, String>> ingredientsList = state.getIngredientsList();
+        final List<Integer> ID = state.getIdList();
+        final List<String> recipeList = state.getRecipeList();
+        final List<String> photoLinkList = state.getPhotoLinkList();
+
+        for (int i = 0; i < nameList.size(); i++) {
+            String name = nameList.get(i);
+            int id = ID.get(i);
+            String recipe = recipeList.get(i);
+            String photoLink = photoLinkList.get(i);
+            String ingredients = state.getIngredientsToString(ingredientsList.get(i));
+
+            // Create a new JPanel for each cocktail
+            JPanel cocktailPanel = new JPanel();
+            cocktailPanel.setLayout(new BoxLayout(cocktailPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
+            cocktailPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding to the panel
+
+            // Set the background color for the cocktail panel to yellow
+            cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
+
+            // Create labels for cocktail details
+            JLabel nameLabel = new JLabel(name);
+            JLabel IDLabel = new JLabel("ID: " + id);
+            JLabel photoLinkLabel = new JLabel(photoLink);
+
+            // Set color for labels
+            nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
+            IDLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
+            photoLinkLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
+
+            // Create JLabel for photo link or image
+            JLabel photoLabel = new JLabel();
+            ImageIcon photoIcon = new ImageIcon(photoLink);
+            photoLabel.setIcon(photoIcon);  // Display the image
+
+            // Optionally, set a background color for the photo label (for a border around the photo)
+            photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
+            photoLabel.setOpaque(true); // Make sure background color is visible
+
+            // Add components to the cocktail panel
+            cocktailPanel.add(nameLabel);
+            cocktailPanel.add(IDLabel);
+            cocktailPanel.add(photoLinkLabel);
+            cocktailPanel.add(photoLabel);
+
+            // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
+            cocktailPanel.setPreferredSize(new Dimension(200, 200));
+
+            // Add the cocktail panel to the main result panel
+            resultPanel.add(cocktailPanel);
+
+            // Add space between each cocktail panel
+            resultPanel.add(Box.createVerticalStrut(10)); // Add space between cocktails
+        }
+
+        // After all panels are added, update the layout to reflect changes
+        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+        resultPanel.revalidate();
+        resultPanel.repaint();
+    }
 }

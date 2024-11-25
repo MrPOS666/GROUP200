@@ -1,20 +1,20 @@
-package interface_adapter.search;
-import java.util.List;
+package interface_adapter.search_by_ingredients;
 
+import java.util.List;
 import java.util.Map;
 
-public class SearchState {
-    private int id = 0;
+public class IngredientsState {
+    private int id;
     private List<Integer> idList;
     private List<Map<String, String>> ingredientsList;
     private List<String> recipeList;
     private List<String> cocktailNamesList;
     private List<String> photoLinkList;
 
-    private String searchError;
+    private String ingredientsError;
     private String input;
 
-    public SearchState() {
+    public IngredientsState() {
     }
 
     public int getId() {
@@ -29,16 +29,16 @@ public class SearchState {
         return cocktailNamesList;
     }
 
-    public String getSearchError() {
-        return searchError;
+    public String getIngredientsError() {
+        return ingredientsError;
     }
 
     public void setCocktailNamesList(List<String> cocktailNames) {
         this.cocktailNamesList = cocktailNames;
     }
 
-    public void setSearchError(String searchError) {
-        this.searchError = searchError;
+    public void setIngredientsError(String error) {
+        this.ingredientsError = error;
     }
 
     public String getIngredientsToString(Map<String, String> ingredientsMap) {
@@ -54,7 +54,7 @@ public class SearchState {
      */
     public void clearState() {
         this.cocktailNamesList = null;
-        this.searchError = null;
+        this.ingredientsError = null;
     }
 
     public String getInput() {
