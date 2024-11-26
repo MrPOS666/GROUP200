@@ -121,7 +121,8 @@ public class DBUserDataAccessObject2 {
                             cocktailJson.getString("strDrink"),
                             cocktailJson.getString("strInstructions"),
                             cocktailJson.getString("photoUrl"),
-                            ingredients
+                            ingredients,
+                            ImageDataAccessObject.fetchImage(cocktailJson.getString("photoUrl"))
                     );
                     cocktails.add(cocktail);
                 }
