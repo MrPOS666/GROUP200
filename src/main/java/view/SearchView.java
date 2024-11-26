@@ -14,6 +14,9 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search_by_ingredients.IngredientsController;
+import interface_adapter.search_by_ingredients.IngredientsState;
+import interface_adapter.search_by_ingredients.IngredientsViewModel;
 
 import java.util.List;
 import java.util.Map;
@@ -22,17 +25,22 @@ import java.util.Map;
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
+    private final IngredientsViewModel ingredientsViewModel;
 
     private final JTextField inputField = new JTextField(15);
     private final JPanel resultPanel = new JPanel();
     private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
+    private final JButton enter;
     private SearchController searchController;
+    private IngredientsController ingredientsController;
 
-    public SearchView(SearchViewModel searchViewModel) {
+    public SearchView(SearchViewModel searchViewModel, IngredientsViewModel ingredientsViewModel) {
         this.searchViewModel = searchViewModel;
+        this.ingredientsViewModel = ingredientsViewModel;
         this.searchViewModel.addPropertyChangeListener(this);
+        this.ingredientsViewModel.addPropertyChangeListener(this);
 
         final JLabel title = new JLabel("Search Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -42,7 +50,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
         final JPanel buttons = new JPanel();
         search = new JButton("search");
+        enter = new JButton("enter ingredients");
         buttons.add(search);
+        buttons.add(enter);
 
         inputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -74,6 +84,12 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                         if (evt.getSource().equals(search)) {
                             final SearchState currentState = searchViewModel.getState();
                             searchController.execute(
+                                    currentState.getInput()
+                            );
+                        }
+                        if (evt.getSource().equals(enter)) {
+                            final IngredientsState currentState = ingredientsViewModel.getState();
+                            ingredientsController.execute(
                                     currentState.getInput()
                             );
                         }
@@ -109,6 +125,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             repaint();
         }
     }
+
 
     private void setFields(SearchState state) {
         inputField.setText(state.getInput());
