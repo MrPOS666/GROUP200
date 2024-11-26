@@ -214,7 +214,7 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Signup Use Case to the application.
+     * Adds the Search Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSearchUseCase() {
@@ -222,14 +222,23 @@ public class AppBuilder {
                 viewManagerModel);
         final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
                 searchOutputBoundary);
+
+        final SearchController searchController = new SearchController(searchInteractor);
+        searchView.setSearchController(searchController);
+        return this;
+    }
+
+    /**
+     * Adds the Ingredients Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addIngredientsUseCase() {
         final IngredientsOutputBoundary ingredientsOutputBoundary = new IngredientsPresenter(searchViewModel,
                 viewManagerModel);
         final IngredientsInputBoundary ingredientsInteractor = new IngredientsInteractor(searchDataAccessObject,
                 ingredientsOutputBoundary);
 
-        final SearchController searchController = new SearchController(searchInteractor);
         final IngredientsController ingredientsController = new IngredientsController(ingredientsInteractor);
-        searchView.setSearchController(searchController);
         searchView.setIngredientsController(ingredientsController);
         return this;
     }

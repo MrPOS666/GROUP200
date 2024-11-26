@@ -39,6 +39,7 @@ public class Main {
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
                 .addSearchUseCase()
+                .addIngredientsUseCase()
                 .build();
 
         application.pack();
