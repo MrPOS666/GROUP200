@@ -1,16 +1,21 @@
-package interface_adapter.select;
+package interface_adapter.myFavourite;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * State for select.
  */
-public class SelectState {
+public class MyFavouriteState {
 
     private String username; // The username of the current user
     private List<Integer> selectedCocktails; // List of selected cocktail IDs
-    private List<Integer> cocktailList; // List of all available cocktail IDs
     private String selectError; // Error message, if any
+    private List<Integer> idList;
+    private List<Map<String, String>> ingredientsList;
+    private List<String> instructionList;
+    private List<String> cocktailNamesList;
+    private List<String> photoLinkList;
 
     /**
      * Gets the username of the current user.
@@ -49,20 +54,55 @@ public class SelectState {
     }
 
     /**
-     * Gets the list of all available cocktail IDs.
-     *
-     * @return the list of all cocktail IDs.
-     */
-    public List<Integer> getCocktailList() {
-        return cocktailList;
-    }
-
-    /**
      * Gets the error message for selection.
      *
      * @param errorMessage the error message.
      */
     public void setSelectError(String errorMessage) {
         this.selectError = errorMessage;
+    }
+
+    public void setCocktailNamesList(List<String> names) {
+        this.cocktailNamesList = names;
+    }
+
+    public void setIdList(List<Integer> ids) {
+        this.idList = ids;
+    }
+
+    public void setIngredientsList(List<Map<String, String>> ingredients) {
+        this.ingredientsList = ingredients;
+    }
+
+    public void setInstructionList(List<String> instructions) {
+        this.instructionList = instructions;
+    }
+
+    public void setPhotoLinkList(List<String> photoLinks) {
+        this.photoLinkList = photoLinks;
+    }
+
+    public String getSelectError() {
+        return selectError;
+    }
+
+    public List<String> getCocktailNamesList() {
+        return cocktailNamesList;
+    }
+
+    public List<Integer> getIdList() {
+        return idList;
+    }
+
+    public List<Map<String, String>> getIngredientsList() {
+        return ingredientsList;
+    }
+
+    public List<String> getInstructionList() {
+        return instructionList;
+    }
+
+    public List<String> getPhotoLinkList() {
+        return photoLinkList;
     }
 }
