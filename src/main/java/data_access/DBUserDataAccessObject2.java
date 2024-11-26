@@ -3,14 +3,11 @@ package data_access;
 import java.io.IOException;
 import java.util.*;
 
-import entity.CommonUser;
+import entity.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import entity.Cocktail;
-import entity.CommonCocktail;
-import entity.User;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,6 +45,7 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
      * @param cocktails The list of cocktails to be saved.
      * @throws DetailPageDataAccessException If there is a problem accessing the database.
      */
+    @Override
     public void saveCocktails(User user, List<Cocktail> cocktails) throws DetailPageDataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
@@ -96,10 +94,12 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
      * @param user The user object containing username and password.
      * @return A list of cocktails associated with the user.
      * @throws DetailPageDataAccessException If there is a problem accessing the database.
-     * @throws RuntimeException If there is a problem while running.
+     * @throws RuntimeException              If there is a problem while running.
      */
+    @Override
     public List<Cocktail> loadCocktails(User user) throws DetailPageDataAccessException {
         final String username = user.getName();
+
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
                 .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
@@ -145,62 +145,14 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
     }
 
     /**
-     * Returns the user by its name.
-     *
-     * @param username the username
-     * @return user
+     * Fetch User from the name.
+     * @param username name of user
+     * @return user User.
+     * @throws DetailPageDataAccessException the exception.
      */
-    @Override
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String username) throws DetailPageDataAccessException {
         final Request request = new Request.Builder()
-                .url(String.format(API_BASE_URL + "/user?username=%s", username))
-                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
-                .build();
-
-        try (Response response = this.client.newCall(request).execute()) {
-            if (response.body() == null) {
-                throw new DetailPageDataAccessException("Response body is null.");
-            }
-
-            final JSONObject responseBody = new JSONObject(response.body().string());
-
-            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("user");
-
-                return new CommonUser(
-                        userJSONObject.getString(USERNAME),
-                        userJSONObject.getString(PASSWORD)
-                );
-            }
-            else {
-                throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
-            }
-        }
-        catch (IOException | JSONException ex) {
-            throw new RuntimeException("Error fetching user data: " + ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Updates the user favorite cocktail list.
-     *
-     * @param user      user
-     * @param deleteIds the list of cocktail IDs to be removed from the user's favorites.
-     */
-    @Override
-    public void updateFavorite(User user, List<Integer> deleteIds) {
-        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
-
-        // Create JSON request body
-        final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
-        requestBody.put(PASSWORD, user.getPassword());
-        requestBody.put(COCKTAILS, new JSONArray(deleteIds)); // Cocktails to remove
-
-        // Create HTTP DELETE request
-        final Request request = new Request.Builder()
-                .url(API_BASE_URL + "/modifyUserInfo")
-                .method("DELETE", RequestBody.create(requestBody.toString(), mediaType))
+                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
                 .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
                 .build();
 
@@ -211,13 +163,24 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
 
             final JSONObject responseBody = new JSONObject(response.body().string());
 
-            if (responseBody.getInt(STATUS_CODE_LABEL) != SUCCESS_CODE) {
+            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
+
+                // Create a User object using the factory
+                final UserFactory userFactory = new CommonUserFactory();
+                return userFactory.create(
+                        userJSONObject.getString("username"),
+                        userJSONObject.getString("password")
+                );
+            }
+            else {
                 throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
             }
-        } catch (IOException | JSONException ex) {
-            throw new RuntimeException("Error updating user favorites: " + ex.getMessage(), ex);
+        }
+        catch (IOException | JSONException ex) {
+            throw new DetailPageDataAccessException("Error fetching user: " + ex.getMessage());
         }
     }
-    }
+
 }
 
