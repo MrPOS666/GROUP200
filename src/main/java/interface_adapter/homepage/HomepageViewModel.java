@@ -11,5 +11,4 @@ public class HomepageViewModel extends ViewModel<HomepageState> {
         super("homepage");
         setState(new HomepageState());
     }
-
 }

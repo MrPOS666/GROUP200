@@ -26,7 +26,6 @@ public interface SearchDataAccessInterface {
 
     /**
      * Returns the cocktail with the given name.
-     *
      * @param cocktailName the name of the cocktail to look up
      * @return the cocktail with the given name
      */

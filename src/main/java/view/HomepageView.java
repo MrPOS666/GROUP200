@@ -20,7 +20,6 @@ import interface_adapter.logout.LogoutController;
  * The view for when the user is logged into the program.
  */
 public class HomepageView extends JPanel implements ActionListener {
-
     private final String viewName = "homepage";
 
     private final HomepageViewModel homepageViewModel;

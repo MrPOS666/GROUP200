@@ -1,14 +1,10 @@
-package interface_adapter.search;
+package interface_adapter.search_by_ingredients;
 
-import interface_adapter.ViewManagerModel;
-// import interface_adapter.back.ResultState;
-// import interface_adapter.back.ResultViewModel;
-import use_case.search.SearchOutputBoundary;
-import use_case.search.SearchOutputData;
-import view.SearchView;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
+import use_case.search_by_ingredients.IngredientsOutputBoundary;
+import use_case.search_by_ingredients.IngredientsOutputData;
 
 import java.util.List;
 import java.util.Map;
@@ -16,18 +12,18 @@ import java.util.Map;
 /**
  * The Presenter for the Search Use Case.
  */
-public class SearchPresenter implements SearchOutputBoundary {
+public class IngredientsPresenter implements IngredientsOutputBoundary {
 
     private final SearchViewModel searchViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public SearchPresenter(SearchViewModel searchViewModel, ViewManagerModel viewManagerModel) {
+    public IngredientsPresenter(SearchViewModel searchViewModel, ViewManagerModel viewManagerModel) {
         this.searchViewModel = searchViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
     @Override
-    public void prepareSuccessView(SearchOutputData response) {
+    public void prepareSuccessView(IngredientsOutputData response) {
         // On success, switch to the searched cocktail in view.
         // update the search state
         final SearchState searchState = searchViewModel.getState();

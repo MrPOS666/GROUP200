@@ -1,4 +1,4 @@
-package use_case.search;
+package use_case.search_by_ingredients;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Output Data for the Search Use Case.
  */
-public class SearchOutputData {
+public class IngredientsOutputData {
 
     private final boolean useCaseFailed;
 
@@ -18,7 +18,7 @@ public class SearchOutputData {
     private final List<Map<String, String>> ingredients;
 
     // Constructor
-    public SearchOutputData(boolean useCaseFailed, List<Integer> idDrink, List<String> strDrink, List<String> strInstructions, List<String> photoUrl, List<Map<String, String>> ingredients) {
+    public IngredientsOutputData(boolean useCaseFailed, List<Integer> idDrink, List<String> strDrink, List<String> strInstructions, List<String> photoUrl, List<Map<String, String>> ingredients) {
         this.useCaseFailed = useCaseFailed;
         this.idDrink = idDrink;
         this.strDrink = strDrink;

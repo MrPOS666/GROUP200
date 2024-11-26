@@ -1,7 +1,9 @@
 package use_case.search;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import entity.Cocktail;
 
@@ -29,14 +31,21 @@ public class SearchInteractor implements SearchInputBoundary {
         if (searchInputData.isSearchByName()) {
             if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
                 final List<Cocktail> cocktails = searchDataAccessObject.getByName(searchInputData.getInput());
+
+                final List<Integer> ids = new ArrayList<>();
+                final List<String> names = new ArrayList<>();
+                final List<String> instructions = new ArrayList<>();
+                final List<String> photoLinks = new ArrayList<>();
+                final List<Map<String, String>> ingredients = new ArrayList<>();
+
                 for (Cocktail cocktail : cocktails) {
-                    searchPresenter.prepareSuccessView(new SearchOutputData(false,
-                            cocktail.getIdDrink(),
-                            cocktail.getCocktailName(),
-                            cocktail.getInstructions(),
-                            cocktail.getPhotoLink(),
-                            cocktail.getIngredients()));
+                    ids.add(cocktail.getIdDrink());
+                    names.add(cocktail.getCocktailName());
+                    instructions.add(cocktail.getInstructions());
+                    photoLinks.add(cocktail.getPhotoLink());
+                    ingredients.add(cocktail.getIngredients());
                 }
+                searchPresenter.prepareSuccessView(new SearchOutputData(false, ids, names, instructions, photoLinks, ingredients));
             }
             else {
                 searchPresenter.prepareFailView("Cocktail with name '" + searchInputData.getInput() + "' not found.");
@@ -46,12 +55,17 @@ public class SearchInteractor implements SearchInputBoundary {
             final int cocktailId = Integer.parseInt(searchInputData.getInput());
             if (searchDataAccessObject.existsById(cocktailId)) {
                 final Cocktail cocktail = searchDataAccessObject.getById(cocktailId);
-                searchPresenter.prepareSuccessView(new SearchOutputData(false,
-                        cocktail.getIdDrink(),
-                        cocktail.getCocktailName(),
-                        cocktail.getInstructions(),
-                        cocktail.getPhotoLink(),
-                        cocktail.getIngredients()));
+                final List<Integer> ids = new ArrayList<>();
+                final List<String> names = new ArrayList<>();
+                final List<String> instructions = new ArrayList<>();
+                final List<String> photoLinks = new ArrayList<>();
+                final List<Map<String, String>> ingredients = new ArrayList<>();
+                ids.add(cocktail.getIdDrink());
+                names.add(cocktail.getCocktailName());
+                instructions.add(cocktail.getInstructions());
+                photoLinks.add(cocktail.getPhotoLink());
+                ingredients.add(cocktail.getIngredients());
+                searchPresenter.prepareSuccessView(new SearchOutputData(false, ids, names, instructions, photoLinks, ingredients));
             }
             else {
                 searchPresenter.prepareFailView("Cocktail with ID '" + searchInputData.getInput() + "' not found.");
@@ -62,5 +76,3 @@ public class SearchInteractor implements SearchInputBoundary {
         }
     }
 }
-
-

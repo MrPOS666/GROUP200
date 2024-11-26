@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 class SearchByNameOrIDAccessObjectTest {
@@ -44,9 +45,24 @@ class SearchByNameOrIDAccessObjectTest {
         }
     }
 
+    @Test
+    void testPrintCocktailByIngredients() {
+        // Assuming ID 11007 corresponds to a valid cocktail (e.g., Margarita)
+        List<String> cocktailIngredients = new ArrayList<>();
+        cocktailIngredients.add("Salt");
+        cocktailIngredients.add("Lemon");
+        List<Cocktail> cocktails = searchDataAccessObject.getByIngredients(cocktailIngredients);
+
+        System.out.println("Cocktails found by ingredients: ");
+        for (Cocktail cocktail : cocktails) {
+            printCocktailDetails(cocktail);
+        }
+    }
+
     // Helper method to print details of a Cocktail object
     private void printCocktailDetails(Cocktail cocktail) {
         System.out.println("Cocktail Name: " + cocktail.getCocktailName());
+        System.out.println("ID: " + cocktail.getIdDrink());
         System.out.println("Recipe: " + cocktail.getInstructions());
         System.out.println("Photo Link: " + cocktail.getPhotoLink());
         System.out.println("Ingredients:");
