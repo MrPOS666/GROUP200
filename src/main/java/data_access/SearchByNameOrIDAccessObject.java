@@ -58,7 +58,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
 
     @Override
     public boolean existsByIngredients(List<String> ingredients) {
-        return getByIngredients(ingredients) != null;
+        return !getByIngredients(ingredients).isEmpty();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
         final Set<Cocktail> set = new HashSet<Cocktail>();
         for (String i: ingredients) {
             final String jsonResponse = searchByIngredient(i);
-            cocktailHelper(jsonResponse, set);
+            set.addAll(cocktailHelper(jsonResponse));
         }
         final List<Cocktail> cocktails = new ArrayList<>(set);
         return cocktails;
@@ -80,11 +80,12 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
     /**
      * Get cocktail ids from jsonResponse and convert to Cocktail objects
      * @param jsonResponse Cocktails with given ingredients
-     * @param set input set to be mutated
+     * @return a set of cocktails.
      */
-    private void cocktailHelper(String jsonResponse, Set<Cocktail> set) {
+    private Set<Cocktail> cocktailHelper(String jsonResponse) {
         final JSONObject jsonObject = new JSONObject(jsonResponse);
         final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
+        final Set<Cocktail> set = new HashSet<Cocktail>();
         if (drinksArray != null) {
             for (int i = 0; i < drinksArray.length(); i++) {
                 final JSONObject drinkObject = drinksArray.getJSONObject(i);
@@ -93,6 +94,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
                 set.add(getById(idDrink));
             }
         }
+        return set;
     }
 
     @Override

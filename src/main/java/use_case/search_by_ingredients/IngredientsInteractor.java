@@ -31,7 +31,6 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
         if (ingredientsInputData.hasIngredients()) {
             if (ingredientsDataAccessObject.existsByIngredients(ingredientsInputData.getInput())) {
                 final List<Cocktail> cocktails = ingredientsDataAccessObject.getByIngredients(ingredientsInputData.getInput());
-
                 final List<Integer> ids = new ArrayList<>();
                 final List<String> names = new ArrayList<>();
                 final List<String> instructions = new ArrayList<>();

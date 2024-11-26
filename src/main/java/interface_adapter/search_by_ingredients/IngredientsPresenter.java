@@ -1,6 +1,8 @@
 package interface_adapter.search_by_ingredients;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.search.SearchState;
+import interface_adapter.search.SearchViewModel;
 import use_case.search_by_ingredients.IngredientsOutputBoundary;
 import use_case.search_by_ingredients.IngredientsOutputData;
 
@@ -12,11 +14,11 @@ import java.util.Map;
  */
 public class IngredientsPresenter implements IngredientsOutputBoundary {
 
-    private final IngredientsViewModel searchViewModel;
+    private final SearchViewModel searchViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public IngredientsPresenter(IngredientsViewModel ingredientsViewModel, ViewManagerModel viewManagerModel) {
-        this.searchViewModel = ingredientsViewModel;
+    public IngredientsPresenter(SearchViewModel searchViewModel, ViewManagerModel viewManagerModel) {
+        this.searchViewModel = searchViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
@@ -24,7 +26,7 @@ public class IngredientsPresenter implements IngredientsOutputBoundary {
     public void prepareSuccessView(IngredientsOutputData response) {
         // On success, switch to the searched cocktail in view.
         // update the search state
-        final IngredientsState ingredientsState = searchViewModel.getState();
+        final SearchState searchState = searchViewModel.getState();
         // Extract lists from the response
         final List<Integer> ids = response.getIdDrink();
         final List<String> names = response.getCocktailName();
@@ -32,11 +34,11 @@ public class IngredientsPresenter implements IngredientsOutputBoundary {
         final List<String> photoLinks = response.getPhotoLink();
         final List<Map<String, String>> ingredients = response.getIngredients();
 
-        ingredientsState.setCocktailNamesList(names);
-        ingredientsState.setIdList(ids);
-        ingredientsState.setIngredientsList(ingredients);
-        ingredientsState.setRecipeList(instructions);
-        ingredientsState.setPhotoLinkList(photoLinks);
+        searchState.setCocktailNamesList(names);
+        searchState.setIdList(ids);
+        searchState.setIngredientsList(ingredients);
+        searchState.setRecipeList(instructions);
+        searchState.setPhotoLinkList(photoLinks);
 
         searchViewModel.firePropertyChanged();
 
@@ -47,8 +49,8 @@ public class IngredientsPresenter implements IngredientsOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         // On failure, set the error message in the search state
-        final IngredientsState ingredientsState = searchViewModel.getState();
-        ingredientsState.setIngredientsError(errorMessage);
+        final SearchState searchState = searchViewModel.getState();
+        searchState.setSearchError(errorMessage);
         searchViewModel.firePropertyChanged();
     }
 }

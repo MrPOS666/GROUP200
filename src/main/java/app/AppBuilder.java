@@ -23,6 +23,8 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search_by_ingredients.IngredientsController;
+import interface_adapter.search_by_ingredients.IngredientsPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -39,6 +41,9 @@ import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
+import use_case.search_by_ingredients.IngredientsInputBoundary;
+import use_case.search_by_ingredients.IngredientsInteractor;
+import use_case.search_by_ingredients.IngredientsOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -217,9 +222,15 @@ public class AppBuilder {
                 viewManagerModel);
         final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
                 searchOutputBoundary);
+        final IngredientsOutputBoundary ingredientsOutputBoundary = new IngredientsPresenter(searchViewModel,
+                viewManagerModel);
+        final IngredientsInputBoundary ingredientsInteractor = new IngredientsInteractor(searchDataAccessObject,
+                ingredientsOutputBoundary);
 
         final SearchController searchController = new SearchController(searchInteractor);
+        final IngredientsController ingredientsController = new IngredientsController(ingredientsInteractor);
         searchView.setSearchController(searchController);
+        searchView.setIngredientsController(ingredientsController);
         return this;
     }
 
