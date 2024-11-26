@@ -1,14 +1,14 @@
-package interface_adapter.select;
+package interface_adapter.myFavourite;
 
 import interface_adapter.ViewModel;
 
 /**
  * The View Model for the Select View.
  */
-public class SelectViewModel extends ViewModel<SelectState> {
+public class MyFavouriteViewModel extends ViewModel<MyFavouriteState> {
 
-    public SelectViewModel(String viewName) {
+    public MyFavouriteViewModel(String viewName) {
         super("MyFavourite");
-        setState(new SelectState());
+        setState(new MyFavouriteState());
     }
 }
