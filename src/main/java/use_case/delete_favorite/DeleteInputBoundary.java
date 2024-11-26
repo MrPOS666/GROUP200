@@ -10,6 +10,7 @@ public interface DeleteInputBoundary {
     /**
      * Executes the delete use case.
      * @param deleteInputData the input data
+     * @throws DetailPageDataAccessException the exception
      */
     void execute(DeleteInputData deleteInputData) throws DetailPageDataAccessException;
 }
