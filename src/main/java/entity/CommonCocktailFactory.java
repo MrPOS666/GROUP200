@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -22,7 +23,8 @@ public class CommonCocktailFactory implements CocktailFactory {
                            String strDrink,
                            String strInstructions,
                            String photoUrl,
-                           Map<String, String> ingredients) {
-        return new CommonCocktail(idDrink, strDrink, strInstructions, photoUrl, ingredients);
+                           Map<String, String> ingredients,
+                           BufferedImage image) {
+        return new CommonCocktail(idDrink, strDrink, strInstructions, photoUrl, ingredients, image);
     }
 }

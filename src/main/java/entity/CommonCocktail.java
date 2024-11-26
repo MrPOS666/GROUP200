@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -11,6 +12,7 @@ public class CommonCocktail implements Cocktail {
     private final String strDrink;
     private final String strInstructions;
     private final String photoUrl;
+    private final BufferedImage image;
 
     // Ingredient name as key, measure as value
     private final Map<String, String> ingredients;
@@ -20,12 +22,14 @@ public class CommonCocktail implements Cocktail {
                           String strDrink,
                           String strInstructions,
                           String photoUrl,
-                          Map<String, String> ingredients) {
+                          Map<String, String> ingredients,
+                          BufferedImage image) {
         this.idDrink = idDrink;
         this.strDrink = strDrink;
         this.strInstructions = strInstructions;
         this.photoUrl = photoUrl;
         this.ingredients = ingredients;
+        this.image = image;
     }
 
     // Getters for accessing fields
@@ -35,6 +39,11 @@ public class CommonCocktail implements Cocktail {
 
     public String getInstructions() {
         return strInstructions;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return image;
     }
 
     public String getCocktailName() {

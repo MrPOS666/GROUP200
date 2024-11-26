@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -13,11 +14,13 @@ public interface CocktailFactory {
      * @param strInstructions instruction of cocktail
      * @param photoUrl photo URL of cocktail
      * @param ingredients ingredients of cocktail
+     * @param image photo of the cocktail
      * @return Cocktail
      */
     Cocktail create(int idDrink,
                     String strDrink,
                     String strInstructions,
                     String photoUrl,
-                    Map<String, String> ingredients);
+                    Map<String, String> ingredients,
+                    BufferedImage image);
 }
