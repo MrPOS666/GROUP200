@@ -13,6 +13,8 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.homepage.HomepageController;
+import interface_adapter.homepage.HomepagePresenter;
 import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -28,6 +30,9 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.homepage.HomepageInputBoundary;
+import use_case.homepage.HomepageInteractor;
+import use_case.homepage.HomepageOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -70,6 +75,8 @@ public class AppBuilder {
     private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
     private SearchViewModel searchViewModel;
+    private RecommendationViewModel recommendationViewModel;
+    private MyFavouriteViewModel myFavouriteViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -115,15 +122,7 @@ public class AppBuilder {
     public AppBuilder addHomepageView() {
         homepageViewModel = new HomepageViewModel();
         // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
-        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
-        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
-        homepageView = new HomepageView(homepageViewModel,
-                viewManagerModel,
-                loginViewModel,
-                loggedInViewModel,
-                searchViewModel,
-                recommendationViewModel,
-                myFavouriteViewModel);
+        homepageView = new HomepageView(homepageViewModel, loggedInViewModel);
         cardPanel.add(homepageView, homepageView.getViewName());
         return this;
     }
@@ -188,6 +187,21 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Homepage Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addHomepageUseCase() {
+
+        final HomepageOutputBoundary homepagePresenter = new HomepagePresenter(viewManagerModel,
+                recommendationViewModel, myFavouriteViewModel, searchViewModel, loggedInViewModel);
+
+        final HomepageInputBoundary homepageInteractor = new HomepageInteractor(homepagePresenter);
+        final HomepageController homepageController = new HomepageController(homepageInteractor);
+        homepageView.setHomepageController(homepageController);
         return this;
     }
 
