@@ -5,6 +5,7 @@ import entity.CommonCocktailFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 class SearchByNameOrIDAccessObjectTest {
@@ -18,7 +19,7 @@ class SearchByNameOrIDAccessObjectTest {
     }
 
     @Test
-    void testPrintCocktailsByName() {
+    void testPrintCocktailsByName() throws IOException {
         // Assuming "Margarita" will return multiple results
         String cocktailName = "Margarita";
         List<Cocktail> cocktails = searchDataAccessObject.getByName(cocktailName);
@@ -30,7 +31,7 @@ class SearchByNameOrIDAccessObjectTest {
     }
 
     @Test
-    void testPrintCocktailById() {
+    void testPrintCocktailById() throws IOException {
         // Assuming ID 11007 corresponds to a valid cocktail (e.g., Margarita)
         int cocktailId = 11007;
         Cocktail cocktail = searchDataAccessObject.getById(cocktailId);
