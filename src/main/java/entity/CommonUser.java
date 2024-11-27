@@ -18,6 +18,12 @@ public class CommonUser implements User {
         this.myFavourite = new ArrayList<Cocktail>();
     }
 
+    public CommonUser(String name, String password, List<Cocktail> myFavourite) {
+        this.name = name;
+        this.password = password;
+        this.myFavourite = myFavourite;
+    }
+
     @Override
     public String getName() {
         return name;
