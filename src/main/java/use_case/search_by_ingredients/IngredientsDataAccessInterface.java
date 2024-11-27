@@ -24,15 +24,4 @@ public interface IngredientsDataAccessInterface {
      */
     List<Cocktail> getByIngredients(List<String> ingredients);
 
-    /**
-     * Returns the name of the current cocktail in focus within the application.
-     * @return the name of the current cocktail; null if no cocktail is currently in focus.
-     */
-    String getCurrentCocktailName();
-
-    /**
-     * Sets the name of the cocktail currently in focus within the application.
-     * @param cocktailName the new current cocktail name; null to indicate no cocktail is currently in focus.
-     */
-    void setCurrentCocktailName(String cocktailName);
 }

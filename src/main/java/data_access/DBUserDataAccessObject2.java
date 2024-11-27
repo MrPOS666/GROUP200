@@ -4,139 +4,215 @@ import java.io.IOException;
 import java.util.*;
 
 import entity.*;
+import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 
 /**
- * The DAO for accessing users and their associated cocktails stored in the database.
- * <p>This class demonstrates how your group can use the password-protected user
- * endpoints of the API to store persistent data about users and their cocktails.</p>
+ * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
+public class DBUserDataAccessObject2 {
 
-    private static final int SUCCESS_CODE = 200;
-    private static final int CREDENTIAL_ERROR = 401;
-    private static final String CONTENT_TYPE_LABEL = "Content-Type";
-    private static final String CONTENT_TYPE_JSON = "application/json";
-    private static final String STATUS_CODE_LABEL = "status_code";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-    private static final String MESSAGE = "message";
+    private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
+    private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
+    private static final String CREATE_USER_ENDPOINT = "/user";
+    private static final String GET_USER_ENDPOINT = "/user";
+    private static final MediaType JSON = MediaType.parse("application/json");
 
-    private final OkHttpClient client;
+    /**
+     * Save a new user with an empty MyFavourite cocktail list.
+     *
+     * @param user The user object containing the username and password.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
+     */
+    public void saveUser(User user) throws DetailPageDataAccessException {
+        final OkHttpClient client = new OkHttpClient();
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put("username", user.getName());
+        requestBody.put("password", user.getPassword());
+        requestBody.put("info", new JSONObject().put("myFavourite", new JSONArray()));
 
-    public DBUserDataAccessObject2(OkHttpClient client) {
-        this.client = client;
+        final RequestBody body = RequestBody.create(requestBody.toString(), JSON);
+        final Request request = new Request.Builder()
+                .url(BASE_URL + CREATE_USER_ENDPOINT)
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new DetailPageDataAccessException("Error saving user: " + response.message());
+            }
+        }
+        catch (IOException e) {
+            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        }
     }
 
     /**
-     * Saves a list of cocktails for a user in the database.
+     * Update the MyFavourite cocktail list for an existing user.
      *
-     * @param user The user object containing username and password.
-     * @param cocktails The list of cocktails to be saved.
-     * @throws DetailPageDataAccessException If there is a problem accessing the database.
+     * @param user          The user object containing the username and password.
+     * @param newFavourites The new list of favorite cocktails.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    @Override
-    public void saveCocktails(User user, List<Cocktail> cocktails) throws DetailPageDataAccessException {
-        final OkHttpClient client = new OkHttpClient().newBuilder().build();
-
-        // POST METHOD
-        final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
+    public void updateMyFavourite(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
+        final OkHttpClient client = new OkHttpClient();
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
-        requestBody.put(PASSWORD, user.getPassword());
+        requestBody.put("username", user.getName());
+        requestBody.put("password", user.getPassword());
 
-        // Serialize the cocktail list
-        final JSONArray cocktailsJSON = new JSONArray();
-        for (Cocktail cocktail : cocktails) {
+        final JSONArray favouritesArray = new JSONArray();
+        for (Cocktail cocktail : newFavourites) {
             final JSONObject cocktailJson = new JSONObject();
             cocktailJson.put("idDrink", cocktail.getIdDrink());
             cocktailJson.put("strDrink", cocktail.getCocktailName());
             cocktailJson.put("strInstructions", cocktail.getInstructions());
             cocktailJson.put("photoUrl", cocktail.getPhotoLink());
             cocktailJson.put("ingredients", new JSONObject(cocktail.getIngredients()));
-            cocktailsJSON.put(cocktailJson);
+            favouritesArray.put(cocktailJson);
         }
-        requestBody.put("cocktails", cocktailsJSON);
+        requestBody.put("info", new JSONObject().put("myFavourite", favouritesArray));
 
-        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final RequestBody body = RequestBody.create(requestBody.toString(), JSON);
         final Request request = new Request.Builder()
-                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
-                .method("PUT", body)
-                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .url(BASE_URL + MODIFY_USER_INFO_ENDPOINT)
+                .put(body)
+                .addHeader("Content-Type", "application/json")
                 .build();
 
-        try {
-            final Response response = client.newCall(request).execute();
-            final JSONObject responseBody = new JSONObject(response.body().string());
-
-            if (responseBody.getInt(STATUS_CODE_LABEL) != SUCCESS_CODE) {
-                throw new DetailPageDataAccessException("Database error: " + responseBody.getString(MESSAGE));
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new DetailPageDataAccessException("Error updating MyFavourite: " + response.message());
             }
         }
-        catch (IOException | JSONException ex) {
-            throw new DetailPageDataAccessException(ex.getMessage());
+        catch (IOException e) {
+            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
         }
     }
 
     /**
-     * Loads a list of cocktails for a user from the database.
+     * Load a user by their username.
      *
-     * @param user The user object containing username and password.
-     * @return A list of cocktails associated with the user.
-     * @throws DetailPageDataAccessException If there is a problem accessing the database.
-     * @throws RuntimeException              If there is a problem while running.
+     * @param username The username of the user.
+     * @return The User object.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    @Override
-    public List<Cocktail> loadCocktails(User user) throws DetailPageDataAccessException {
-        final String username = user.getName();
+    public User loadUser(String username) throws DetailPageDataAccessException {
+        final OkHttpClient client = new OkHttpClient();
+        final HttpUrl url = new HttpUrl.Builder()
+                .scheme("http")
+                .host("vm003.teach.cs.toronto.edu")
+                .port(20112)
+                .addPathSegment("user")
+                .addQueryParameter("username", username)
+                .build();
 
-        final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
-                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
-                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
+                .url(url)
+                .get()
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                final JSONObject responseBody = new JSONObject(response.body().string());
+                final JSONObject userObject = responseBody.getJSONObject("user");
+
+                final String name = userObject.getString("username");
+                final String password = userObject.getString("password");
+                final JSONObject info = userObject.optJSONObject("info");
+
+                final List<Cocktail> favourites = new ArrayList<>();
+                if (info != null && info.has("myFavourite")) {
+                    final JSONArray favouritesArray = info.getJSONArray("myFavourite");
+                    for (int i = 0; i < favouritesArray.length(); i++) {
+                        final JSONObject cocktailJson = favouritesArray.getJSONObject(i);
+                        final Map<String, String> ingredients = new HashMap<>();
+                        final JSONObject ingredientsJson = cocktailJson.getJSONObject("ingredients");
+                        for (String key : ingredientsJson.keySet()) {
+                            ingredients.put(key, ingredientsJson.getString(key));
+                        }
+                        final String photoUrl = cocktailJson.optString("photoUrl");
+                        final CommonCocktail cocktail = new CommonCocktail(
+                                cocktailJson.optInt("idDrink"),
+                                cocktailJson.optString("strDrink"),
+                                cocktailJson.optString("strInstructions"),
+                                photoUrl,
+                                ingredients,
+                                ImageDataAccessObject.fetchImage(photoUrl)
+                        );
+                        favourites.add(cocktail);
+                    }
+                }
+
+                return new CommonUser(name, password, favourites);
+            }
+            else {
+                throw new DetailPageDataAccessException("Error loading user: " + response.message());
+            }
+        }
+        catch (IOException | JSONException e) {
+            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Change the password for an existing user.
+     *
+     * @param user        The user object containing the username and current password.
+     * @param newPassword The new password for the user.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
+     */
+    public void changePassword(User user, String newPassword) {
+        final OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+        // Prepare request body
+        final MediaType mediaType = MediaType.parse("application/json");
+        final JSONObject requestBody = new JSONObject();
+        requestBody.put("username", user.getName());
+        // Update to the new password
+        requestBody.put("password", newPassword);
+
+        // Transport the current MyFavourite list
+        final JSONArray favouritesArray = new JSONArray();
+        for (Cocktail cocktail : user.getMyFavourite()) {
+            final JSONObject cocktailJson = new JSONObject();
+            cocktailJson.put("idDrink", cocktail.getIdDrink());
+            cocktailJson.put("strDrink", cocktail.getCocktailName());
+            cocktailJson.put("strInstructions", cocktail.getInstructions());
+            cocktailJson.put("photoUrl", cocktail.getPhotoLink());
+            cocktailJson.put("ingredients", new JSONObject(cocktail.getIngredients()));
+            favouritesArray.put(cocktailJson);
+        }
+        requestBody.put("info", new JSONObject().put("myFavourite", favouritesArray));
+
+        // Build HTTP request
+        final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
+        final Request request = new Request.Builder()
+                .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
+                .method("PUT", body)
+                .addHeader("Content-Type", "application/json")
                 .build();
 
         try {
             final Response response = client.newCall(request).execute();
-            final JSONObject responseBody = new JSONObject(response.body().string());
 
-            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("user");
-                final JSONArray cocktailsArray = userJSONObject.getJSONArray("cocktails");
+            if (response.isSuccessful()) {
+                final JSONObject responseBody = new JSONObject(response.body().string());
 
-                final List<Cocktail> cocktails = new ArrayList<>();
-                for (int i = 0; i < cocktailsArray.length(); i++) {
-                    final JSONObject cocktailJson = cocktailsArray.getJSONObject(i);
-
-                    final Map<String, Object> tempingredients = cocktailJson.getJSONObject("ingredients").toMap();
-                    final Map<String, String> ingredients = new HashMap<>();
-                    for (Map.Entry<String, ?> entry : tempingredients.entrySet()) {
-                        ingredients.put(entry.getKey(), entry.getValue().toString());
-                    }
-
-                    final Cocktail cocktail = new CommonCocktail(
-                            cocktailJson.getInt("idDrink"),
-                            cocktailJson.getString("strDrink"),
-                            cocktailJson.getString("strInstructions"),
-                            cocktailJson.getString("photoUrl"),
-                            ingredients
-                    );
-                    cocktails.add(cocktail);
+                if (responseBody.getInt("status_code") == 200) {
+                    // Password updated successfully
                 }
-                return cocktails;
+                else {
+                    throw new RuntimeException(responseBody.getString("message"));
+                }
             }
             else {
-                throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
+                throw new RuntimeException("HTTP error: " + response.code());
             }
         }
         catch (IOException | JSONException ex) {
@@ -144,43 +220,6 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
         }
     }
 
-    /**
-     * Fetch User from the name.
-     * @param username name of user
-     * @return user User.
-     * @throws DetailPageDataAccessException the exception.
-     */
-    public User getUserByUsername(String username) throws DetailPageDataAccessException {
-        final Request request = new Request.Builder()
-                .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
-                .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.body() == null) {
-                throw new DetailPageDataAccessException("Response body is null.");
-            }
-
-            final JSONObject responseBody = new JSONObject(response.body().string());
-
-            if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("user");
-
-                // Create a User object using the factory
-                final UserFactory userFactory = new CommonUserFactory();
-                return userFactory.create(
-                        userJSONObject.getString("username"),
-                        userJSONObject.getString("password")
-                );
-            }
-            else {
-                throw new DetailPageDataAccessException(responseBody.getString(MESSAGE));
-            }
-        }
-        catch (IOException | JSONException ex) {
-            throw new DetailPageDataAccessException("Error fetching user: " + ex.getMessage());
-        }
-    }
-
 }
+
 

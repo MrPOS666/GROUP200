@@ -1,5 +1,6 @@
 package use_case.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class SearchInteractor implements SearchInputBoundary {
      * @param searchInputData the input data
      */
     @Override
-    public void execute(SearchInputData searchInputData) {
+    public void execute(SearchInputData searchInputData) throws IOException {
 
         if (searchInputData.isSearchByName()) {
             if (searchDataAccessObject.existsByName(searchInputData.getInput())) {
@@ -75,6 +76,3 @@ public class SearchInteractor implements SearchInputBoundary {
         }
     }
 }
-
-
-

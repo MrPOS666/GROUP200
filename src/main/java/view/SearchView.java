@@ -14,6 +14,7 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search_by_ingredients.IngredientsController;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     private final JLabel searchOutputField = new JLabel();
 
     private final JButton search;
+    private final JButton enter;
     private SearchController searchController;
+    private IngredientsController ingredientsController;
 
     public SearchView(SearchViewModel searchViewModel) {
         this.searchViewModel = searchViewModel;
@@ -42,7 +45,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
         final JPanel buttons = new JPanel();
         search = new JButton("search");
+        enter = new JButton("enter ingredients");
         buttons.add(search);
+        buttons.add(enter);
 
         inputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -80,6 +85,20 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                     }
                 }
         );
+
+        enter.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(enter)) {
+                            final SearchState currentState = searchViewModel.getState();
+                            ingredientsController.execute(
+                                    List.of(currentState.getInput().split(","))
+                            );
+                        }
+                    }
+                }
+        );
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(title);
@@ -127,6 +146,10 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.searchController = controller;
     }
 
+    public void setIngredientsController(IngredientsController controller) {
+        this.ingredientsController = controller;
+    }
+
     public void searchresults(SearchState state) {
 
         final List<String> nameList = state.getCocktailNamesList();
@@ -136,14 +159,14 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         final List<String> photoLinkList = state.getPhotoLinkList();
 
         for (int i = 0; i < nameList.size(); i++) {
-            String name = nameList.get(i);
-            int id = ID.get(i);
-            String recipe = recipeList.get(i);
-            String photoLink = photoLinkList.get(i);
-            String ingredients = state.getIngredientsToString(ingredientsList.get(i));
+            final String name = nameList.get(i);
+            final int id = ID.get(i);
+            final String recipe = recipeList.get(i);
+            final String photoLink = photoLinkList.get(i);
+            final String ingredients = state.getIngredientsToString(ingredientsList.get(i));
 
             // Create a new JPanel for each cocktail
-            JPanel cocktailPanel = new JPanel();
+            final JPanel cocktailPanel = new JPanel();
             cocktailPanel.setLayout(new BoxLayout(cocktailPanel, BoxLayout.Y_AXIS));  // Vertical layout for better organization
             cocktailPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding to the panel
 
@@ -151,9 +174,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
 
             // Create labels for cocktail details
-            JLabel nameLabel = new JLabel(name);
-            JLabel IDLabel = new JLabel("ID: " + id);
-            JLabel photoLinkLabel = new JLabel(photoLink);
+            final JLabel nameLabel = new JLabel(name);
+            final JLabel IDLabel = new JLabel("ID: " + id);
+            final JLabel photoLinkLabel = new JLabel(photoLink);
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
@@ -161,8 +184,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             photoLinkLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
             // Create JLabel for photo link or image
-            JLabel photoLabel = new JLabel();
-            ImageIcon photoIcon = new ImageIcon(photoLink);
+            final JLabel photoLabel = new JLabel();
+            final ImageIcon photoIcon = new ImageIcon(photoLink);
             photoLabel.setIcon(photoIcon);  // Display the image
 
             // Optionally, set a background color for the photo label (for a border around the photo)

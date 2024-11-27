@@ -15,4 +15,10 @@ public interface DetailPageInputBoundary {
      * Return to the original Page.
      */
     void returnOrigin();
+
+    /**
+     * Execute the addMyFavourite Use case.
+     * @param detailPageInputData detailPageInputData
+     */
+    void addMyFavourite(DetailPageInputData detailPageInputData);
 }

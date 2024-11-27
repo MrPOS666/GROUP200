@@ -14,4 +14,9 @@ public class DetailPageInteractor implements DetailPageInputBoundary{
     public void returnOrigin() {
 
     }
+
+    @Override
+    public void addMyFavourite(DetailPageInputData detailPageInputData) {
+
+    }
 }

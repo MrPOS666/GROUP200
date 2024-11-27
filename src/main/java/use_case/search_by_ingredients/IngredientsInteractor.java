@@ -1,6 +1,7 @@
 package use_case.search_by_ingredients;
 
 import entity.Cocktail;
+import use_case.search.SearchOutputBoundary;
 import use_case.search_by_ingredients.*;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
     private final IngredientsOutputBoundary ingredientsPresenter;
 
     public IngredientsInteractor(IngredientsDataAccessInterface ingredientsDataAccessInterface,
-                                 IngredientsOutputBoundary ingredientsOutputBoundary) {
+                                  IngredientsOutputBoundary ingredientsOutputBoundary) {
         this.ingredientsDataAccessObject = ingredientsDataAccessInterface;
         this.ingredientsPresenter = ingredientsOutputBoundary;
     }
@@ -30,7 +31,6 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
         if (ingredientsInputData.hasIngredients()) {
             if (ingredientsDataAccessObject.existsByIngredients(ingredientsInputData.getInput())) {
                 final List<Cocktail> cocktails = ingredientsDataAccessObject.getByIngredients(ingredientsInputData.getInput());
-
                 final List<Integer> ids = new ArrayList<>();
                 final List<String> names = new ArrayList<>();
                 final List<String> instructions = new ArrayList<>();
