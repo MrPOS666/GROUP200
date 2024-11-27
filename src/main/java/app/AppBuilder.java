@@ -6,7 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.DeleteDataAccessObject;
+import data_access.DBUserDataAccessObject;
+import data_access.DBUserDataAccessObject2;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -25,14 +26,13 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
 import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
-import interface_adapter.select.SelectViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import okhttp3.OkHttpClient;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.delete_favorite.DeleteInputBoundary;
 import use_case.delete_favorite.DeleteInteractor;
 import use_case.delete_favorite.DeleteOutputBoundary;
@@ -68,6 +68,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2(new OkHttpClient());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -78,8 +79,8 @@ public class AppBuilder {
     private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
     private SearchViewModel searchViewModel;
+    private MyFavouriteViewModel myFavouriteViewModel;
     private MyFavouriteView myFavouriteView;
-    private SelectViewModel selectViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -126,7 +127,7 @@ public class AppBuilder {
         homepageViewModel = new HomepageViewModel();
         // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
         final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
-        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
+        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel("MyFavourite");
         homepageView = new HomepageView(homepageViewModel,
                 viewManagerModel,
                 loginViewModel,
@@ -206,8 +207,8 @@ public class AppBuilder {
      * @return this builder.
      */
     public AppBuilder addDeleteUseCase() {
-        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(selectViewModel, viewManagerModel);
-        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteOutputBoundary, DeleteDataAccessObject);
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel);
+        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteDataAccessObject, deleteOutputBoundary);
 
         final DeleteController deleteController = new DeleteController(deleteInteractor);
         myFavouriteView.setDeleteController(deleteController);
