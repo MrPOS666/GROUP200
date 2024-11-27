@@ -39,7 +39,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final JPanel buttons = new JPanel();
-        select = new JButton("search");
+        select = new JButton("select");
         buttons.add(select);
         delete = new JButton("delete");
         delete.setEnabled(false);
