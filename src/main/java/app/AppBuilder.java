@@ -140,6 +140,17 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the MyFavourite View to the application.
+     * @return this builder
+     */
+    public AppBuilder addMyFavouriteView() {
+        myFavouriteViewModel = new MyFavouriteViewModel("MyFavourite");
+        myFavouriteView = new MyFavouriteView(myFavouriteViewModel);
+        cardPanel.add(myFavouriteView, myFavouriteView.getViewName());
+        return this;
+    }
+
+    /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
@@ -207,6 +218,10 @@ public class AppBuilder {
      * @return this builder.
      */
     public AppBuilder addDeleteUseCase() {
+        if (myFavouriteView == null || myFavouriteViewModel == null) {
+            throw new IllegalStateException("MyFavouriteView and MyFavouriteViewModel must be initialized before adding Delete Use Case.");
+        }
+
         final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel);
         final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteDataAccessObject, deleteOutputBoundary);
 
