@@ -1,5 +1,6 @@
 package interface_adapter.myFavourite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class MyFavouriteState {
     private List<Integer> idList;
     private List<Map<String, String>> ingredientsList;
     private List<String> instructionList;
-    private List<String> cocktailNamesList;
+    private List<String> cocktailNamesList = new ArrayList<>();
     private List<String> photoLinkList;
 
     /**
