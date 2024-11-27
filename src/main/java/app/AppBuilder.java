@@ -1,22 +1,23 @@
 package app;
 
 import java.awt.CardLayout;
-import java.util.Map;
 
 import javax.swing.*;
 
+import data_access.DBUserDataAccessObject;
+import data_access.DBUserDataAccessObject2;
 import data_access.InMemoryUserDataAccessObject;
-import data_access.SearchByNameOrIDAccessObject;
-import entity.*;
+import entity.CommonUserFactory;
+import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.delete.DeleteController;
+import interface_adapter.delete.DeletePresenter;
 import interface_adapter.homepage.HomepageController;
 import interface_adapter.homepage.HomepagePresenter;
 import interface_adapter.homepage.HomepageViewModel;
-import interface_adapter.myFavourite.MyFavouriteViewModel;
-import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -30,9 +31,13 @@ import interface_adapter.search.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import okhttp3.OkHttpClient;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.delete_favorite.DeleteInputBoundary;
+import use_case.delete_favorite.DeleteInteractor;
+import use_case.delete_favorite.DeleteOutputBoundary;
 import use_case.homepage.HomepageInputBoundary;
 import use_case.homepage.HomepageInteractor;
 import use_case.homepage.HomepageOutputBoundary;
@@ -75,21 +80,21 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
+    private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2(new OkHttpClient());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
+    private HomepageViewModel homepageViewModel;
+    private MyFavouriteViewModel myFavouriteViewModel;
+    private RecommendationViewModel recommendationViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
-    private SearchViewModel searchViewModel;
-    private SearchView searchView;
-    private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
     private SearchViewModel searchViewModel;
-    private RecommendationViewModel recommendationViewModel;
-    private MyFavouriteViewModel myFavouriteViewModel;
+    private SearchView searchView;
+    private MyFavouriteView myFavouriteView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -219,6 +224,19 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the Delete Use Case to the application.
+     * @return this builder.
+     */
+    public AppBuilder addDeleteUseCase() {
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel);
+        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteDataAccessObject, deleteOutputBoundary);
+
+        final DeleteController deleteController = new DeleteController(deleteInteractor);
+        myFavouriteView.setDeleteController(deleteController);
+        return this;
+    }
+
+    /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
@@ -243,7 +261,6 @@ public class AppBuilder {
         searchViewModel = new SearchViewModel("search");
         searchView = new SearchView(searchViewModel);
         cardPanel.add(searchView, searchView.getViewName());
-
         return this;
     }
 
@@ -256,47 +273,20 @@ public class AppBuilder {
                 viewManagerModel);
         final SearchInputBoundary searchInteractor = new SearchInteractor(searchDataAccessObject,
                 searchOutputBoundary);
-        final IngredientsOutputBoundary ingredientsOutputBoundary = new IngredientsPresenter(searchViewModel,
-                viewManagerModel);
-        final IngredientsInputBoundary ingredientsInteractor = new IngredientsInteractor(searchDataAccessObject,
-                ingredientsOutputBoundary);
 
-        final SearchController searchController = new SearchController(searchInteractor);
-        final IngredientsController ingredientsController = new IngredientsController(ingredientsInteractor);
-        searchView.setSearchController(searchController);
-        searchView.setIngredientsController(ingredientsController);
+        final SearchController controller = new SearchController(searchInteractor);
+        searchView.setSearchController(controller);
         return this;
     }
 
     /**
-     * Adds the Homepage View to the application.
-     * @return this builder
-     */
-    public AppBuilder addHomepageView() {
-        homepageViewModel = new HomepageViewModel();
-        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
-        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
-        final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
-        homepageView = new HomepageView(homepageViewModel,
-                viewManagerModel,
-                loginViewModel,
-                loggedInViewModel,
-                searchViewModel,
-                recommendationViewModel,
-                myFavouriteViewModel);
-        cardPanel.add(homepageView, homepageView.getViewName());
-        return this;
-    }
-
-    /**
-     * Creates the JFrame for the application and initially sets the SearchView to be displayed.
+     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build_search() {
-        final JFrame application = new JFrame("Search");
-        final JScrollPane scrollPane = new JScrollPane(cardPanel);
-        application.add(scrollPane);
-        application.setContentPane(scrollPane);
+        final JFrame application = new JFrame("Search Example");
+        application.add(cardPanel);
+        application.setContentPane(cardPanel);
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         viewManagerModel.setState(searchView.getViewName());
         viewManagerModel.firePropertyChanged();
