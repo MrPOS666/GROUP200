@@ -14,19 +14,7 @@ public class Main {
     public static void main(String[] args) {
         final AppBuilder appBuilder = new AppBuilder();
 
-        final JFrame application = appBuilder
-                .addLoginView()
-                .addSignupView()
-                .addLoggedInView()
-                .addSearchView()
-                .addHomepageView()
-                .addSignupUseCase()
-                .addLoginUseCase()
-                .addChangePasswordUseCase()
-                .addLogoutUseCase()
-                .addSearchUseCase()
-                .build();
-                                            .addLoginView()
+        final JFrame application = appBuilder.addLoginView()
                                             .addSignupView()
                                             .addLoggedInView()
                                             .addHomepageView()
