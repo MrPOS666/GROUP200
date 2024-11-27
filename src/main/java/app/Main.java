@@ -17,6 +17,7 @@ public class Main {
                                             .addSignupView()
                                             .addLoggedInView()
                                             .addHomepageView()
+                                            .addMyFavouriteView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
