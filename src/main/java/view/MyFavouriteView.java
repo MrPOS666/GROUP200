@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
     private final JButton delete;
     private final JButton select;
     private final JButton cancel;
+    private final JButton back;
 
     private final JPanel resultPanel = new JPanel();
     private final List<JCheckBox> cocktailCheckboxes = new ArrayList<>();
@@ -47,6 +49,9 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         cancel = new JButton("cancel");
         cancel.setEnabled(false);
         buttons.add(cancel);
+        back = new JButton("back");
+        back.setEnabled(true);
+        buttons.add(back);
 
         // Result Panel
         resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
@@ -89,6 +94,16 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource() == cancel) {
                             resetView();
+                        }
+                    }
+                }
+        );
+
+        back.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource() == back) {
+                            deleteController.switchToHomepageView();
                         }
                     }
                 }
@@ -157,6 +172,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         resultPanel.removeAll();
         final List<String> names = myFavouriteViewModel.getState().getCocktailNamesList();
         final List<String> photos = myFavouriteViewModel.getState().getPhotoLinkList();
+        final List<BufferedImage> images = myFavouriteViewModel.getState().getImageList();
 
         for (int i = 0; i < names.size(); i++) {
             final String name = names.get(i);
@@ -184,9 +200,16 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
             photoLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
-            // Create JLabel for photo link or image
-            ImageIcon photoIcon = new ImageIcon(photo);
-            photoLabel.setIcon(photoIcon);  // Display the image
+            // Add the cocktail image if available
+            final JLabel imageLabel = new JLabel();
+            if (images != null && i < images.size() && images.get(i) != null) {
+                // Create an ImageIcon from the BufferedImage
+                final ImageIcon imageIcon = new ImageIcon(images.get(i));
+                imageLabel.setIcon(imageIcon); // Set the image in the label
+            }
+            else {
+                imageLabel.setText("Image not available"); // Fallback text
+            }
 
             // Optionally, set a background color for the photo label (for a border around the photo)
             photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
@@ -195,6 +218,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
             // Add components to the cocktail panel
             cocktailPanel.add(nameLabel);
             cocktailPanel.add(photoLabel);
+            cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
             cocktailPanel.setPreferredSize(new Dimension(200, 200));
@@ -215,6 +239,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         delete.setEnabled(false); // Disable delete button
         cancel.setEnabled(false); // Disable cancel button
         select.setEnabled(true); // Enable select button
+        back.setEnabled(true);
         cocktailCheckboxes.clear();
         displayCocktails();
     }
