@@ -48,8 +48,8 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
                 throw new DetailPageDataAccessException("Error saving user: " + response.message());
             }
         }
-        catch (IOException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        catch (IOException evt) {
+            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
@@ -90,8 +90,8 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
                 throw new DetailPageDataAccessException("Error updating MyFavourite: " + response.message());
             }
         }
-        catch (IOException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        catch (IOException evt) {
+            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
