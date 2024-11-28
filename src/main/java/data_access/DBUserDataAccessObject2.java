@@ -10,17 +10,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import use_case.detailPage.DetailPageDataAccessException;
+import use_case.detailPage.DetailPageDataAccessInterface;
 
 /**
  * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 {
+public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
     private static final String CREATE_USER_ENDPOINT = "/user";
     private static final String GET_USER_ENDPOINT = "/user";
     private static final MediaType JSON = MediaType.parse("application/json");
+
+    @Override
+    public User getUser(String username) {
+        try {
+            return this.loadUser(username);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addMyFavourite(User user, List<Cocktail> newFavourites) {
+        try {
+            this.updateMyFavourite(user, newFavourites);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Save a new user with an empty MyFavourite cocktail list.
@@ -219,7 +240,6 @@ public class DBUserDataAccessObject2 {
             throw new RuntimeException(ex);
         }
     }
-
 }
 
 

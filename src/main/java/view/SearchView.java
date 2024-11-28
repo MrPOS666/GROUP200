@@ -165,7 +165,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
         for (int i = 0; i < nameList.size(); i++) {
             final String name = nameList.get(i);
-            final int id = ids.get(i);
+            final Integer id = ids.get(i);
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();
@@ -176,8 +176,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
 
             // Create labels for cocktail details
-            final JLabel nameLabel = new JLabel(name);
-            final JLabel IDLabel = new JLabel(id);
+        final JLabel nameLabel = new JLabel(name);
+            final JLabel IDLabel = new JLabel(id.toString());
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label

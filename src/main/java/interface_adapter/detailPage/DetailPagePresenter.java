@@ -41,6 +41,7 @@ public class DetailPagePresenter implements DetailPageOutputBoundary {
         detailPageState.setInstruction(detailPageOutputData.getInstruction());
         detailPageState.setPhotolink(detailPageOutputData.getPhotolink());
         detailPageState.setIngredients(detailPageOutputData.getIngredients());
+        detailPageState.setImage(detailPageOutputData.getImage());
         this.detailPageViewModel.setState(detailPageState);
         detailPageViewModel.firePropertyChanged();
 
