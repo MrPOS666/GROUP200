@@ -1,4 +1,5 @@
 package interface_adapter.search;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import java.util.Map;
@@ -10,6 +11,7 @@ public class SearchState {
     private List<String> recipeList;
     private List<String> cocktailNamesList;
     private List<String> photoLinkList;
+    private List<BufferedImage> images;
 
     private String searchError;
     private String input;
@@ -27,6 +29,14 @@ public class SearchState {
 
     public List<String> getCocktailNamesList() {
         return cocktailNamesList;
+    }
+
+    public List<BufferedImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<BufferedImage> images) {
+        this.images = images;
     }
 
     public String getSearchError() {
