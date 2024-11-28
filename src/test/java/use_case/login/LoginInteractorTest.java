@@ -35,7 +35,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter, factory);
         interactor.execute(inputData);
     }
 
@@ -62,7 +62,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter, factory);
         assertEquals(null, userRepository.getCurrentUsername());
 
         interactor.execute(inputData);
@@ -93,7 +93,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter, factory);
         interactor.execute(inputData);
     }
 
@@ -118,7 +118,7 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter, factory);
         interactor.execute(inputData);
     }
 }

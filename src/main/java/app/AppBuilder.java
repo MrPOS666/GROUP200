@@ -28,6 +28,7 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.interests_build.interests_buildInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -150,8 +151,9 @@ public class AppBuilder {
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
                 homepageViewModel, loginViewModel);
+        final interests_buildInteractor interestBuildInteractor = new interests_buildInteractor();
         final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
+                userDataAccessObject, loginOutputBoundary, interestBuildInteractor);
 
         final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);

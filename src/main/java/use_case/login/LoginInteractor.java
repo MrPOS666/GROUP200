@@ -1,5 +1,6 @@
 package use_case.login;
 
+import use_case.interests_build.interests_buildInteractor;
 import entity.User;
 
 /**
@@ -8,11 +9,14 @@ import entity.User;
 public class LoginInteractor implements LoginInputBoundary {
     private final LoginUserDataAccessInterface userDataAccessObject;
     private final LoginOutputBoundary loginPresenter;
+    private final interests_buildInteractor interestBuildInteractor;
 
     public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary) {
+                           LoginOutputBoundary loginOutputBoundary,
+                           interests_buildInteractor interestBuildInteractor) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
+        this.interestBuildInteractor = interestBuildInteractor;
     }
 
     @Override
@@ -34,7 +38,12 @@ public class LoginInteractor implements LoginInputBoundary {
                 userDataAccessObject.setCurrentUsername(user.getName());
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);
+
+                // Trigger the Interest Build logic after successful login
+                interestBuildInteractor.interests_buildInputData(user);  // Call the method to build interests for the logged-in user
             }
         }
     }
+
+
 }
