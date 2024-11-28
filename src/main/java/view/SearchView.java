@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -16,6 +17,7 @@ import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -78,9 +80,14 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(search)) {
                             final SearchState currentState = searchViewModel.getState();
-                            searchController.execute(
-                                    currentState.getInput()
-                            );
+                            try {
+                                searchController.execute(
+                                        currentState.getInput()
+                                );
+                            }
+                            catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 }
@@ -153,17 +160,12 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     public void searchresults(SearchState state) {
 
         final List<String> nameList = state.getCocktailNamesList();
-        final List<Map<String, String>> ingredientsList = state.getIngredientsList();
-        final List<Integer> ID = state.getIdList();
-        final List<String> recipeList = state.getRecipeList();
-        final List<String> photoLinkList = state.getPhotoLinkList();
+        final List<Integer> ids = state.getIdList();
+        final List<BufferedImage> images = state.getImages();
 
         for (int i = 0; i < nameList.size(); i++) {
             final String name = nameList.get(i);
-            final int id = ID.get(i);
-            final String recipe = recipeList.get(i);
-            final String photoLink = photoLinkList.get(i);
-            final String ingredients = state.getIngredientsToString(ingredientsList.get(i));
+            final int id = ids.get(i);
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();
@@ -175,28 +177,27 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Create labels for cocktail details
             final JLabel nameLabel = new JLabel(name);
-            final JLabel IDLabel = new JLabel("ID: " + id);
-            final JLabel photoLinkLabel = new JLabel(photoLink);
+            final JLabel IDLabel = new JLabel(id);
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
             IDLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
-            photoLinkLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
-            // Create JLabel for photo link or image
-            final JLabel photoLabel = new JLabel();
-            final ImageIcon photoIcon = new ImageIcon(photoLink);
-            photoLabel.setIcon(photoIcon);  // Display the image
-
-            // Optionally, set a background color for the photo label (for a border around the photo)
-            photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
-            photoLabel.setOpaque(true); // Make sure background color is visible
+            // Add the cocktail image if available
+            final JLabel imageLabel = new JLabel();
+            if (images != null && i < images.size() && images.get(i) != null) {
+                // Create an ImageIcon from the BufferedImage
+                final ImageIcon imageIcon = new ImageIcon(images.get(i));
+                imageLabel.setIcon(imageIcon); // Set the image in the label
+            }
+            else {
+                imageLabel.setText("Image not available"); // Fallback text
+            }
 
             // Add components to the cocktail panel
             cocktailPanel.add(nameLabel);
             cocktailPanel.add(IDLabel);
-            cocktailPanel.add(photoLinkLabel);
-            cocktailPanel.add(photoLabel);
+            cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
             cocktailPanel.setPreferredSize(new Dimension(200, 200));

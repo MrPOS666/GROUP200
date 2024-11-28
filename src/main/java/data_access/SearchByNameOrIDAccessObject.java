@@ -91,7 +91,12 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
                 final JSONObject drinkObject = drinksArray.getJSONObject(i);
                 // Extract id
                 final int idDrink = drinkObject.optInt("idDrink");
-                set.add(getById(idDrink));
+                try {
+                    set.add(getById(idDrink));
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         return set;
