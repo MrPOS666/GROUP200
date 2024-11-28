@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.Map;
+import java.util.HashSet;
 
 /**
  * The representation of a cocktail in our program.
@@ -8,7 +9,7 @@ import java.util.Map;
 public interface Cocktail {
     /**
      * Returns the information of the cocktail.
-     * @return the name of the user.
+     * @return the name of the cocktail.
      */
     String getCocktailName();
 
@@ -35,4 +36,6 @@ public interface Cocktail {
      * @return the instructions.
      */
     String getInstructions();
+
+    Map<String, String> getCocktailTags();
 }

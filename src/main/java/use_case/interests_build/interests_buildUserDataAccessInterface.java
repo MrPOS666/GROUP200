@@ -1,4 +1,4 @@
-package use_case.interests.build;
+package use_case.interests_build;
 
 import entity.Cocktail;
 import entity.User;
@@ -19,5 +19,5 @@ public interface interests_buildUserDataAccessInterface {
      * @param interestsHashMap
      * @param user
      */
-    void setUserRecommendations(User user, HashMap<String, Integer> interestsHashMap);
+    void setUserInterests(User user, HashMap<String, Integer> interestsHashMap);
 }

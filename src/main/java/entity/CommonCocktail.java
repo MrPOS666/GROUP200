@@ -11,6 +11,7 @@ public class CommonCocktail implements Cocktail {
     private final String strDrink;
     private final String strInstructions;
     private final String photoUrl;
+    private final Map<String, String> strTags;
 
     // Ingredient name as key, measure as value
     private final Map<String, String> ingredients;
@@ -20,12 +21,14 @@ public class CommonCocktail implements Cocktail {
                           String strDrink,
                           String strInstructions,
                           String photoUrl,
-                          Map<String, String> ingredients) {
+                          Map<String, String> ingredients,
+                          Map<String, String> tags) {
         this.idDrink = idDrink;
         this.strDrink = strDrink;
         this.strInstructions = strInstructions;
         this.photoUrl = photoUrl;
         this.ingredients = ingredients;
+        this.strTags = tags;
     }
 
     // Getters for accessing fields
@@ -47,5 +50,9 @@ public class CommonCocktail implements Cocktail {
 
     public Map<String, String> getIngredients() {
         return ingredients;
+    }
+
+    public Map<String, String> getStrTags() {
+        return strTags;
     }
 }

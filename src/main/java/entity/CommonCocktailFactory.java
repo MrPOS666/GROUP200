@@ -22,7 +22,8 @@ public class CommonCocktailFactory implements CocktailFactory {
                            String strDrink,
                            String strInstructions,
                            String photoUrl,
-                           Map<String, String> ingredients) {
-        return new CommonCocktail(idDrink, strDrink, strInstructions, photoUrl, ingredients);
+                           Map<String, String> ingredients,
+                           Map<String, String> tags) {
+        return new CommonCocktail(idDrink, strDrink, strInstructions, photoUrl, ingredients, tags);
     }
 }

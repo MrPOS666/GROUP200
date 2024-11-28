@@ -1,15 +1,9 @@
 package interface_adapter.recommendation;
 
-import interface_adapter.ViewModel;
+public class RecommendationViewModel {
 
-/**
- * The View Model for the Login View.
- */
-public class RecommendationViewModel extends ViewModel<RecommendationState> {
-
-    public RecommendationViewModel() {
-        super("Recommendation");
-        setState(new RecommendationState());
+    public String[] getRecommendations() {
+        // Simulate fetching recommendations (replace with real logic later)
+        return new String[] {"Mojito", "Martini", "Margarita", "Pina Colada", "Bloody Mary", "Whiskey Sour"};
     }
-
 }

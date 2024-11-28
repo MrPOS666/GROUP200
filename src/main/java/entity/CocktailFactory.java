@@ -19,5 +19,6 @@ public interface CocktailFactory {
                     String strDrink,
                     String strInstructions,
                     String photoUrl,
-                    Map<String, String> ingredients);
+                    Map<String, String> ingredients,
+                    Map<String, String> tags);
 }
