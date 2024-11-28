@@ -12,22 +12,26 @@ public class HomepageInteractor implements HomepageInputBoundary {
     }
 
     @Override
-    public void switchToSearchView() {
-        homepagePresenter.switchToSearchView();
+    public void switchToSearchView(HomepageInputData input) {
+        final HomepageOutputData homepageOutputData = new HomepageOutputData(input.getUsername());
+        homepagePresenter.switchToSearchView(homepageOutputData);
     }
 
     @Override
-    public void switchToMyFavouritesView() {
-        homepagePresenter.switchToMyFavouritesView();
+    public void switchToMyFavouritesView(HomepageInputData input) {
+        final HomepageOutputData homepageOutputData = new HomepageOutputData(input.getUsername());
+        homepagePresenter.switchToMyFavouritesView(homepageOutputData);
     }
 
     @Override
-    public void switchToRecommendationView() {
-        homepagePresenter.switchToRecommendationView();
+    public void switchToRecommendationView(HomepageInputData input) {
+        final HomepageOutputData homepageOutputData = new HomepageOutputData(input.getUsername());
+        homepagePresenter.switchToRecommendationView(homepageOutputData);
     }
 
     @Override
-    public void switchToChangePasswordView() {
-        homepagePresenter.switchToChangePasswordView();
+    public void switchToChangePasswordView(HomepageInputData input) {
+        final HomepageOutputData homepageOutputData = new HomepageOutputData(input.getUsername());
+        homepagePresenter.switchToChangePasswordView(homepageOutputData);
     }
 }

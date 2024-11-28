@@ -9,13 +9,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessInterface;
 
 /**
  * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface {
+public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface, DeleteDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
@@ -239,6 +240,21 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface {
         catch (IOException | JSONException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public List<Cocktail> loadCocktails(User user) throws DetailPageDataAccessException {
+        return List.of();
+    }
+
+    @Override
+    public void saveCocktails(User user, List<Cocktail> cocktails) throws DetailPageDataAccessException {
+
+    }
+
+    @Override
+    public User getUserByUsername(String username) throws DetailPageDataAccessException {
+        return null;
     }
 }
 

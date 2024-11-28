@@ -8,20 +8,20 @@ public interface HomepageOutputBoundary {
     /**
      * Switches to the Search View.
      */
-    void switchToSearchView();
+    void switchToSearchView(HomepageOutputData homepageOutputData);
 
     /**
      * Switches to the MyFavourites View.
      */
-    void switchToMyFavouritesView();
+    void switchToMyFavouritesView(HomepageOutputData homepageOutputData);
 
     /**
      * Switches to the Recommendation View.
      */
-    void switchToRecommendationView();
+    void switchToRecommendationView(HomepageOutputData homepageOutputData);
 
     /**
      * Switches to the ChangePassword View.
      */
-    void switchToChangePasswordView();
+    void switchToChangePasswordView(HomepageOutputData homepageOutputData);
 }

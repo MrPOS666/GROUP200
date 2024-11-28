@@ -55,7 +55,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toSearch)) {
-                            homepageController.switchToSearchView();
+                            homepageController.switchToSearchView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -64,7 +64,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toMyFavourites)) {
-                            homepageController.switchToMyFavouritesView();
+                            homepageController.switchToMyFavouritesView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -73,7 +73,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toRecommends)) {
-                            homepageController.switchToRecommendationView();
+                            homepageController.switchToRecommendationView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -82,7 +82,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toChangePassword)) {
-                            homepageController.switchToChangePasswordView();
+                            homepageController.switchToChangePasswordView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });

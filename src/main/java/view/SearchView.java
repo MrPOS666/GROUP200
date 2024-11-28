@@ -7,21 +7,23 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.detailPage.DetailPageController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-
+/**
+ * View for search use cases.
+ */
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
@@ -32,8 +34,11 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
     private final JButton search;
     private final JButton enter;
+
     private SearchController searchController;
     private IngredientsController ingredientsController;
+
+    private DetailPageController detailPageController;
 
     public SearchView(SearchViewModel searchViewModel) {
         this.searchViewModel = searchViewModel;
@@ -157,15 +162,29 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.ingredientsController = controller;
     }
 
+    public void setDetailPageController(DetailPageController detailPageController) {
+        this.detailPageController = detailPageController;
+    }
+
     public void searchresults(SearchState state) {
+
+        final String username = state.getUsername();
 
         final List<String> nameList = state.getCocktailNamesList();
         final List<Integer> ids = state.getIdList();
+        final List<String> instructions = state.getRecipeList();
+        final List<Map<String, String>> ingredients = state.getIngredientsList();
+        final List<String> photoLinks = state.getPhotoLinkList();
         final List<BufferedImage> images = state.getImages();
 
         for (int i = 0; i < nameList.size(); i++) {
-            final String name = nameList.get(i);
+
+            final String cocktailName = nameList.get(i);
             final Integer id = ids.get(i);
+            final String instruction = instructions.get(i);
+            final Map<String, String> ingredient = ingredients.get(i);
+            final String photolink = photoLinks.get(i);
+            final BufferedImage image = images.get(i);
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();
@@ -176,7 +195,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
 
             // Create labels for cocktail details
-        final JLabel nameLabel = new JLabel(name);
+            final JLabel nameLabel = new JLabel(cocktailName);
             final JLabel IDLabel = new JLabel(id.toString());
 
             // Set color for labels
@@ -185,9 +204,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Add the cocktail image if available
             final JLabel imageLabel = new JLabel();
-            if (images != null && i < images.size() && images.get(i) != null) {
+            if (image != null) {
                 // Create an ImageIcon from the BufferedImage
-                final ImageIcon imageIcon = new ImageIcon(images.get(i));
+                final ImageIcon imageIcon = new ImageIcon(image);
                 imageLabel.setIcon(imageIcon); // Set the image in the label
             }
             else {
@@ -204,6 +223,25 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Add the cocktail panel to the main result panel
             resultPanel.add(cocktailPanel);
+
+            JButton detailsButton = new JButton("Details");
+            detailsButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(detailsButton)) {
+                                detailPageController.execute(username,
+                                        cocktailName,
+                                        id,
+                                        instruction,
+                                        photolink,
+                                        ingredient,
+                                        image);
+                            }
+                        }
+                    }
+            );
+
+            resultPanel.add(detailsButton);
 
             // Add space between each cocktail panel
             resultPanel.add(Box.createVerticalStrut(10)); // Add space between cocktails
