@@ -12,16 +12,18 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-
+/**
+ * View for the Search Use Case.
+ */
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
@@ -165,7 +167,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
         for (int i = 0; i < nameList.size(); i++) {
             final String name = nameList.get(i);
-            final int id = ids.get(i);
+            final Integer id = ids.get(i);
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();
@@ -177,11 +179,11 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Create labels for cocktail details
             final JLabel nameLabel = new JLabel(name);
-            final JLabel IDLabel = new JLabel(id);
+            final JLabel idLabel = new JLabel(id.toString());
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
-            IDLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
+            idLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
 
             // Add the cocktail image if available
             final JLabel imageLabel = new JLabel();
@@ -196,7 +198,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
             // Add components to the cocktail panel
             cocktailPanel.add(nameLabel);
-            cocktailPanel.add(IDLabel);
+            cocktailPanel.add(idLabel);
             cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
