@@ -9,12 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 
 /**
  * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 {
+public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
