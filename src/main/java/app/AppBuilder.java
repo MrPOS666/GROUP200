@@ -7,6 +7,8 @@ import javax.swing.*;
 import data_access.DBUserDataAccessObject;
 import data_access.DBUserDataAccessObject2;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.SearchByNameOrIDAccessObject;
+import entity.CommonCocktailFactory;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -81,6 +83,7 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2();
+    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -243,7 +246,7 @@ public class AppBuilder {
             throw new IllegalStateException("MyFavouriteView and MyFavouriteViewModel must be initialized before adding Delete Use Case.");
         }
 
-        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel);
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel, homepageViewModel);
         final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteDataAccessObject, deleteOutputBoundary);
 
         final DeleteController deleteController = new DeleteController(deleteInteractor);
