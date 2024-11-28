@@ -80,7 +80,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2(new OkHttpClient());
+    private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
