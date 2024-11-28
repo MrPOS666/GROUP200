@@ -1,5 +1,6 @@
 package use_case.delete_favorite;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,12 +74,21 @@ public class DeleteInteractor implements DeleteInputBoundary {
         }
     }
 
+    /**
+     * Execute the switch to Homepage View use case.
+     */
+    @Override
+    public void switchToHomepageView() {
+        deletePresenter.switchToHomepageView();
+    }
+
     private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites) {
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
         final List<String> instructions = new ArrayList<>();
         final List<String> photos = new ArrayList<>();
         final List<Map<String, String>> ingredients = new ArrayList<>();
+        final List<BufferedImage> images = new ArrayList<>();
 
         for (Cocktail cocktail : updatedFavourites) {
             ids.add(cocktail.getIdDrink());
@@ -86,7 +96,8 @@ public class DeleteInteractor implements DeleteInputBoundary {
             instructions.add(cocktail.getInstructions());
             photos.add(cocktail.getPhotoLink());
             ingredients.add(cocktail.getIngredients());
+            images.add(cocktail.getImage());
         }
-        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients);
+        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images);
     }
 }
