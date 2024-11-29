@@ -233,6 +233,7 @@ public class AppBuilder {
 
         final HomepageInputBoundary homepageInteractor = new HomepageInteractor(homepagePresenter);
         final HomepageController homepageController = new HomepageController(homepageInteractor);
+
         homepageView.setHomepageController(homepageController);
         return this;
     }
