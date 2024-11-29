@@ -18,7 +18,7 @@ public interface DeleteDataAccessInterface {
      * @param newFavourites The new list of favorite cocktails.
      * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    void updateMyFavourite(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException;
+    void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException;
 
     /**
      * Load a user by their username.
@@ -27,6 +27,7 @@ public interface DeleteDataAccessInterface {
      * @return The User object.
      * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    User loadUser(String username) throws DetailPageDataAccessException;
+    User loadUserByName(String username) throws DetailPageDataAccessException;
 
+    void saveUserToApi(User testUser) throws DetailPageDataAccessException;
 }
