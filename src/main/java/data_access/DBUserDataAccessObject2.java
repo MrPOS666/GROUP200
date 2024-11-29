@@ -9,14 +9,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface, DeleteDataAccessInterface {
+public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
+                                                SignupUserDataAccessInterface,
+                                                LoginUserDataAccessInterface,
+                                                ChangePasswordUserDataAccessInterface,
+                                                LogoutUserDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
@@ -227,7 +235,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface, D
                 final JSONObject responseBody = new JSONObject(response.body().string());
 
                 if (responseBody.getInt("status_code") == 200) {
-                    // Password updated successfully
+                    return;
                 }
                 else {
                     throw new RuntimeException(responseBody.getString("message"));
@@ -243,19 +251,48 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface, D
     }
 
     @Override
-    public List<Cocktail> loadCocktails(User user) throws DetailPageDataAccessException {
-        return List.of();
+    public void changePassword(User user) {
+            changePassword(user, user.getPassword());
     }
 
     @Override
-    public void saveCocktails(User user, List<Cocktail> cocktails) throws DetailPageDataAccessException {
-
+    public User get(String username) {
+        try {
+            return this.loadUser(username);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public User getUserByUsername(String username) throws DetailPageDataAccessException {
+    public String getCurrentUsername() {
         return null;
     }
+
+    @Override
+    public void setCurrentUsername(String username) {
+
+    }
+
+    @Override
+    public boolean existsByName(String username) {
+        try {
+            User user = loadUser(username);
+            return user != null;
+        }
+        catch (DetailPageDataAccessException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void save(User user) {
+        try {
+            saveUser(user);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException("Error saving user: " + e.getMessage());
+        }
+    }
 }
-
-
