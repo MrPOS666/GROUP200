@@ -70,7 +70,7 @@ public class DeletePresenter implements DeleteOutputBoundary {
      */
     @Override
     public void switchToHomepageView() {
-        viewManagerModel.setState(homepageViewModel.getState());
+        viewManagerModel.setState(homepageViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
