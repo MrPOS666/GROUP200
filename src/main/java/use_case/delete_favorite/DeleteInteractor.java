@@ -30,7 +30,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
     public void execute(DeleteInputData deleteInputData) throws DetailPageDataAccessException {
         final String username = deleteInputData.getUserName();
         final List<Integer> cocktailIdToDelete = deleteInputData.getDeleteCocktailId();
-        final User user = dbUserDataAccessObject2.loadUser(username);
+        final User user = dbUserDataAccessObject2.loadUserByName(username);
 
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
@@ -65,7 +65,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
             user.getMyFavourite().clear();
             user.getMyFavourite().addAll(updateFavourites);
             final DeleteOutputData outputData = createOutputData(updateFavourites);
-            dbUserDataAccessObject2.updateMyFavourite(user, updateFavourites);
+            dbUserDataAccessObject2.updateMyFavouriteCocktail(user, updateFavourites);
 
             deletePresenter.prepareSuccessView(outputData);
         }
