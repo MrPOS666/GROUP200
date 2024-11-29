@@ -62,7 +62,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                 if (evt.getSource().equals(select)) {
                     System.out.println("Select button clicked");
                     delete.setEnabled(true);
-                    cancel.setEnabled(true);
+                    back.setEnabled(true);
                     select.setEnabled(false);
                     updateCocktailCheckboxes(myFavouriteViewModel.getState().getIdList());
                 }
