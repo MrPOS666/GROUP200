@@ -1,5 +1,6 @@
 package interface_adapter.myFavourite;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class MyFavouriteState {
     private List<String> instructionList;
     private List<String> cocktailNamesList = new ArrayList<>();
     private List<String> photoLinkList;
+    private List<BufferedImage> imageList;
 
     /**
      * Gets the username of the current user.
@@ -83,6 +85,9 @@ public class MyFavouriteState {
         this.photoLinkList = photoLinks;
     }
 
+    public void setImageList(List<BufferedImage> images) {
+    }
+
     public String getSelectError() {
         return selectError;
     }
@@ -106,4 +111,9 @@ public class MyFavouriteState {
     public List<String> getPhotoLinkList() {
         return photoLinkList;
     }
+
+    public List<BufferedImage> getImageList() {
+        return imageList;
+    }
+
 }
