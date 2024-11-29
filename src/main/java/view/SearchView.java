@@ -230,12 +230,12 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                         public void actionPerformed(ActionEvent evt) {
                             if (evt.getSource().equals(detailsButton)) {
                                 detailPageController.execute(username,
-                                        cocktailName,
-                                        id,
-                                        instruction,
-                                        photolink,
-                                        ingredient,
-                                        image);
+                                                            cocktailName,
+                                                            id,
+                                                            instruction,
+                                                            photolink,
+                                                            ingredient,
+                                                            image);
                             }
                         }
                     }

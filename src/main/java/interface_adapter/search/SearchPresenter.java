@@ -10,6 +10,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +38,14 @@ public class SearchPresenter implements SearchOutputBoundary {
         final List<String> instructions = response.getInstructions();
         final List<String> photoLinks = response.getPhotoLink();
         final List<Map<String, String>> ingredients = response.getIngredients();
+        final List<BufferedImage> images = response.getImages();
 
         searchState.setCocktailNamesList(names);
         searchState.setIdList(ids);
         searchState.setIngredientsList(ingredients);
         searchState.setRecipeList(instructions);
         searchState.setPhotoLinkList(photoLinks);
+        searchState.setImages(images);
 
         searchViewModel.firePropertyChanged();
 

@@ -7,7 +7,7 @@ import interface_adapter.ViewModel;
  */
 public class DetailPageViewModel extends ViewModel<DetailPageState> {
     public DetailPageViewModel() {
-        super("detail page");
+        super("detailpage");
         setState(new DetailPageState());
     }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
  * Output Data of Detail Page Use Case.
  */
 public class DetailPageOutputData {
+    private String username;
     private String cocktailname;
     private Integer cocktailiD;
     private String instruction;
@@ -14,18 +15,24 @@ public class DetailPageOutputData {
     private Map<String, String> ingredients;
     private BufferedImage image;
 
-    public DetailPageOutputData(String cocktailname,
+    public DetailPageOutputData(String username,
+                                String cocktailname,
                                 Integer cocktailiD,
                                 String instruction,
                                 String photolink,
                                 Map<String, String> ingredients,
                                 BufferedImage image) {
+        this.username = username;
         this.cocktailname = cocktailname;
         this.cocktailiD = cocktailiD;
         this.instruction = instruction;
         this.photolink = photolink;
         this.ingredients = ingredients;
         this.image = image;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getCocktailname() {

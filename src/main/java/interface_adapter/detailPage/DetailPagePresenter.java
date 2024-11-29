@@ -36,6 +36,7 @@ public class DetailPagePresenter implements DetailPageOutputBoundary {
     public void prepareSuccessView(DetailPageOutputData detailPageOutputData) {
         // On success, switch to the Detail View
         final DetailPageState detailPageState = detailPageViewModel.getState();
+        detailPageState.setUsername(detailPageOutputData.getUsername());
         detailPageState.setCocktailname(detailPageOutputData.getCocktailname());
         detailPageState.setCocktailiD(detailPageOutputData.getCocktailiD());
         detailPageState.setInstruction(detailPageOutputData.getInstruction());

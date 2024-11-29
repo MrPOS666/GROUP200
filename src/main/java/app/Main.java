@@ -34,10 +34,14 @@ public class Main {
                 .addLoggedInView()
                 .addSearchView()
                 .addHomepageView()
+                .addDetailPageView()
+                .addDetailPageView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
+                .addHomepageUseCase()
+                .addDetailPageUseCase()
                 .addSearchUseCase()
                 .build();
 

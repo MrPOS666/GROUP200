@@ -29,6 +29,7 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
     public void execute(DetailPageInputData detailPageInputData) {
         try {
             // Extract details from input data
+            final String username = detailPageInputData.getUsername();
             final String cocktailName = detailPageInputData.getCocktailName();
             final Integer cocktailID = detailPageInputData.getCocktailID();
             final String instruction = detailPageInputData.getInstruction();
@@ -37,7 +38,7 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
             final BufferedImage image = detailPageInputData.getImage();
 
             // Create output data
-            final DetailPageOutputData outputData = new DetailPageOutputData(
+            final DetailPageOutputData outputData = new DetailPageOutputData(username,
                     cocktailName,
                     cocktailID,
                     instruction,

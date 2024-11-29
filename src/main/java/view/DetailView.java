@@ -18,6 +18,7 @@ import interface_adapter.detailPage.DetailPageViewModel;
  * Showing detail of a cocktail.
  */
 public class DetailView extends JPanel implements ActionListener, PropertyChangeListener {
+    private final String viewName = "detailpage";
 
     private final DetailPageViewModel detailPageViewModel;
 
@@ -136,5 +137,9 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
                 repaint();
             }
         }
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
