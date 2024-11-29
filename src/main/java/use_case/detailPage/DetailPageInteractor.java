@@ -36,6 +36,7 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
             final String photolink = detailPageInputData.getPhotolink();
             final Map<String, String> ingredients = detailPageInputData.getIngredients();
             final BufferedImage image = detailPageInputData.getImage();
+            final String previousViewName = detailPageInputData.getPreviousViewName();
 
             // Create output data
             final DetailPageOutputData outputData = new DetailPageOutputData(username,
@@ -44,7 +45,8 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
                     instruction,
                     photolink,
                     ingredients,
-                    image
+                    image,
+                    previousViewName
             );
 
             // Send to presenter to prepare the success view

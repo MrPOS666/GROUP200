@@ -32,15 +32,17 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
 
     public DetailView(DetailPageViewModel detailPageViewModel) {
         this.detailPageViewModel = detailPageViewModel;
+        this.detailPageViewModel.addPropertyChangeListener(this);
+
+        final JLabel titleLabel = new JLabel("Detail Page");
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        /*
-        Put the previous page parameter in the interactor
-         */
+
         final JPanel buttons = new JPanel();
         addMyFavourite = new JButton("Add My Favourite");
-        buttons.add(addMyFavourite);
         backButton = new JButton("Back");
+        buttons.add(addMyFavourite);
         buttons.add(backButton);
 
         addMyFavourite.addActionListener(
@@ -71,21 +73,21 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
+        this.add(titleLabel);
+        detailPanel.setForeground(Color.YELLOW);
+        this.add(detailPanel);
+        this.add(detailOutputField);
+        this.add(buttons);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-    }
-
-    public void setDetailPageController(DetailPageController detailPageController) {
-        this.detailPageController = detailPageController;
+        System.out.println("Clicked: " + e.getActionCommand());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         detailPanel.removeAll();
-        this.remove(detailPanel);
         detailOutputField.removeAll();
         this.remove(detailOutputField);
         final DetailPageState currentState = (DetailPageState) evt.getNewValue();
@@ -120,26 +122,27 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
                 final JLabel imageLabel = new JLabel(imageIcon);
                 detailPanel.add(imageLabel);
             }
-            else {
-                final JLabel noImageLabel = new JLabel("No image available.");
-                noImageLabel.setForeground(Color.WHITE);
 
-                // Add ingredients to the panel
-                detailPanel.add(new JLabel("Ingredients:"));
-                for (Map.Entry<String, String> entry : currentState.getIngredients().entrySet()) {
-                    final JLabel ingredientLabel = new JLabel(entry.getKey() + ": " + entry.getValue());
-                    ingredientLabel.setForeground(Color.WHITE);
-                    detailPanel.add(ingredientLabel);
-                }
+            final JLabel noImageLabel = new JLabel("No image available.");
+            noImageLabel.setForeground(Color.WHITE);
 
-                this.add(detailPanel);
-                revalidate();
-                repaint();
+            // Add ingredients to the panel
+            detailPanel.add(new JLabel("Ingredients:"));
+            for (Map.Entry<String, String> entry : currentState.getIngredients().entrySet()) {
+                final JLabel ingredientLabel = new JLabel(entry.getKey() + ": " + entry.getValue());
+                ingredientLabel.setForeground(Color.WHITE);
+                detailPanel.add(ingredientLabel);
             }
+            revalidate();
+            repaint();
         }
     }
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setDetailPageController(DetailPageController detailPageController) {
+        this.detailPageController = detailPageController;
     }
 }

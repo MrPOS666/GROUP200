@@ -219,7 +219,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
-            cocktailPanel.setPreferredSize(new Dimension(200, 200));
+            cocktailPanel.setPreferredSize(new Dimension(1200, 1200));
 
             // Add the cocktail panel to the main result panel
             resultPanel.add(cocktailPanel);
@@ -235,7 +235,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                                                             instruction,
                                                             photolink,
                                                             ingredient,
-                                                            image);
+                                                            image,
+                                                            searchViewModel.getViewName());
                             }
                         }
                     }
