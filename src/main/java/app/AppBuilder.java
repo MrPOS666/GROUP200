@@ -1,6 +1,7 @@
 package app;
 
 import java.awt.CardLayout;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -8,15 +9,16 @@ import data_access.DBUserDataAccessObject;
 import data_access.DBUserDataAccessObject2;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchByNameOrIDAccessObject;
-import entity.CommonCocktailFactory;
-import entity.CommonUserFactory;
-import entity.UserFactory;
+import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.delete.DeleteController;
 import interface_adapter.delete.DeletePresenter;
+import interface_adapter.detailPage.DetailPageController;
+import interface_adapter.detailPage.DetailPagePresenter;
+import interface_adapter.detailPage.DetailPageViewModel;
 import interface_adapter.homepage.HomepageController;
 import interface_adapter.homepage.HomepagePresenter;
 import interface_adapter.homepage.HomepageViewModel;
@@ -30,6 +32,7 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search_by_ingredients.IngredientsController;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -40,6 +43,9 @@ import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.delete_favorite.DeleteInputBoundary;
 import use_case.delete_favorite.DeleteInteractor;
 import use_case.delete_favorite.DeleteOutputBoundary;
+import use_case.detailPage.DetailPageInputBoundary;
+import use_case.detailPage.DetailPageInteractor;
+import use_case.detailPage.DetailPageOutputBoundary;
 import use_case.homepage.HomepageInputBoundary;
 import use_case.homepage.HomepageInteractor;
 import use_case.homepage.HomepageOutputBoundary;
@@ -77,27 +83,32 @@ public class AppBuilder {
     private final CardLayout cardLayout = new CardLayout();
     // thought question: is the hard dependency below a problem?
     private final UserFactory userFactory = new CommonUserFactory();
+    private final CocktailFactory cocktailFactory = new CommonCocktailFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final DBUserDataAccessObject2 deleteDataAccessObject = new DBUserDataAccessObject2();
-    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
+    private final DBUserDataAccessObject2 userDataAccessObject = new DBUserDataAccessObject2();
+    private final SearchByNameOrIDAccessObject searchDataAccessObject =
+            new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
     private HomepageViewModel homepageViewModel;
+    private SearchViewModel searchViewModel;
     private MyFavouriteViewModel myFavouriteViewModel;
     private RecommendationViewModel recommendationViewModel;
+    private DetailPageViewModel detailPageViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
     private HomepageView homepageView;
-    private SearchViewModel searchViewModel;
     private SearchView searchView;
     private MyFavouriteView myFavouriteView;
+    private DetailView detailView;
+
+    private DetailPageController detailPageController;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -142,7 +153,6 @@ public class AppBuilder {
      */
     public AppBuilder addHomepageView() {
         homepageViewModel = new HomepageViewModel();
-        // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
         homepageView = new HomepageView(homepageViewModel, loggedInViewModel);
         cardPanel.add(homepageView, homepageView.getViewName());
         return this;
@@ -156,6 +166,17 @@ public class AppBuilder {
         myFavouriteViewModel = new MyFavouriteViewModel("MyFavourite");
         myFavouriteView = new MyFavouriteView(myFavouriteViewModel);
         cardPanel.add(myFavouriteView, myFavouriteView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Detailpage View to the application.
+     * @return this builder
+     */
+    public AppBuilder addDetailPageView() {
+        detailPageViewModel = new DetailPageViewModel();
+        detailView = new DetailView(detailPageViewModel);
+        cardPanel.add(detailView, detailView.getViewName());
         return this;
     }
 
@@ -256,11 +277,25 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the DetailPage Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addDetailPageUseCase() {
+        final DetailPageOutputBoundary detailPagePresenter = new DetailPagePresenter(viewManagerModel,
+                detailPageViewModel, searchViewModel, myFavouriteViewModel, recommendationViewModel);
+        final DetailPageInputBoundary detailPageInteractor =
+                new DetailPageInteractor(detailPagePresenter, userDataAccessObject, cocktailFactory);
+        this.detailPageController = new DetailPageController(detailPageInteractor);
+        detailView.setDetailPageController(detailPageController);
+        return this;
+    }
+
+    /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login Example");
+        final JFrame application = new JFrame("GROUP200");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         final JScrollPane scrollPane = new JScrollPane(cardPanel);
@@ -295,6 +330,7 @@ public class AppBuilder {
 
         final SearchController controller = new SearchController(searchInteractor);
         searchView.setSearchController(controller);
+        searchView.setDetailPageController(this.detailPageController);
         return this;
     }
 

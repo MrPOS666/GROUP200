@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchState {
-    private int id = 0;
+    private Integer id = 0;
     private List<Integer> idList;
     private List<Map<String, String>> ingredientsList;
     private List<String> recipeList;
@@ -15,6 +15,8 @@ public class SearchState {
 
     private String searchError;
     private String input;
+
+    private String username;
 
     public SearchState() {
     }
@@ -71,6 +73,10 @@ public class SearchState {
         return input;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setInput(String input) {
         this.input = input;
     }
@@ -105,5 +111,9 @@ public class SearchState {
 
     public void setRecipeList(List<String> recipeList) {
         this.recipeList = recipeList;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -9,19 +9,50 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
+import use_case.detailPage.DetailPageDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 
 /**
  * DAO class for managing user data and their associated favorite cocktails.
  */
-public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
+public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
+                                                SignupUserDataAccessInterface,
+                                                LoginUserDataAccessInterface,
+                                                ChangePasswordUserDataAccessInterface,
+                                                LogoutUserDataAccessInterface,
+                                                DeleteDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
     private static final String CREATE_USER_ENDPOINT = "/user";
     private static final String GET_USER_ENDPOINT = "/user";
     private static final MediaType JSON = MediaType.parse("application/json");
+
+    @Override
+    public User getUser(String username) {
+        try {
+            return this.loadUser(username);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void addMyFavourite(User user, List<Cocktail> newFavourites) {
+        try {
+            this.updateMyFavourite(user, newFavourites);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Save a new user with an empty MyFavourite cocktail list.
@@ -206,7 +237,7 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
                 final JSONObject responseBody = new JSONObject(response.body().string());
 
                 if (responseBody.getInt("status_code") == 200) {
-                    // Password updated successfully
+                    return;
                 }
                 else {
                     throw new RuntimeException(responseBody.getString("message"));
@@ -221,6 +252,30 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
         }
     }
 
+    @Override
+    public void changePassword(User user) {
+            changePassword(user, user.getPassword());
+    }
+
+    @Override
+    public User get(String username) {
+        try {
+            return this.loadUser(username);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return null;
+    }
+
+    @Override
+    public void setCurrentUsername(String username) {
+
+    }
     /**
      * Update the MyFavourite cocktail list for an existing user.
      *
@@ -251,4 +306,24 @@ public class DBUserDataAccessObject2 implements DeleteDataAccessInterface {
     }
 }
 
+    @Override
+    public boolean existsByName(String username) {
+        try {
+            User user = loadUser(username);
+            return user != null;
+        }
+        catch (DetailPageDataAccessException e) {
+            return false;
+        }
+    }
 
+    @Override
+    public void save(User user) {
+        try {
+            saveUser(user);
+        }
+        catch (DetailPageDataAccessException e) {
+            throw new RuntimeException("Error saving user: " + e.getMessage());
+        }
+    }
+}
