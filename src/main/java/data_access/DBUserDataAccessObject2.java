@@ -254,7 +254,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
     @Override
     public void changePassword(User user) {
-            changePassword(user, user.getPassword());
+        changePassword(user, user.getPassword());
     }
 
     @Override
@@ -274,7 +274,6 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
     @Override
     public void setCurrentUsername(String username) {
-
     }
     /**
      * Update the MyFavourite cocktail list for an existing user.
@@ -304,12 +303,11 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
     public void saveUserToApi(User testUser) throws DetailPageDataAccessException {
         saveUser(testUser);
     }
-}
 
     @Override
     public boolean existsByName(String username) {
         try {
-            User user = loadUser(username);
+            final User user = loadUser(username);
             return user != null;
         }
         catch (DetailPageDataAccessException e) {
