@@ -71,9 +71,10 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
         final Set<Cocktail> set = new HashSet<Cocktail>();
         for (String i: ingredients) {
             final String jsonResponse = searchByIngredient(i);
-            set.addAll(cocktailHelper(jsonResponse));
+            set.addAll(createCocktailsFromJson(jsonResponse));
         }
-        final List<Cocktail> cocktails = new ArrayList<>(set);
+        final List<Cocktail> cocktails = new ArrayList<>();
+        cocktails.addAll(set);
         return cocktails;
     }
 
