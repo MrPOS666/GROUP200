@@ -49,7 +49,7 @@ class SearchByNameOrIDAccessObjectTest {
         // Assuming ID 11007 corresponds to a valid cocktail (e.g., Margarita)
         List<String> cocktailIngredients = new ArrayList<>();
         cocktailIngredients.add("Salt");
-        cocktailIngredients.add("Lemon");
+        cocktailIngredients.add("gin");
         List<Cocktail> cocktails = searchDataAccessObject.getByIngredients(cocktailIngredients);
 
         System.out.println("Cocktails found by ingredients: ");

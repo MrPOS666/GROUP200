@@ -68,16 +68,42 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
 
     @Override
     public List<Cocktail> getByIngredients(List<String> ingredients) {
-        final Set<Cocktail> set = new HashSet<Cocktail>();
+        final Set<Cocktail> cocktails = new HashSet<Cocktail>();
         for (String i: ingredients) {
             final String jsonResponse = searchByIngredient(i);
-            set.addAll(createCocktailsFromJson(jsonResponse));
+            cocktails.addAll(createCocktailsFromJson(jsonResponse));
         }
-        final List<Cocktail> cocktails = new ArrayList<>();
-        cocktails.addAll(set);
-        return cocktails;
+        final List<Cocktail> cocktailList = new ArrayList<>();
+        cocktailList.addAll(cocktails);
+        return cocktailList;
     }
 
+    /**
+     * Helper method to get full cocktail information from id
+     * @param jsonResponse
+     * @return
+     */
+    public List<Cocktail> cocktailsFromJson(String jsonResponse) {
+        final Set<Cocktail> cocktails = new HashSet<>();
+        final List<Cocktail> cocktailList = new ArrayList<>();
+        cocktailList.addAll(cocktails);
+        if (jsonResponse == null) {
+            return cocktailList;
+        }
+
+        final JSONObject jsonObject = new JSONObject(jsonResponse);
+        final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
+
+        if (drinksArray != null) {
+            for (int i = 0; i < drinksArray.length(); i++) {
+                final JSONObject drinkObject = drinksArray.getJSONObject(i);
+                final int idDrink = drinkObject.optInt("idDrink");
+                cocktails.add(getById(idDrink));
+            }
+        }
+        cocktailList.addAll(cocktails);
+        return cocktailList;
+    }
 
     @Override
     public void setCurrentCocktailName(String cocktailName) {
