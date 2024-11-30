@@ -235,7 +235,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                                                             instruction,
                                                             photolink,
                                                             ingredient,
-                                                            image);
+                                                            image,
+                                                            searchViewModel.getViewName());
                             }
                         }
                     }

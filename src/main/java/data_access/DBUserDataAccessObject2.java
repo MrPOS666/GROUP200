@@ -11,8 +11,7 @@ import org.json.JSONObject;
 
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
-import use_case.delete_favorite.DeleteDataAccessInterface;
-import use_case.detailPage.DetailPageDataAccessException;
+import use_case.detailPage.MyfavouritePageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -39,7 +38,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             return this.loadUser(username);
         }
-        catch (DetailPageDataAccessException e) {
+        catch (MyfavouritePageDataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -49,7 +48,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             this.updateMyFavourite(user, newFavourites);
         }
-        catch (DetailPageDataAccessException e) {
+        catch (MyfavouritePageDataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -58,9 +57,9 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      * Save a new user with an empty MyFavourite cocktail list.
      *
      * @param user The user object containing the username and password.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
-    public void saveUser(User user) throws DetailPageDataAccessException {
+    public void saveUser(User user) throws MyfavouritePageDataAccessException {
         final OkHttpClient client = new OkHttpClient();
         final JSONObject requestBody = new JSONObject();
         requestBody.put("username", user.getName());
@@ -76,11 +75,11 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new DetailPageDataAccessException("Error saving user: " + response.message());
+                throw new MyfavouritePageDataAccessException("Error saving user: " + response.message());
             }
         }
         catch (IOException evt) {
-            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
+            throw new MyfavouritePageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
@@ -89,9 +88,9 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      *
      * @param user          The user object containing the username and password.
      * @param newFavourites The new list of favorite cocktails.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
-    public void updateMyFavourite(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
+    public void updateMyFavourite(User user, List<Cocktail> newFavourites) throws MyfavouritePageDataAccessException {
         final OkHttpClient client = new OkHttpClient();
         final JSONObject requestBody = new JSONObject();
         requestBody.put("username", user.getName());
@@ -118,11 +117,11 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new DetailPageDataAccessException("Error updating MyFavourite: " + response.message());
+                throw new MyfavouritePageDataAccessException("Error updating MyFavourite: " + response.message());
             }
         }
         catch (IOException evt) {
-            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
+            throw new MyfavouritePageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
@@ -131,9 +130,9 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      *
      * @param username The username of the user.
      * @return The User object.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
-    public User loadUser(String username) throws DetailPageDataAccessException {
+    public User loadUser(String username) throws MyfavouritePageDataAccessException {
         final OkHttpClient client = new OkHttpClient();
         final HttpUrl url = new HttpUrl.Builder()
                 .scheme("http")
@@ -184,11 +183,11 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                 return new CommonUser(name, password, favourites);
             }
             else {
-                throw new DetailPageDataAccessException("Error loading user: " + response.message());
+                throw new MyfavouritePageDataAccessException("Error loading user: " + response.message());
             }
         }
         catch (IOException | JSONException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+            throw new MyfavouritePageDataAccessException("Exception occurred: " + e.getMessage());
         }
     }
 
@@ -197,7 +196,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      *
      * @param user        The user object containing the username and current password.
      * @param newPassword The new password for the user.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
     public void changePassword(User user, String newPassword) {
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -262,7 +261,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             return this.loadUser(username);
         }
-        catch (DetailPageDataAccessException e) {
+        catch (MyfavouritePageDataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -280,10 +279,10 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      *
      * @param user          The user object containing the username and password.
      * @param newFavourites The new list of favorite cocktails.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
     @Override
-    public void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
+    public void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws MyfavouritePageDataAccessException {
         updateMyFavourite(user, newFavourites);
     }
 
@@ -292,15 +291,15 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      *
      * @param username The username of the user.
      * @return The User object.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
     @Override
-    public User loadUserByName(String username) throws DetailPageDataAccessException {
+    public User loadUserByName(String username) throws MyfavouritePageDataAccessException {
         return loadUser(username);
     }
 
     @Override
-    public void saveUserToApi(User testUser) throws DetailPageDataAccessException {
+    public void saveUserToApi(User testUser) throws MyfavouritePageDataAccessException {
         saveUser(testUser);
     }
 
@@ -310,7 +309,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             final User user = loadUser(username);
             return user != null;
         }
-        catch (DetailPageDataAccessException e) {
+        catch (MyfavouritePageDataAccessException e) {
             return false;
         }
     }
@@ -320,7 +319,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             saveUser(user);
         }
-        catch (DetailPageDataAccessException e) {
+        catch (MyfavouritePageDataAccessException e) {
             throw new RuntimeException("Error saving user: " + e.getMessage());
         }
     }
