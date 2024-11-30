@@ -24,4 +24,10 @@ public interface IngredientsDataAccessInterface {
      */
     List<Cocktail> getByIngredients(List<String> ingredients);
 
+    /**
+     * Returns the cocktail with the given ID.
+     * @param cocktailId the ID of the cocktail to look up
+     * @return the cocktail with the given ID
+     */
+    Cocktail getById(int cocktailId);
 }

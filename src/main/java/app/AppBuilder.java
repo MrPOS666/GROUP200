@@ -78,7 +78,7 @@ public class AppBuilder {
     private LoggedInView loggedInView;
     private LoginView loginView;
 
-    private SearchViewModel searchViewModel;
+    private SearchViewModel searchViewModel = new SearchViewModel("search");
     private SearchView searchView;
 
     private HomepageViewModel homepageViewModel;
@@ -206,7 +206,7 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSearchView() {
-        searchViewModel = new SearchViewModel("search");
+        // searchViewModel = new SearchViewModel("search");
         searchView = new SearchView(searchViewModel, homepageViewModel, viewManagerModel);
         cardPanel.add(searchView, searchView.getViewName());
 

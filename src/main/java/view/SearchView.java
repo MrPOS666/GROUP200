@@ -88,7 +88,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         toHomepage.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(toHomepage)){
+                        if (evt.getSource().equals(toHomepage)) {
                             viewManagerModel.setState(homepageViewModel.getViewName());
                             viewManagerModel.firePropertyChanged();
                         }
@@ -139,6 +139,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         setFields(state);
         if (state.getSearchError() != null) {
             searchOutputField.setText(state.getSearchError());
+            searchOutputField.setAlignmentX(Component.CENTER_ALIGNMENT);
             this.add(searchOutputField);
             revalidate();
             repaint();

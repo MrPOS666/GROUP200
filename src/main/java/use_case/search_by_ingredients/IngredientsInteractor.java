@@ -54,6 +54,23 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
             ingredientsPresenter.prepareFailView("Invalid search input. Please enter valid ingredients.");
         }
     }
+
+    /**
+     * A helper method to return full cocktail information.
+     * @param ingredientsInputData the input data
+     * @return a list consists of cocktail information
+     */
+    public List<Object> getInfo(IngredientsInputData ingredientsInputData) {
+        final int id = ingredientsInputData.getId();
+        final Cocktail cocktail = ingredientsDataAccessObject.getById(id);
+        final List<Object> info = new ArrayList<>();
+        info.add(cocktail.getCocktailName());
+        info.add(cocktail.getIdDrink());
+        info.add(cocktail.getIngredients());
+        info.add(cocktail.getInstructions());
+        info.add(cocktail.getPhotoLink());
+        return info;
+    }
 }
 
 

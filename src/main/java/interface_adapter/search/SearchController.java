@@ -1,7 +1,11 @@
 package interface_adapter.search;
 
+import entity.Cocktail;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInputData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchController {
 
