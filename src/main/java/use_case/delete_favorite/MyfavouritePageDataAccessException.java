@@ -1,10 +1,10 @@
 package use_case.delete_favorite;
 
 /**
- * Exception thrown when there is an error with a
+ * Exception thrown when there is an error with accessing data.
  */
-public class MyfavourtiePageDataAccessException extends RuntimeException {
-    public MyfavourtiePageDataAccessException(String message) {
+public class MyfavouritePageDataAccessException extends RuntimeException {
+    public MyfavouritePageDataAccessException(String message) {
         super(message);
     }
 }
