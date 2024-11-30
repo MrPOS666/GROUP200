@@ -4,7 +4,7 @@ import java.util.List;
 
 import entity.Cocktail;
 import entity.User;
-import use_case.detailPage.DetailPageDataAccessException;
+import use_case.detailPage.MyfavouritePageDataAccessException;
 
 /**
  * DAO for the Delete Use Case.
@@ -16,18 +16,18 @@ public interface DeleteDataAccessInterface {
      *
      * @param user          The user object containing the username and password.
      * @param newFavourites The new list of favorite cocktails.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
-    void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException;
+    void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws MyfavouritePageDataAccessException;
 
     /**
      * Load a user by their username.
      *
      * @param username The username of the user.
      * @return The User object.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
-    User loadUserByName(String username) throws DetailPageDataAccessException;
+    User loadUserByName(String username) throws MyfavouritePageDataAccessException;
 
-    void saveUserToApi(User testUser) throws DetailPageDataAccessException;
+    void saveUserToApi(User testUser) throws MyfavouritePageDataAccessException;
 }
