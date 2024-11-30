@@ -207,7 +207,7 @@ public class AppBuilder {
      */
     public AppBuilder addSearchView() {
         searchViewModel = new SearchViewModel("search");
-        searchView = new SearchView(searchViewModel);
+        searchView = new SearchView(searchViewModel, homepageViewModel, viewManagerModel);
         cardPanel.add(searchView, searchView.getViewName());
 
         return this;

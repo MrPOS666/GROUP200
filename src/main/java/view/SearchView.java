@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
+    private final HomepageViewModel homepageViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private final JTextField inputField = new JTextField(15);
     private final JPanel resultPanel = new JPanel();
@@ -30,12 +34,18 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
     private final JButton search;
     private final JButton enter;
+    private final JButton toHomepage;
     private SearchController searchController;
     private IngredientsController ingredientsController;
 
-    public SearchView(SearchViewModel searchViewModel) {
+    public SearchView(SearchViewModel searchViewModel,
+                      HomepageViewModel homepageViewModel,
+                      ViewManagerModel viewManagerModel) {
         this.searchViewModel = searchViewModel;
         this.searchViewModel.addPropertyChangeListener(this);
+
+        this.homepageViewModel = homepageViewModel;
+        this.viewManagerModel = viewManagerModel;
 
         final JLabel title = new JLabel("Search Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -46,8 +56,10 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         final JPanel buttons = new JPanel();
         search = new JButton("search by name or id");
         enter = new JButton("search by ingredients");
+        toHomepage = new JButton("back to homepage");
         buttons.add(search);
         buttons.add(enter);
+        buttons.add(toHomepage);
 
         inputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -72,6 +84,17 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                 documentListenerHelper();
             }
         });
+
+        toHomepage.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(toHomepage)){
+                            viewManagerModel.setState(homepageViewModel.getViewName());
+                            viewManagerModel.firePropertyChanged();
+                        }
+                    }
+                }
+        );
 
         search.addActionListener(
                 new ActionListener() {
