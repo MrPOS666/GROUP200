@@ -1,7 +1,5 @@
 package use_case.logout;
 
-import entity.User;
-
 /**
  * DAO for the Logout Use Case.
  */
