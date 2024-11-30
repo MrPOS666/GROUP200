@@ -4,7 +4,7 @@ import java.util.List;
 
 import use_case.delete_favorite.DeleteInputBoundary;
 import use_case.delete_favorite.DeleteInputData;
-import use_case.detailPage.DetailPageDataAccessException;
+import use_case.detailPage.MyfavouritePageDataAccessException;
 
 /**
  * Controller for the Delete Use Case.
@@ -28,7 +28,7 @@ public class DeleteController {
         try {
             deleteInteractor.execute(deleteInputData);
         }
-        catch (DetailPageDataAccessException evt) {
+        catch (MyfavouritePageDataAccessException evt) {
             throw new RuntimeException(evt);
         }
     }
