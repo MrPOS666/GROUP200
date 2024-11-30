@@ -91,4 +91,5 @@ public class DetailPageState {
     public String getDetailPageError() {
         return detailPageError;
     }
+
 }

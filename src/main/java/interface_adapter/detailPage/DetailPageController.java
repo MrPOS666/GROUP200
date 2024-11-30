@@ -24,8 +24,9 @@ public class DetailPageController {
      * @param cocktailiD ID of current cocktail.
      * @param instruction instruction String of current cocktail
      * @param photolink photolink of current cocktail.
-     * @param ingredients ingredient map of current cocktail
-     * @param image image of current cocktail
+     * @param ingredients ingredient map of current cocktail.
+     * @param image image of current cocktail.
+     * @param previousViewName name of previous View.
      */
     public void execute(String username,
                         String cocktailname,
@@ -33,14 +34,16 @@ public class DetailPageController {
                         String instruction,
                         String photolink,
                         Map<String, String> ingredients,
-                        BufferedImage image) {
+                        BufferedImage image,
+                        String previousViewName) {
         final DetailPageInputData detailPageInputData = new DetailPageInputData(username,
                                                                                 cocktailname,
                                                                                 cocktailiD,
                                                                                 instruction,
                                                                                 photolink,
                                                                                 ingredients,
-                                                                                image);
+                                                                                image,
+                                                                                previousViewName);
         detailPageInteractor.execute(detailPageInputData);
     }
 
@@ -63,7 +66,7 @@ public class DetailPageController {
                                Map<String, String> ingredients,
                                BufferedImage image) {
         final DetailPageInputData detailPageInputData = new DetailPageInputData(username, cocktailname,
-                cocktailiD, instruction, photolink, ingredients, image);
+                cocktailiD, instruction, photolink, ingredients, image, "");
         detailPageInteractor.addMyFavourite(detailPageInputData);
     }
 
