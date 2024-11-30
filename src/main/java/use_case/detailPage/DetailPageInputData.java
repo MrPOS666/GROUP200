@@ -15,7 +15,6 @@ public class DetailPageInputData {
     private String photolink;
     private Map<String, String > ingredients;
     private BufferedImage image;
-    private String previousViewName;
 
     public DetailPageInputData(String username,
                                String cocktailName,
@@ -23,8 +22,7 @@ public class DetailPageInputData {
                                String instruction,
                                String photolink,
                                Map<String, String > ingredients,
-                               BufferedImage image,
-                               String previousViewName) {
+                               BufferedImage image) {
         this.username = username;
         this.cocktailName = cocktailName;
         this.cocktailID = cocktailID;
@@ -32,7 +30,6 @@ public class DetailPageInputData {
         this.photolink = photolink;
         this.ingredients = ingredients;
         this.image = image;
-        this.previousViewName = previousViewName;
     }
 
     public String getUsername() {
@@ -61,9 +58,5 @@ public class DetailPageInputData {
 
     public BufferedImage getImage() {
         return image;
-    }
-
-    public String getPreviousViewName() {
-        return previousViewName;
     }
 }
