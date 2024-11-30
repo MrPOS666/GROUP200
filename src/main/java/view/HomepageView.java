@@ -3,6 +3,7 @@ package view;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -11,6 +12,7 @@ import javax.swing.JPanel;
 
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.delete.DeleteController;
 import interface_adapter.homepage.HomepageController;
 import interface_adapter.homepage.HomepageState;
 import interface_adapter.homepage.HomepageViewModel;
@@ -31,6 +33,7 @@ public class HomepageView extends JPanel implements ActionListener {
     private final JButton logout;
     private LogoutController logoutController;
     private HomepageController homepageController;
+    private DeleteController deleteController;
 
     public HomepageView(HomepageViewModel homepageViewModel,
                         LoggedInViewModel loggedInViewModel) {
@@ -64,7 +67,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toMyFavourites)) {
-                            homepageController.switchToMyFavouritesView(homepageViewModel.getState().getUsername());
+                            deleteController.execute(new ArrayList<Integer>(), homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -94,7 +97,7 @@ public class HomepageView extends JPanel implements ActionListener {
                         // 1. get the state out of the loggedInViewModel. It contains the username.
                         // 2. Execute the logout Controller.
                         final HomepageState state = homepageViewModel.getState();
-                        logoutController.execute(state.getUsername());
+                        this.logoutController.execute(state.getUsername());
                     }
                 }
         );
@@ -120,5 +123,9 @@ public class HomepageView extends JPanel implements ActionListener {
 
     public void setHomepageController(HomepageController homepageController) {
         this.homepageController = homepageController;
+    }
+
+    public void setDeleteController(DeleteController deleteController) {
+        this.deleteController = deleteController;
     }
 }

@@ -109,6 +109,7 @@ public class AppBuilder {
     private DetailView detailView;
 
     private DetailPageController detailPageController;
+    private DeleteController deleteController;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -155,6 +156,17 @@ public class AppBuilder {
         homepageViewModel = new HomepageViewModel();
         homepageView = new HomepageView(homepageViewModel, loggedInViewModel);
         cardPanel.add(homepageView, homepageView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the MyFavourite View to the application.
+     * @return this builder
+     */
+    public AppBuilder addMyFavouriteView() {
+        myFavouriteViewModel = new MyFavouriteViewModel("MyFavourite");
+        myFavouriteView = new MyFavouriteView(myFavouriteViewModel);
+        cardPanel.add(myFavouriteView, myFavouriteView.getViewName());
         return this;
     }
 
@@ -240,10 +252,33 @@ public class AppBuilder {
 
         final HomepageOutputBoundary homepagePresenter = new HomepagePresenter(viewManagerModel,
                 recommendationViewModel, myFavouriteViewModel, searchViewModel, loggedInViewModel);
+        final LogoutOutputBoundary logoutPresenter = new LogoutPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
 
         final HomepageInputBoundary homepageInteractor = new HomepageInteractor(homepagePresenter);
         final HomepageController homepageController = new HomepageController(homepageInteractor);
+        final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutPresenter);
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
+
         homepageView.setHomepageController(homepageController);
+        homepageView.setDeleteController(deleteController);
+        homepageView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the Delete Use Case to the application.
+     * @return this builder.
+     */
+    public AppBuilder addDeleteUseCase() {
+        if (myFavouriteView == null || myFavouriteViewModel == null) {
+            throw new IllegalStateException("MyFavouriteView and MyFavouriteViewModel must be initialized before adding Delete Use Case.");
+        }
+
+        final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel, homepageViewModel);
+        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(userDataAccessObject, deleteOutputBoundary);
+
+        this.deleteController = new DeleteController(deleteInteractor);
+        myFavouriteView.setDeleteController(deleteController);
         return this;
     }
 

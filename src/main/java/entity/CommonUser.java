@@ -10,7 +10,7 @@ public class CommonUser implements User {
 
     private final String name;
     private final String password;
-    private final List<Cocktail> myFavourite;
+    private List<Cocktail> myFavourite = new ArrayList();
 
     public CommonUser(String name, String password) {
         this.name = name;

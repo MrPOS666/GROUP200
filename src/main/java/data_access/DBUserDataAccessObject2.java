@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
+import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.detailPage.DetailPageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -24,7 +25,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                                                 SignupUserDataAccessInterface,
                                                 LoginUserDataAccessInterface,
                                                 ChangePasswordUserDataAccessInterface,
-                                                LogoutUserDataAccessInterface {
+                                                LogoutUserDataAccessInterface,
+                                                DeleteDataAccessInterface {
 
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
@@ -77,8 +79,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                 throw new DetailPageDataAccessException("Error saving user: " + response.message());
             }
         }
-        catch (IOException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        catch (IOException evt) {
+            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
@@ -119,8 +121,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                 throw new DetailPageDataAccessException("Error updating MyFavourite: " + response.message());
             }
         }
-        catch (IOException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+        catch (IOException evt) {
+            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
         }
     }
 
@@ -252,7 +254,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
     @Override
     public void changePassword(User user) {
-            changePassword(user, user.getPassword());
+        changePassword(user, user.getPassword());
     }
 
     @Override
@@ -272,13 +274,40 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
 
     @Override
     public void setCurrentUsername(String username) {
+    }
+    /**
+     * Update the MyFavourite cocktail list for an existing user.
+     *
+     * @param user          The user object containing the username and password.
+     * @param newFavourites The new list of favorite cocktails.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
+     */
+    @Override
+    public void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
+        updateMyFavourite(user, newFavourites);
+    }
 
+    /**
+     * Load a user by their username.
+     *
+     * @param username The username of the user.
+     * @return The User object.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
+     */
+    @Override
+    public User loadUserByName(String username) throws DetailPageDataAccessException {
+        return loadUser(username);
+    }
+
+    @Override
+    public void saveUserToApi(User testUser) throws DetailPageDataAccessException {
+        saveUser(testUser);
     }
 
     @Override
     public boolean existsByName(String username) {
         try {
-            User user = loadUser(username);
+            final User user = loadUser(username);
             return user != null;
         }
         catch (DetailPageDataAccessException e) {

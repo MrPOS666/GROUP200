@@ -1,5 +1,6 @@
 package use_case.delete_favorite;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
     public void execute(DeleteInputData deleteInputData) throws DetailPageDataAccessException {
         final String username = deleteInputData.getUserName();
         final List<Integer> cocktailIdToDelete = deleteInputData.getDeleteCocktailId();
-        final User user = dbUserDataAccessObject2.getUserByUsername(username);
+        final User user = dbUserDataAccessObject2.loadUserByName(username);
 
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
@@ -38,7 +39,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
         final List<Map<String, String>> ingredients = new ArrayList<>();
 
         // Fetch the list of favorite cocktails directly using the username
-        final List<Cocktail> favourites = dbUserDataAccessObject2.loadCocktails(user);
+        final List<Cocktail> favourites = user.getMyFavourite();
         if (favourites == null || favourites.isEmpty()) {
             deletePresenter.prepareFailView("No favorites found for user: " + username);
         }
@@ -64,7 +65,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
             user.getMyFavourite().clear();
             user.getMyFavourite().addAll(updateFavourites);
             final DeleteOutputData outputData = createOutputData(updateFavourites);
-            dbUserDataAccessObject2.saveCocktails(user, updateFavourites);
+            dbUserDataAccessObject2.updateMyFavouriteCocktail(user, updateFavourites);
 
             deletePresenter.prepareSuccessView(outputData);
         }
@@ -73,12 +74,21 @@ public class DeleteInteractor implements DeleteInputBoundary {
         }
     }
 
+    /**
+     * Execute the switch to Homepage View use case.
+     */
+    @Override
+    public void switchToHomepageView() {
+        deletePresenter.switchToHomepageView();
+    }
+
     private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites) {
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
         final List<String> instructions = new ArrayList<>();
         final List<String> photos = new ArrayList<>();
         final List<Map<String, String>> ingredients = new ArrayList<>();
+        final List<BufferedImage> images = new ArrayList<>();
 
         for (Cocktail cocktail : updatedFavourites) {
             ids.add(cocktail.getIdDrink());
@@ -86,7 +96,8 @@ public class DeleteInteractor implements DeleteInputBoundary {
             instructions.add(cocktail.getInstructions());
             photos.add(cocktail.getPhotoLink());
             ingredients.add(cocktail.getIngredients());
+            images.add(cocktail.getImage());
         }
-        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients);
+        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images);
     }
 }

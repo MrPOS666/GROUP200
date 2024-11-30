@@ -16,4 +16,9 @@ public interface DeleteOutputBoundary {
      * @param errorMessage the explanation of the failure
      */
     void prepareFailView(String errorMessage);
+
+    /**
+     * Switches to the Homepage View.
+     */
+    void switchToHomepageView();
 }

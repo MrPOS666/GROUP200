@@ -13,4 +13,9 @@ public interface DeleteInputBoundary {
      * @throws DetailPageDataAccessException the exception
      */
     void execute(DeleteInputData deleteInputData) throws DetailPageDataAccessException;
+
+    /**
+     * Execute the switch to Homepage View use case.
+     */
+    void switchToHomepageView();
 }

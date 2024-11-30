@@ -1,7 +1,6 @@
 package use_case.delete_favorite;
 
 import java.util.List;
-import java.util.Map;
 
 import entity.Cocktail;
 import entity.User;
@@ -13,26 +12,22 @@ import use_case.detailPage.DetailPageDataAccessException;
 public interface DeleteDataAccessInterface {
 
     /**
-     * Load cocktails from user.
-     * @param user user
-     * @return the map of user and cocktails in DAO.
-     * @throws DetailPageDataAccessException throw exceptions.
+     * Update the MyFavourite cocktail list for an existing user.
+     *
+     * @param user          The user object containing the username and password.
+     * @param newFavourites The new list of favorite cocktails.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    List<Cocktail> loadCocktails(User user) throws DetailPageDataAccessException;
+    void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException;
 
     /**
-     * Updates the user favorite cocktail list.
-     * @param user user
-     * @param cocktails the list of cocktails to be saved from the user's favorites.
-     * @throws DetailPageDataAccessException throw exceptions.
+     * Load a user by their username.
+     *
+     * @param username The username of the user.
+     * @return The User object.
+     * @throws DetailPageDataAccessException If an error occurs during the process.
      */
-    void saveCocktails(User user, List<Cocktail> cocktails) throws DetailPageDataAccessException;
+    User loadUserByName(String username) throws DetailPageDataAccessException;
 
-    /**
-     * Get user by username.
-     * @param username username
-     * @return user user
-     * @throws DetailPageDataAccessException throw exceptions.
-     */
-    User getUserByUsername(String username) throws DetailPageDataAccessException;
+    void saveUserToApi(User testUser) throws DetailPageDataAccessException;
 }

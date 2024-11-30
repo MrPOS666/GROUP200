@@ -35,13 +35,15 @@ public class Main {
                 .addSearchView()
                 .addHomepageView()
                 .addDetailPageView()
+                .addMyFavouriteView()
                 .addDetailPageView()
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addChangePasswordUseCase()
                 .addLogoutUseCase()
-                .addHomepageUseCase()
                 .addDetailPageUseCase()
+                .addDeleteUseCase()
+                .addHomepageUseCase()
                 .addSearchUseCase()
                 .build();
 

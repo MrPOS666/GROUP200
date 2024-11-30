@@ -32,4 +32,8 @@ public class DeleteController {
             throw new RuntimeException(evt);
         }
     }
+
+    public void switchToHomepageView() {
+        deleteInteractor.switchToHomepageView();
+    }
 }
