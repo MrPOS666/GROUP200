@@ -74,14 +74,26 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
                                                                 detailPageInputData.getPhotolink(),
                                                                 detailPageInputData.getIngredients(),
                                                                 detailPageInputData.getImage());
-
+            // 3.b. Check if the cocktail exist in the list
+            boolean cocktailExists = false;
+            for (Cocktail cocktail : favoriteCocktails) {
+                if (cocktail.getIdDrink() == newCocktail.getIdDrink()) {
+                    cocktailExists = true;
+                    break;
+                }
+            }
             // 4. Add the new cocktail to the user's favorite list
-            favoriteCocktails.add(newCocktail);
+            if (!cocktailExists) {
+                favoriteCocktails.add(newCocktail);
 
-            // 5. Update the user in the data layer
-            detailPageDataAccessObject.addMyFavourite(user, favoriteCocktails);
+                // 5. Update the user in the data layer
+                detailPageDataAccessObject.addMyFavourite(user, favoriteCocktails);
 
-            System.out.println("Successfully added my favourite");
+                System.out.println("Successfully added my favourite");
+            }
+            else {
+                System.out.println("This cocktail is already in your favourites.");
+            }
         }
         catch (Exception e) {
             // Handle any errors and pass them to the presenter

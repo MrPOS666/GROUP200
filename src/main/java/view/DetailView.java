@@ -30,6 +30,12 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
     private final JButton addMyFavourite;
     private final JButton backButton;
 
+    private JLabel nameLabel;
+    private JLabel idLabel;
+    private JTextArea instructionTextArea;
+    private JLabel imageLabel;
+    private JPanel ingredientsPanel;
+
     public DetailView(DetailPageViewModel detailPageViewModel) {
         this.detailPageViewModel = detailPageViewModel;
         this.detailPageViewModel.addPropertyChangeListener(this);
@@ -44,6 +50,41 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         backButton = new JButton("Back");
         buttons.add(addMyFavourite);
         buttons.add(backButton);
+
+        nameLabel = new JLabel("Name: ");
+        idLabel = new JLabel("ID: ");
+        instructionTextArea = new JTextArea("Instructions: ");
+        imageLabel = new JLabel(new ImageIcon());
+        ingredientsPanel = new JPanel();
+
+        nameLabel.setBackground(Color.GRAY);
+        nameLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        idLabel.setBackground(Color.GRAY);
+        idLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        instructionTextArea.setBackground(Color.GRAY);
+        instructionTextArea.setLineWrap(true);
+        instructionTextArea.setWrapStyleWord(true);
+        instructionTextArea.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        instructionTextArea.setColumns(60);
+        instructionTextArea.setEditable(false);
+        instructionTextArea.setBackground(Color.GRAY);
+        instructionTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.Y_AXIS));
+        ingredientsPanel.setBackground(Color.GRAY);
+        ingredientsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel ingredientLabel = new JLabel("Ingredients");
+        ingredientLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        ingredientsPanel.add(ingredientLabel);
+
+        detailPanel.add(nameLabel);
+        detailPanel.add(idLabel);
+        detailPanel.add(imageLabel);
+        detailPanel.add(ingredientsPanel);
+        detailPanel.add(instructionTextArea);
 
         addMyFavourite.addActionListener(
                 new ActionListener() {
@@ -74,10 +115,11 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         );
 
         this.add(titleLabel);
-        detailPanel.setForeground(Color.YELLOW);
+        detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
+        detailPanel.setBackground(Color.GRAY);
+        this.add(buttons);
         this.add(detailPanel);
         this.add(detailOutputField);
-        this.add(buttons);
     }
 
     @Override
@@ -87,11 +129,10 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        detailPanel.removeAll();
         detailOutputField.removeAll();
         this.remove(detailOutputField);
         final DetailPageState currentState = (DetailPageState) evt.getNewValue();
-        if (currentState.getDetailPageError() != null) {
+        if (!currentState.getDetailPageError().isEmpty()) {
             detailOutputField.setText(currentState.getDetailPageError());
             this.add(detailOutputField);
             revalidate();
@@ -100,39 +141,32 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         }
         else {
             detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
-            detailPanel.setBackground(Color.DARK_GRAY);
+            detailPanel.setBackground(Color.GRAY);
 
             // Add cocktail details
-            final JLabel nameLabel = new JLabel("Name: " + currentState.getCocktailname());
-            nameLabel.setForeground(Color.WHITE);
-            detailPanel.add(nameLabel);
+            nameLabel.setText("Name: " + currentState.getCocktailname());
 
-            final JLabel idLabel = new JLabel("ID: " + currentState.getCocktailiD());
-            idLabel.setForeground(Color.WHITE);
-            detailPanel.add(idLabel);
-
-            final JLabel instructionLabel = new JLabel("Instructions: " + currentState.getInstruction());
-            instructionLabel.setForeground(Color.WHITE);
-            detailPanel.add(instructionLabel);
+            idLabel.setText("ID: " + currentState.getCocktailiD());
 
             // Display the actual image
             final BufferedImage image = currentState.getImage();
             if (image != null) {
-                final ImageIcon imageIcon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(imageIcon);
-                detailPanel.add(imageLabel);
+                imageLabel.setIcon(new ImageIcon(image));
+            }
+            else {
+                imageLabel.setIcon(new ImageIcon());
             }
 
-            final JLabel noImageLabel = new JLabel("No image available.");
-            noImageLabel.setForeground(Color.WHITE);
+            instructionTextArea.setText("Instructions: " + currentState.getInstruction());
 
             // Add ingredients to the panel
-            detailPanel.add(new JLabel("Ingredients:"));
             for (Map.Entry<String, String> entry : currentState.getIngredients().entrySet()) {
                 final JLabel ingredientLabel = new JLabel(entry.getKey() + ": " + entry.getValue());
-                ingredientLabel.setForeground(Color.WHITE);
-                detailPanel.add(ingredientLabel);
+                ingredientLabel.setBackground(Color.GRAY);
+                ingredientLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+                ingredientsPanel.add(ingredientLabel);
             }
+
             revalidate();
             repaint();
         }
