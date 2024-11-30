@@ -109,6 +109,7 @@ public class AppBuilder {
     private DetailView detailView;
 
     private DetailPageController detailPageController;
+    private DeleteController deleteController;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -251,11 +252,16 @@ public class AppBuilder {
 
         final HomepageOutputBoundary homepagePresenter = new HomepagePresenter(viewManagerModel,
                 recommendationViewModel, myFavouriteViewModel, searchViewModel, loggedInViewModel);
+        final LogoutOutputBoundary logoutPresenter = new LogoutPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
 
         final HomepageInputBoundary homepageInteractor = new HomepageInteractor(homepagePresenter);
         final HomepageController homepageController = new HomepageController(homepageInteractor);
+        final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutPresenter);
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
 
         homepageView.setHomepageController(homepageController);
+        homepageView.setDeleteController(deleteController);
+        homepageView.setLogoutController(logoutController);
         return this;
     }
 
@@ -269,9 +275,9 @@ public class AppBuilder {
         }
 
         final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel, homepageViewModel);
-        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(deleteDataAccessObject, deleteOutputBoundary);
+        final DeleteInputBoundary deleteInteractor = new DeleteInteractor(userDataAccessObject, deleteOutputBoundary);
 
-        final DeleteController deleteController = new DeleteController(deleteInteractor);
+        this.deleteController = new DeleteController(deleteInteractor);
         myFavouriteView.setDeleteController(deleteController);
         return this;
     }
