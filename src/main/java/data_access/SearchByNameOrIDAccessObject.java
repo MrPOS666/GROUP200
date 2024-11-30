@@ -78,25 +78,6 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
         return cocktails;
     }
 
-    /**
-     * Get cocktail ids from jsonResponse and convert to Cocktail objects
-     * @param jsonResponse Cocktails with given ingredients
-     * @return a set of cocktails.
-     */
-    private Set<Cocktail> cocktailHelper(String jsonResponse) {
-        final JSONObject jsonObject = new JSONObject(jsonResponse);
-        final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
-        final Set<Cocktail> set = new HashSet<Cocktail>();
-        if (drinksArray != null) {
-            for (int i = 0; i < drinksArray.length(); i++) {
-                final JSONObject drinkObject = drinksArray.getJSONObject(i);
-                // Extract id
-                final int idDrink = drinkObject.optInt("idDrink");
-                set.add(getById(idDrink));
-            }
-        }
-        return set;
-    }
 
     @Override
     public void setCurrentCocktailName(String cocktailName) {
