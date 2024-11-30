@@ -18,7 +18,7 @@ public class LogoutInteractor implements LogoutInputBoundary {
         final String username = logoutInputData.getUsername();
 
         final String currname = userDataAccessObject.getCurrentUsername();
-        if (currname == null || !username.equals(currname)) {
+        if (!username.equals(currname)) {
             logoutPresenter.prepareFailView("No user is logged in the username.");
         }
 
