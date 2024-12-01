@@ -257,7 +257,8 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                                         instruction,
                                         photo,
                                         ingredient,
-                                        image);
+                                        image,
+                                        myFavouriteViewModel.getViewName());
                             }
                         }
                     }
