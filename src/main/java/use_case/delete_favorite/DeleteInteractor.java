@@ -7,7 +7,7 @@ import java.util.Map;
 
 import entity.Cocktail;
 import entity.User;
-import use_case.detailPage.MyfavouritePageDataAccessException;
+import use_case.delete_favorite.MyfavouritePageDataAccessException;
 
 /**
  * The Delete Interactor.
@@ -53,7 +53,8 @@ public class DeleteInteractor implements DeleteInputBoundary {
         }
         user.getMyFavourite().clear();
         user.getMyFavourite().addAll(updateFavourites);
-        final DeleteOutputData outputData = createOutputData(updateFavourites);
+
+        final DeleteOutputData outputData = createOutputData(updateFavourites, username);
         dbUserDataAccessObject2.updateMyFavouriteCocktail(user, updateFavourites);
 
         deletePresenter.prepareSuccessView(outputData);
@@ -68,7 +69,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
         deletePresenter.switchToHomepageView();
     }
 
-    private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites) {
+    private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites, String username) {
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
         final List<String> instructions = new ArrayList<>();
@@ -84,6 +85,6 @@ public class DeleteInteractor implements DeleteInputBoundary {
             ingredients.add(cocktail.getIngredients());
             images.add(cocktail.getImage());
         }
-        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images);
+        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images, username);
     }
 }
