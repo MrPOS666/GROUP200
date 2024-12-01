@@ -32,8 +32,8 @@ public class Main {
                 .addLoginView()
                 .addSignupView()
                 .addLoggedInView()
-                .addSearchView()
                 .addHomepageView()
+                .addSearchView()
                 .addDetailPageView()
                 .addMyFavouriteView()
                 .addDetailPageView()
@@ -45,6 +45,7 @@ public class Main {
                 .addDeleteUseCase()
                 .addHomepageUseCase()
                 .addSearchUseCase()
+                .addIngredientsUseCase()
                 .build();
 
         application.pack();

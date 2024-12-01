@@ -68,13 +68,20 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
 
     @Override
     public List<Cocktail> getByIngredients(List<String> ingredients) {
-        final Set<Cocktail> set = new HashSet<Cocktail>();
+        final Set<Cocktail> cocktails = new HashSet<Cocktail>();
         for (String i: ingredients) {
             final String jsonResponse = searchByIngredient(i);
-            set.addAll(cocktailHelper(jsonResponse));
+            // cocktails.addAll(cocktailHelper(jsonResponse));
+            try {
+                cocktails.addAll(createCocktailsFromJson(jsonResponse));
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        final List<Cocktail> cocktails = new ArrayList<>(set);
-        return cocktails;
+        final List<Cocktail> cocktailList = new ArrayList<>();
+        cocktailList.addAll(cocktails);
+        return cocktailList;
     }
 
     /**
@@ -82,21 +89,21 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
      * @param jsonResponse Cocktails with given ingredients
      * @return a set of cocktails.
      */
-    private Set<Cocktail> cocktailHelper(String jsonResponse) {
+    private Set<Cocktail> cocktailHelper(String jsonResponse) throws Exception {
         final JSONObject jsonObject = new JSONObject(jsonResponse);
         final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
         final Set<Cocktail> set = new HashSet<Cocktail>();
         if (drinksArray != null) {
-            for (int i = 0; i < drinksArray.length(); i++) {
-                final JSONObject drinkObject = drinksArray.getJSONObject(i);
-                // Extract id
-                final int idDrink = drinkObject.optInt("idDrink");
-                try {
+            try {
+                for (int i = 0; i < drinksArray.length(); i++) {
+                    final JSONObject drinkObject = drinksArray.getJSONObject(i);
+                    // Extract id
+                    final int idDrink = drinkObject.optInt("idDrink");
                     set.add(getById(idDrink));
                 }
-                catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            }
+            catch (Exception e) {
+                throw new Exception(e);
             }
         }
         return set;

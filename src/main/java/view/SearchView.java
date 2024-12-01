@@ -15,6 +15,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.detailPage.DetailPageController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
@@ -31,6 +33,8 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
+    private final HomepageViewModel homepageViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private final JTextField inputField = new JTextField(15);
     private final JPanel resultPanel = new JPanel();
@@ -38,15 +42,19 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
 
     private final JButton search;
     private final JButton enter;
-
+    private final JButton toHomepage;
     private SearchController searchController;
     private IngredientsController ingredientsController;
-
     private DetailPageController detailPageController;
 
-    public SearchView(SearchViewModel searchViewModel) {
+    public SearchView(SearchViewModel searchViewModel,
+                      HomepageViewModel homepageViewModel,
+                      ViewManagerModel viewManagerModel) {
         this.searchViewModel = searchViewModel;
         this.searchViewModel.addPropertyChangeListener(this);
+
+        this.homepageViewModel = homepageViewModel;
+        this.viewManagerModel = viewManagerModel;
 
         final JLabel title = new JLabel("Search Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -55,10 +63,12 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                 new JLabel("Search: "), inputField);
 
         final JPanel buttons = new JPanel();
-        search = new JButton("search");
-        enter = new JButton("enter ingredients");
+        search = new JButton("search by name or id");
+        enter = new JButton("search by ingredients");
+        toHomepage = new JButton("back to homepage");
         buttons.add(search);
         buttons.add(enter);
+        buttons.add(toHomepage);
 
         inputField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -83,6 +93,17 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                 documentListenerHelper();
             }
         });
+
+        toHomepage.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(toHomepage)) {
+                            viewManagerModel.setState(homepageViewModel.getViewName());
+                            viewManagerModel.firePropertyChanged();
+                        }
+                    }
+                }
+        );
 
         search.addActionListener(
                 new ActionListener() {
@@ -132,6 +153,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         setFields(state);
         if (state.getSearchError() != null) {
             searchOutputField.setText(state.getSearchError());
+            searchOutputField.setAlignmentX(Component.CENTER_ALIGNMENT);
             this.add(searchOutputField);
             revalidate();
             repaint();
@@ -228,7 +250,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setPreferredSize(new Dimension(CPWIDTH, CPHEIGHT));
 
             // Add the cocktail panel to the main result panel
+            //TODO
             resultPanel.add(cocktailPanel);
+            List<Object> info = ingredientsController.getInfo(id);
 
             final JButton detailsButton = new JButton("Details");
             detailsButton.addActionListener(
@@ -238,9 +262,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                                 detailPageController.execute(username,
                                                             cocktailName,
                                                             id,
-                                                            instruction,
+                                                            (String) info.get(3),
                                                             photolink,
-                                                            ingredient,
+                                                            (Map<String, String>) info.get(2),
                                                             image,
                                                             searchViewModel.getViewName());
                             }

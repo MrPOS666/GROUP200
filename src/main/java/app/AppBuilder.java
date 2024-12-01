@@ -33,6 +33,7 @@ import interface_adapter.search.SearchPresenter;
 import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
+import interface_adapter.search_by_ingredients.IngredientsPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -97,7 +98,7 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
     private HomepageViewModel homepageViewModel;
-    private SearchViewModel searchViewModel;
+    private SearchViewModel searchViewModel = new SearchViewModel("search");;
     private MyFavouriteViewModel myFavouriteViewModel;
     private RecommendationViewModel recommendationViewModel;
     private DetailPageViewModel detailPageViewModel;
@@ -319,14 +320,14 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSearchView() {
-        searchViewModel = new SearchViewModel("search");
-        searchView = new SearchView(searchViewModel);
+        // searchViewModel = new SearchViewModel("search");
+        searchView = new SearchView(searchViewModel, homepageViewModel, viewManagerModel);
         cardPanel.add(searchView, searchView.getViewName());
         return this;
     }
 
     /**
-     * Adds the Signup Use Case to the application.
+     * Adds the Search Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSearchUseCase() {
@@ -337,6 +338,22 @@ public class AppBuilder {
 
         final SearchController controller = new SearchController(searchInteractor);
         searchView.setSearchController(controller);
+        searchView.setDetailPageController(this.detailPageController);
+        return this;
+    }
+
+    /**
+     * Adds the Ingredients Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addIngredientsUseCase() {
+        final IngredientsOutputBoundary ingredientsOutputBoundary = new IngredientsPresenter(searchViewModel,
+                viewManagerModel);
+        final IngredientsInputBoundary ingredientsInteractor = new IngredientsInteractor(searchDataAccessObject,
+                ingredientsOutputBoundary);
+
+        final IngredientsController ingredientsController = new IngredientsController(ingredientsInteractor);
+        searchView.setIngredientsController(ingredientsController);
         searchView.setDetailPageController(this.detailPageController);
         return this;
     }

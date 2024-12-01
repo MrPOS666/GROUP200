@@ -1,9 +1,12 @@
 package use_case.search_by_ingredients;
 
+import java.awt.image.BufferedImage;
 import entity.Cocktail;
 import use_case.search.SearchOutputBoundary;
 import use_case.search_by_ingredients.*;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,7 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
                 final List<String> instructions = new ArrayList<>();
                 final List<String> photoLinks = new ArrayList<>();
                 final List<Map<String, String>> ingredients = new ArrayList<>();
+                final List<BufferedImage> images = new ArrayList<>();
 
                 for (Cocktail cocktail : cocktails) {
                     ids.add(cocktail.getIdDrink());
@@ -43,8 +47,9 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
                     instructions.add(cocktail.getInstructions());
                     photoLinks.add(cocktail.getPhotoLink());
                     ingredients.add(cocktail.getIngredients());
+                    images.add(cocktail.getImage());
                 }
-                ingredientsPresenter.prepareSuccessView(new IngredientsOutputData(false, ids, names, instructions, photoLinks, ingredients));
+                ingredientsPresenter.prepareSuccessView(new IngredientsOutputData(false, ids, names, instructions, photoLinks, ingredients, images));
             }
             else {
                 ingredientsPresenter.prepareFailView("Unable to find any cocktails with given ingredients");
@@ -53,6 +58,29 @@ public class IngredientsInteractor implements IngredientsInputBoundary {
         else {
             ingredientsPresenter.prepareFailView("Invalid search input. Please enter valid ingredients.");
         }
+    }
+
+    /**
+     * A helper method to return full cocktail information.
+     * @param ingredientsInputData the input data
+     * @return a list consists of cocktail information
+     */
+    public List<Object> getInfo(IngredientsInputData ingredientsInputData) {
+        final int id = ingredientsInputData.getId();
+        final Cocktail cocktail;
+        try {
+            cocktail = ingredientsDataAccessObject.getById(id);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        final List<Object> info = new ArrayList<>();
+        info.add(cocktail.getCocktailName());
+        info.add(cocktail.getIdDrink());
+        info.add(cocktail.getIngredients());
+        info.add(cocktail.getInstructions());
+        info.add(cocktail.getPhotoLink());
+        return info;
     }
 }
 

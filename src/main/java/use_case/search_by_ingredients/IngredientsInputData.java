@@ -6,8 +6,8 @@ import java.util.List;
  * Data structure for search input parameters in the Search Use Case.
  */
 public class IngredientsInputData {
-
-    private final List<String> input;
+    private List<String> input;
+    private int id;
 
     /**
      * Constructor for search by ingredients input, which is a list of ingredients.
@@ -18,6 +18,14 @@ public class IngredientsInputData {
     }
 
     /**
+     * Constructor for search by ingredients input, which is a list of ingredients.
+     * @param id the id of cocktail
+     */
+    public IngredientsInputData(int id) {
+        this.id = id;
+    }
+
+    /**
      * Checks if the ingredients list is empty.
      * @return true if ingredients is not empty; false otherwise
      */
@@ -25,24 +33,9 @@ public class IngredientsInputData {
         return input != null;
     }
 
-    /**
-     * Checks if the search is by cocktail name.
-     * A name usually contains letters, so we check for at least one letter.
-     * @return true if searching by name; false otherwise
-     */
-
-    // public boolean isSearchByName() {
-        // return input != null && input.matches(".*[a-zA-Z].*");
-    // }
-
-    /**
-     * Checks if the search is by cocktail ID.
-     * An ID is a number, so we check if it only contains digits.
-     * @return true if searching by ID; false otherwise
-     */
-    // public boolean isSearchById() {
-        // return input != null && input.matches("\\d+");
-    // }
+    public int getId() {
+        return this.id;
+    }
 
     /**
      * Gets the input provided by the user, which can be a cocktail name or ID.
