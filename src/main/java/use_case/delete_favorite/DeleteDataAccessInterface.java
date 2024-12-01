@@ -4,7 +4,7 @@ import java.util.List;
 
 import entity.Cocktail;
 import entity.User;
-import use_case.detailPage.MyfavouritePageDataAccessException;
+import use_case.delete_favorite.MyfavouritePageDataAccessException;
 
 /**
  * DAO for the Delete Use Case.
