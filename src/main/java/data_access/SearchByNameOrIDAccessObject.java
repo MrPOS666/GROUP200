@@ -72,7 +72,12 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
         for (String i: ingredients) {
             final String jsonResponse = searchByIngredient(i);
             // cocktails.addAll(cocktailHelper(jsonResponse));
-            cocktails.addAll(createCocktailsFromJson(jsonResponse));
+            try {
+                cocktails.addAll(createCocktailsFromJson(jsonResponse));
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         final List<Cocktail> cocktailList = new ArrayList<>();
         cocktailList.addAll(cocktails);

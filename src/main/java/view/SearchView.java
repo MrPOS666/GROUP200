@@ -244,7 +244,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setPreferredSize(new Dimension(1200, 1200));
 
             // Add the cocktail panel to the main result panel
+            //TODO
             resultPanel.add(cocktailPanel);
+            List<Object> info = ingredientsController.getInfo(id);
 
             JButton detailsButton = new JButton("Details");
             detailsButton.addActionListener(
@@ -254,9 +256,9 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                                 detailPageController.execute(username,
                                                             cocktailName,
                                                             id,
-                                                            instruction,
+                                                            (String) info.get(3),
                                                             photolink,
-                                                            ingredient,
+                                                            (Map<String, String>) info.get(2),
                                                             image,
                                                             searchViewModel.getViewName());
                             }

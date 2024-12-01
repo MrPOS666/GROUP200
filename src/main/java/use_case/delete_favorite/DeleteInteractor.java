@@ -7,7 +7,6 @@ import java.util.Map;
 
 import entity.Cocktail;
 import entity.User;
-import use_case.detailPage.MyfavouritePageDataAccessException;
 
 /**
  * The Delete Interactor.

@@ -33,6 +33,7 @@ import interface_adapter.search.SearchPresenter;
 import interface_adapter.recommendation.RecommendationViewModel;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
+import interface_adapter.search_by_ingredients.IngredientsPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
