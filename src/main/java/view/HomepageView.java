@@ -67,7 +67,8 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toMyFavourites)) {
-                            deleteController.execute(new ArrayList<Integer>(), homepageViewModel.getState().getUsername());
+                            deleteController.execute(new ArrayList<Integer>(),
+                                    homepageViewModel.getState().getUsername());
                         }
                     }
                 });

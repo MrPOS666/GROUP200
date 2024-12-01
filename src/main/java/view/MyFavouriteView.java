@@ -63,8 +63,6 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         // Result Panel
         resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
 
-        displayCocktails();
-
         select.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -123,13 +121,12 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                 }
         );
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(title);
         this.add(buttons);
         this.add(deleteOutputField);
         this.add(resultPanel);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        displayCocktails();
     }
 
     /**
