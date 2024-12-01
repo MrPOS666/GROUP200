@@ -1,7 +1,5 @@
 package use_case.delete_favorite;
 
-import use_case.detailPage.MyfavouritePageDataAccessException;
-
 /**
  * Input Boundary for actions which are related to deleting.
  */
