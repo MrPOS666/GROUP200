@@ -25,10 +25,4 @@ public interface User {
      * @return the "My favourite" list of Cocktails of the user.
      */
     List<entity.Cocktail> getMyFavourite();
-
-    /**
-     * Returns the myInterests HashMap of the user.
-     * @return the myInterests HashMap of the user.
-     */
-    HashMap<String, Integer> getMyInterests();
 }

@@ -1,13 +1,13 @@
-package use_case.get_recommendations;
+package use_case.recommended;
 
 import entity.Cocktail;
 
 import java.util.List;
 
-public class get_recommendationsOutputData {
+public class RecommendedOutputData {
     private final List<Cocktail> cocktails;
 
-    public get_recommendationsOutputData(List<Cocktail> cocktails) {
+    public RecommendedOutputData(List<Cocktail> cocktails) {
         this.cocktails = cocktails;
     }
 

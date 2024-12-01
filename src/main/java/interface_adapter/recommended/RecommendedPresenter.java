@@ -1,15 +1,15 @@
-package interface_adapter.recommendation;
+package interface_adapter.recommended;
 
-import view.recommendedView;
+import view.RecommendedView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RecommendationPresenter {
+public class RecommendedPresenter {
 
-    private final recommendedView view;
-    private final RecommendationViewModel viewModel;
+    private final RecommendedView view;
+    private final RecommendedViewModel viewModel;
 
-    public RecommendationPresenter(recommendedView view, RecommendationViewModel viewModel) {
+    public RecommendedPresenter(RecommendedView view, RecommendedViewModel viewModel) {
         this.view = view;
         this.viewModel = viewModel;
 

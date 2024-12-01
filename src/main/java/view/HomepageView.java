@@ -16,7 +16,7 @@ import interface_adapter.homepage.HomepageViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
-import interface_adapter.recommendation.RecommendationViewModel;
+import interface_adapter.recommended.RecommendedViewModel;
 import interface_adapter.search.SearchViewModel;
 
 /**
@@ -30,7 +30,7 @@ public class HomepageView extends JPanel implements ActionListener {
     private final LoginViewModel loginViewModel;
     private final LoggedInViewModel loggedInViewModel;
     private final SearchViewModel searchViewModel;
-    private final RecommendationViewModel recommendationViewModel;
+    private final RecommendedViewModel recommendationViewModel;
     private final MyFavouriteViewModel myFavouriteViewModel;
 
     private final JButton toSearch;
@@ -45,7 +45,7 @@ public class HomepageView extends JPanel implements ActionListener {
                         LoginViewModel loginViewModel,
                         LoggedInViewModel loggedInViewModel,
                         SearchViewModel searchViewModel,
-                        RecommendationViewModel recommendationViewModel,
+                        RecommendedViewModel recommendationViewModel,
                         MyFavouriteViewModel myFavouriteViewModel) {
         this.homepageViewModel = homepageViewModel;
         this.viewManagerModel = viewManagerModel;

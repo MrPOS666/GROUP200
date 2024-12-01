@@ -20,7 +20,7 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
-import interface_adapter.recommendation.RecommendationViewModel;
+import interface_adapter.recommended.RecommendedViewModel;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -28,7 +28,6 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
-import use_case.interests_build.interests_buildInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -71,6 +70,7 @@ public class AppBuilder {
     private HomepageViewModel homepageViewModel;
     private HomepageView homepageView;
     private SearchViewModel searchViewModel;
+    private RecommendedViewModel recommendedViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -116,14 +116,13 @@ public class AppBuilder {
     public AppBuilder addHomepageView() {
         homepageViewModel = new HomepageViewModel();
         // This is a temporary solution for recommendationViewModel and myFavouriteViewModel and searchViewModel
-        final RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
         final MyFavouriteViewModel myFavouriteViewModel = new MyFavouriteViewModel();
         homepageView = new HomepageView(homepageViewModel,
                 viewManagerModel,
                 loginViewModel,
                 loggedInViewModel,
                 searchViewModel,
-                recommendationViewModel,
+                recommendedViewModel,
                 myFavouriteViewModel);
         cardPanel.add(homepageView, homepageView.getViewName());
         return this;
@@ -151,9 +150,8 @@ public class AppBuilder {
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
                 homepageViewModel, loginViewModel);
-        final interests_buildInteractor interestBuildInteractor = new interests_buildInteractor();
         final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary, interestBuildInteractor);
+                userDataAccessObject, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);

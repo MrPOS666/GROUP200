@@ -1,24 +1,23 @@
-package use_case.get_recommendations;
+package use_case.recommended;
 
-import data_access.DBUserDataAccessObject;
 import entity.Cocktail;
 import entity.User;
 
 import java.util.*;
 
-public class get_recommendationsInteractor {
+public class RecommendedInteractor {
 
-    private final get_recommendationsUserDataAccessInterface userDataAccess; // DAL for API and User
-    private final get_recommendationsOutputBoundary outputBoundary;
+    private final RecommendedDataAccessInterface userDataAccess; // DAL for API and User
+    private final RecommendedOutputBoundary outputBoundary;
 
-    public get_recommendationsInteractor(get_recommendationsUserDataAccessInterface userDataAccess,
-                                    get_recommendationsOutputBoundary outputBoundary) {
+    public RecommendedInteractor(RecommendedDataAccessInterface userDataAccess,
+                                 RecommendedOutputBoundary outputBoundary) {
         this.userDataAccess = userDataAccess;
         this.outputBoundary = outputBoundary;
     }
 
     public List<Cocktail> getRecommendations(User user) {
-        HashMap<String, Integer> interests = userDataAccess.getMyInterests(user);
+        HashMap<String, Integer> interests = userDataAccess.getMyInterests(user); //TODO reminder to remove from user directly
         List<String> selectedTags = selectTags(interests);
 
         Set<Cocktail> uniqueCocktails = new HashSet<>();

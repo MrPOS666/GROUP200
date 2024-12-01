@@ -12,14 +12,10 @@ public class CommonUser implements User {
     private final String name;
     private final String password;
     private final List<Cocktail> myFavourite;
-
-    private final HashMap<String, Integer> myInterests;
-
     public CommonUser(String name, String password) {
         this.name = name;
         this.password = password;
         this.myFavourite = new ArrayList<Cocktail>();
-        this.myInterests = new HashMap<String, Integer>();
     }
 
     @Override
@@ -32,13 +28,7 @@ public class CommonUser implements User {
         return password;
     }
 
-    @Override
     public List<Cocktail> getMyFavourite() {
         return myFavourite;
-    }
-
-    @Override
-    public HashMap<String, Integer> getMyInterests() {
-        return myInterests;
     }
 }

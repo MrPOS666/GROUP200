@@ -2,16 +2,18 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 
-public class recommendedView extends JPanel {
+public class RecommendedView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    private final String viewName = "recommended";
-    private final JButton refreshButton;
-    private final JButton backButton;
-    private final JButton[] drinkButtons = new JButton[6];
+    private final String viewName = "recommended drinks";
+    private final RecommendedViewModel recommendedViewModel;
 
-    public recommendedView() {
+
+
+    public RecommendedView() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Title
@@ -35,7 +37,18 @@ public class recommendedView extends JPanel {
         controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(refreshButton)) {
+                            final // TODO: complete later
+                        }
+                    }
+                }
+        );
         backButton = new JButton("Back");
+        // TODO: Implement Back
 
         controlPanel.add(refreshButton);
         controlPanel.add(backButton);
