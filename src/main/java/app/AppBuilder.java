@@ -279,6 +279,7 @@ public class AppBuilder {
 
         this.deleteController = new DeleteController(deleteInteractor);
         myFavouriteView.setDeleteController(deleteController);
+        myFavouriteView.setDetailPageController(detailPageController);
         return this;
     }
 
