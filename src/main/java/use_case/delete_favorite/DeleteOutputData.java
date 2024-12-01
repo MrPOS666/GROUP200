@@ -18,8 +18,9 @@ public class DeleteOutputData {
     // Ingredient name as key, measure as value
     private final List<Map<String, String>> ingredients;
     private final List<BufferedImage> images;
+    private final String username;
 
-    public DeleteOutputData(boolean useCaseFailed, List<Integer> idDrink, List<String> strDrink, List<String> strInstructions, List<String> photoUrl, List<Map<String, String>> ingredients, List<BufferedImage> images) {
+    public DeleteOutputData(boolean useCaseFailed, List<Integer> idDrink, List<String> strDrink, List<String> strInstructions, List<String> photoUrl, List<Map<String, String>> ingredients, List<BufferedImage> images, String username) {
         this.useCaseFailed = useCaseFailed;
         this.idDrink = idDrink;
         this.strDrink = strDrink;
@@ -27,6 +28,7 @@ public class DeleteOutputData {
         this.photoUrl = photoUrl;
         this.ingredients = ingredients;
         this.images = images;
+        this.username = username;
     }
 
     // Getters for accessing fields
@@ -52,6 +54,10 @@ public class DeleteOutputData {
 
     public List<BufferedImage> getImages() {
         return images;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public boolean isUseCaseFailed() {
