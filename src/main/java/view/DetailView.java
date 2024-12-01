@@ -18,6 +18,11 @@ import interface_adapter.detailPage.DetailPageViewModel;
  * Showing detail of a cocktail.
  */
 public class DetailView extends JPanel implements ActionListener, PropertyChangeListener {
+    public static final String TAHOMA = "Tahoma";
+    public static final int LABELFONT = 18;
+    public static final int INSFONT = 15;
+    public static final int COLUMNS = 60;
+
     private final String viewName = "detailpage";
 
     private final DetailPageViewModel detailPageViewModel;
@@ -57,28 +62,7 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         imageLabel = new JLabel(new ImageIcon());
         ingredientsPanel = new JPanel();
 
-        nameLabel.setBackground(Color.GRAY);
-        nameLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        idLabel.setBackground(Color.GRAY);
-        idLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        instructionTextArea.setBackground(Color.GRAY);
-        instructionTextArea.setLineWrap(true);
-        instructionTextArea.setWrapStyleWord(true);
-        instructionTextArea.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        instructionTextArea.setColumns(60);
-        instructionTextArea.setEditable(false);
-        instructionTextArea.setBackground(Color.GRAY);
-        instructionTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
-        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.Y_AXIS));
-        ingredientsPanel.setBackground(Color.GRAY);
-        ingredientsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel ingredientLabel = new JLabel("Ingredients");
-        ingredientLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-        ingredientsPanel.add(ingredientLabel);
+        this.setPanels();
 
         detailPanel.add(nameLabel);
         detailPanel.add(idLabel);
@@ -122,6 +106,35 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         this.add(detailOutputField);
     }
 
+    private void setPanels() {
+        nameLabel.setBackground(Color.GRAY);
+        nameLabel.setFont(new Font(TAHOMA, Font.BOLD, LABELFONT));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        idLabel.setBackground(Color.GRAY);
+        idLabel.setFont(new Font(TAHOMA, Font.BOLD, LABELFONT));
+        idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        instructionTextArea.setBackground(Color.GRAY);
+        instructionTextArea.setLineWrap(true);
+        instructionTextArea.setWrapStyleWord(true);
+        instructionTextArea.setFont(new Font("Monospaced", Font.PLAIN, INSFONT));
+        instructionTextArea.setColumns(COLUMNS);
+        instructionTextArea.setEditable(false);
+        instructionTextArea.setBackground(Color.GRAY);
+        instructionTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.Y_AXIS));
+        ingredientsPanel.setBackground(Color.GRAY);
+        ingredientsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        final JLabel ingredientLabel = new JLabel("Ingredients");
+        ingredientLabel.setFont(new Font(TAHOMA, Font.BOLD, LABELFONT));
+        ingredientLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ingredientsPanel.add(ingredientLabel);
+
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Clicked: " + e.getActionCommand());
@@ -163,7 +176,7 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
             for (Map.Entry<String, String> entry : currentState.getIngredients().entrySet()) {
                 final JLabel ingredientLabel = new JLabel(entry.getKey() + ": " + entry.getValue());
                 ingredientLabel.setBackground(Color.GRAY);
-                ingredientLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+                ingredientLabel.setFont(new Font(TAHOMA, Font.BOLD, LABELFONT));
                 ingredientsPanel.add(ingredientLabel);
             }
 
