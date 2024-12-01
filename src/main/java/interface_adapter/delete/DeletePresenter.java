@@ -43,6 +43,7 @@ public class DeletePresenter implements DeleteOutputBoundary {
         final List<String> photoLinks = response.getPhotoLink();
         final List<Map<String, String>> ingredients = response.getIngredients();
         final List<BufferedImage> images = response.getImages();
+        final String username = response.getUsername();
 
         myFavouriteState.setCocktailNamesList(names);
         myFavouriteState.setIdList(ids);
@@ -50,6 +51,9 @@ public class DeletePresenter implements DeleteOutputBoundary {
         myFavouriteState.setInstructionList(instructions);
         myFavouriteState.setPhotoLinkList(photoLinks);
         myFavouriteState.setImageList(images);
+        myFavouriteState.setUsername(username);
+
+        myFavouriteViewModel.setState(myFavouriteState);
 
         myFavouriteViewModel.firePropertyChanged();
 

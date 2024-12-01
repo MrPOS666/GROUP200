@@ -10,15 +10,17 @@ import java.util.Map;
  */
 public class MyFavouriteState {
 
-    private String username; // The username of the current user
-    private List<Integer> selectedCocktails; // List of selected cocktail IDs
+    private String username;
+
+    private List<Integer> selectedCocktails = new ArrayList<>(); // List of selected cocktail IDs
     private String selectError; // Error message, if any
-    private List<Integer> idList;
-    private List<Map<String, String>> ingredientsList;
-    private List<String> instructionList;
+
+    private List<Integer> idList = new ArrayList<>();
     private List<String> cocktailNamesList = new ArrayList<>();
-    private List<String> photoLinkList;
-    private List<BufferedImage> imageList;
+    private List<Map<String, String>> ingredientsList = new ArrayList<>();
+    private List<String> instructionList = new ArrayList<>();
+    private List<String> photoLinkList = new ArrayList<>();
+    private List<BufferedImage> imageList = new ArrayList<>();
 
     /**
      * Gets the username of the current user.
@@ -86,6 +88,7 @@ public class MyFavouriteState {
     }
 
     public void setImageList(List<BufferedImage> images) {
+        this.imageList = images;
     }
 
     public String getSelectError() {

@@ -11,6 +11,7 @@ import entity.*;
 import okhttp3.*;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
+import use_case.delete_favorite.MyfavouritePageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessException;
 import use_case.detailPage.DetailPageDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
@@ -287,15 +288,16 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
     @Override
     public void setCurrentUsername(String username) {
     }
+
     /**
      * Update the MyFavourite cocktail list for an existing user.
      *
      * @param user          The user object containing the username and password.
      * @param newFavourites The new list of favorite cocktails.
-     * @throws DetailPageDataAccessException If an error occurs during the process.
+     * @throws MyfavouritePageDataAccessException If an error occurs during the process.
      */
     @Override
-    public void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
+    public void updateMyFavouriteCocktail(User user, List<Cocktail> newFavourites) throws MyfavouritePageDataAccessException, DetailPageDataAccessException {
         updateMyFavourite(user, newFavourites);
     }
 
@@ -307,12 +309,12 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
      * @throws DetailPageDataAccessException If an error occurs during the process.
      */
     @Override
-    public User loadUserByName(String username) throws DetailPageDataAccessException {
+    public User loadUserByName(String username) throws MyfavouritePageDataAccessException, DetailPageDataAccessException {
         return loadUser(username);
     }
 
     @Override
-    public void saveUserToApi(User testUser) throws DetailPageDataAccessException {
+    public void saveUserToApi(User testUser) throws MyfavouritePageDataAccessException, DetailPageDataAccessException {
         saveUser(testUser);
     }
 

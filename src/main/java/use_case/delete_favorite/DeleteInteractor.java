@@ -7,7 +7,7 @@ import java.util.Map;
 
 import entity.Cocktail;
 import entity.User;
-import use_case.detailPage.DetailPageDataAccessException;
+import use_case.delete_favorite.MyfavouritePageDataAccessException;
 
 /**
  * The Delete Interactor.
@@ -27,7 +27,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
      * @param deleteInputData the input data
      */
     @Override
-    public void execute(DeleteInputData deleteInputData) throws DetailPageDataAccessException {
+    public void execute(DeleteInputData deleteInputData) throws MyfavouritePageDataAccessException {
         final String username = deleteInputData.getUserName();
         final List<Integer> cocktailIdToDelete = deleteInputData.getDeleteCocktailId();
         final User user = dbUserDataAccessObject2.loadUserByName(username);
@@ -40,38 +40,25 @@ public class DeleteInteractor implements DeleteInputBoundary {
 
         // Fetch the list of favorite cocktails directly using the username
         final List<Cocktail> favourites = user.getMyFavourite();
-        if (favourites == null || favourites.isEmpty()) {
+        if (favourites == null) {
             deletePresenter.prepareFailView("No favorites found for user: " + username);
         }
 
         final List<Cocktail> updateFavourites = new ArrayList<>(favourites);
-        boolean deleted = false;
 
         for (Cocktail cocktail: favourites) {
             if (cocktailIdToDelete.contains(cocktail.getIdDrink())) {
                 updateFavourites.remove(cocktail);
-                deleted = true;
             }
         }
+        user.getMyFavourite().clear();
+        user.getMyFavourite().addAll(updateFavourites);
 
-        if (deleted) {
-            for (Cocktail cocktail : updateFavourites) {
-                ids.add(cocktail.getIdDrink());
-                names.add(cocktail.getCocktailName());
-                instructions.add(cocktail.getInstructions());
-                photoLinks.add(cocktail.getPhotoLink());
-                ingredients.add(cocktail.getIngredients());
-            }
-            user.getMyFavourite().clear();
-            user.getMyFavourite().addAll(updateFavourites);
-            final DeleteOutputData outputData = createOutputData(updateFavourites);
-            dbUserDataAccessObject2.updateMyFavouriteCocktail(user, updateFavourites);
+        final DeleteOutputData outputData = createOutputData(updateFavourites, username);
+        dbUserDataAccessObject2.updateMyFavouriteCocktail(user, updateFavourites);
 
-            deletePresenter.prepareSuccessView(outputData);
-        }
-        else {
-            deletePresenter.prepareFailView("No matching cocktails found for deletion.");
-        }
+        deletePresenter.prepareSuccessView(outputData);
+
     }
 
     /**
@@ -82,7 +69,7 @@ public class DeleteInteractor implements DeleteInputBoundary {
         deletePresenter.switchToHomepageView();
     }
 
-    private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites) {
+    private DeleteOutputData createOutputData(List<Cocktail> updatedFavourites, String username) {
         final List<Integer> ids = new ArrayList<>();
         final List<String> names = new ArrayList<>();
         final List<String> instructions = new ArrayList<>();
@@ -98,6 +85,6 @@ public class DeleteInteractor implements DeleteInputBoundary {
             ingredients.add(cocktail.getIngredients());
             images.add(cocktail.getImage());
         }
-        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images);
+        return new DeleteOutputData(false, ids, names, instructions, photos, ingredients, images, username);
     }
 }
