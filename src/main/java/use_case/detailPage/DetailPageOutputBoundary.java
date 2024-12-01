@@ -6,8 +6,9 @@ package use_case.detailPage;
 public interface DetailPageOutputBoundary {
     /**
      * Prepare success view for Detail Page.
+     * @param detailPageOutputData detailPageOutputData.
      */
-    void prepareSuccessView();
+    void prepareSuccessView(DetailPageOutputData detailPageOutputData);
 
     /**
      * Prepare failure view for Detail Page.

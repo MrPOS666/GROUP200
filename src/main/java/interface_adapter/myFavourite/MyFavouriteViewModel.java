@@ -3,13 +3,12 @@ package interface_adapter.myFavourite;
 import interface_adapter.ViewModel;
 
 /**
- * The View Model for the Login View.
+ * The View Model for the Select View.
  */
 public class MyFavouriteViewModel extends ViewModel<MyFavouriteState> {
 
-    public MyFavouriteViewModel() {
-        super("My Favourite");
+    public MyFavouriteViewModel(String viewName) {
+        super("MyFavourite");
         setState(new MyFavouriteState());
     }
-
 }

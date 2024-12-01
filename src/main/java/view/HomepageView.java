@@ -3,21 +3,20 @@ package view;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.delete.DeleteController;
+import interface_adapter.homepage.HomepageController;
+import interface_adapter.homepage.HomepageState;
 import interface_adapter.homepage.HomepageViewModel;
-import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
-import interface_adapter.myFavourite.MyFavouriteViewModel;
-import interface_adapter.recommendation.RecommendationViewModel;
-import interface_adapter.search.SearchViewModel;
 
 /**
  * The view for when the user is logged into the program.
@@ -26,12 +25,6 @@ public class HomepageView extends JPanel implements ActionListener {
     private final String viewName = "homepage";
 
     private final HomepageViewModel homepageViewModel;
-    private final ViewManagerModel viewManagerModel;
-    private final LoginViewModel loginViewModel;
-    private final LoggedInViewModel loggedInViewModel;
-    private final SearchViewModel searchViewModel;
-    private final RecommendationViewModel recommendationViewModel;
-    private final MyFavouriteViewModel myFavouriteViewModel;
 
     private final JButton toSearch;
     private final JButton toMyFavourites;
@@ -39,21 +32,12 @@ public class HomepageView extends JPanel implements ActionListener {
     private final JButton toChangePassword;
     private final JButton logout;
     private LogoutController logoutController;
+    private HomepageController homepageController;
+    private DeleteController deleteController;
 
     public HomepageView(HomepageViewModel homepageViewModel,
-                        ViewManagerModel viewManagerModel,
-                        LoginViewModel loginViewModel,
-                        LoggedInViewModel loggedInViewModel,
-                        SearchViewModel searchViewModel,
-                        RecommendationViewModel recommendationViewModel,
-                        MyFavouriteViewModel myFavouriteViewModel) {
+                        LoggedInViewModel loggedInViewModel) {
         this.homepageViewModel = homepageViewModel;
-        this.viewManagerModel = viewManagerModel;
-        this.loginViewModel = loginViewModel;
-        this.loggedInViewModel = loggedInViewModel;
-        this.searchViewModel = searchViewModel;
-        this.recommendationViewModel = recommendationViewModel;
-        this.myFavouriteViewModel = myFavouriteViewModel;
 
         final JLabel title = new JLabel("Homepage");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -74,8 +58,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toSearch)) {
-                            viewManagerModel.setState(searchViewModel.getViewName());
-                            viewManagerModel.firePropertyChanged();
+                            homepageController.switchToSearchView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -84,8 +67,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toMyFavourites)) {
-                            viewManagerModel.setState(myFavouriteViewModel.getViewName());
-                            viewManagerModel.firePropertyChanged();
+                            deleteController.execute(new ArrayList<Integer>(), homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -94,8 +76,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toRecommends)) {
-                            viewManagerModel.setState(recommendationViewModel.getViewName());
-                            viewManagerModel.firePropertyChanged();
+                            homepageController.switchToRecommendationView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -104,8 +85,7 @@ public class HomepageView extends JPanel implements ActionListener {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(toChangePassword)) {
-                            viewManagerModel.setState(loggedInViewModel.getViewName());
-                            viewManagerModel.firePropertyChanged();
+                            homepageController.switchToChangePasswordView(homepageViewModel.getState().getUsername());
                         }
                     }
                 });
@@ -116,8 +96,8 @@ public class HomepageView extends JPanel implements ActionListener {
                     if (evt.getSource().equals(logout)) {
                         // 1. get the state out of the loggedInViewModel. It contains the username.
                         // 2. Execute the logout Controller.
-                        final LoggedInState state = loggedInViewModel.getState();
-                        logoutController.execute(state.getUsername());
+                        final HomepageState state = homepageViewModel.getState();
+                        this.logoutController.execute(state.getUsername());
                     }
                 }
         );
@@ -139,5 +119,13 @@ public class HomepageView extends JPanel implements ActionListener {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setHomepageController(HomepageController homepageController) {
+        this.homepageController = homepageController;
+    }
+
+    public void setDeleteController(DeleteController deleteController) {
+        this.deleteController = deleteController;
     }
 }

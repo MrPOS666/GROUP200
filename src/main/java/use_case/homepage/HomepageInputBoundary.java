@@ -7,21 +7,25 @@ public interface HomepageInputBoundary {
 
     /**
      * Execute the switch to Search view use case.
+     * @param homepageInputData Input data of homepage use case
      */
-    void switchToSearchView();
+    void switchToSearchView(HomepageInputData homepageInputData);
 
     /**
      * Execute the switch to MyFavourites view use case.
+     * @param homepageInputData Input data of homepage use case
      */
-    void switchToMyFavouritesView();
+    void switchToMyFavouritesView(HomepageInputData homepageInputData);
 
     /**
      * Execute the switch to Recommendation view use case.
+     * @param homepageInputData Input data of homepage use case
      */
-    void switchToRecommendationView();
+    void switchToRecommendationView(HomepageInputData homepageInputData);
 
     /**
      * Execute the switch to ChangePassword view use case.
+     * @param homepageInputData Input data of homepage use case
      */
-    void switchToChangePasswordView();
+    void switchToChangePasswordView(HomepageInputData homepageInputData);
 }

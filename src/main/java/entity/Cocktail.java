@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
@@ -35,4 +36,10 @@ public interface Cocktail {
      * @return the instructions.
      */
     String getInstructions();
+
+    /**
+     * Returns the photo of the cocktail.
+     * @return the photo of the Cocktail.
+     */
+    BufferedImage getImage();
 }

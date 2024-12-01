@@ -30,23 +30,23 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
     }
 
     @Override
-    public boolean existsByName(String cocktailName) {
+    public boolean existsByName(String cocktailName) throws IOException {
         return !getByName(cocktailName).isEmpty();
     }
 
     @Override
-    public boolean existsById(int cocktailId) {
+    public boolean existsById(int cocktailId) throws IOException {
         return getById(cocktailId) != null;
     }
 
     @Override
-    public List<Cocktail> getByName(String cocktailName) {
+    public List<Cocktail> getByName(String cocktailName) throws IOException {
         final String jsonResponse = searchByName(cocktailName);
         return createCocktailsFromJson(jsonResponse);
     }
 
     @Override
-    public Cocktail getById(int cocktailId) {
+    public Cocktail getById(int cocktailId) throws IOException {
         final String jsonResponse = searchByID(String.valueOf(cocktailId));
         final List<Cocktail> cocktails = createCocktailsFromJson(jsonResponse);
         Cocktail result = null;
@@ -104,40 +104,13 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
         return set;
     }
 
-    /**
-     * Helper method to get full cocktail information from id
-     * @param jsonResponse
-     * @return
-     */
-    public List<Cocktail> cocktailsFromJson(String jsonResponse) {
-        final Set<Cocktail> cocktails = new HashSet<>();
-        final List<Cocktail> cocktailList = new ArrayList<>();
-        cocktailList.addAll(cocktails);
-        if (jsonResponse == null) {
-            return cocktailList;
-        }
-
-        final JSONObject jsonObject = new JSONObject(jsonResponse);
-        final JSONArray drinksArray = jsonObject.optJSONArray("drinks");
-
-        if (drinksArray != null) {
-            for (int i = 0; i < drinksArray.length(); i++) {
-                final JSONObject drinkObject = drinksArray.getJSONObject(i);
-                final int idDrink = drinkObject.optInt("idDrink");
-                cocktails.add(getById(idDrink));
-            }
-        }
-        cocktailList.addAll(cocktails);
-        return cocktailList;
-    }
-
     @Override
     public void setCurrentCocktailName(String cocktailName) {
         this.currentCocktailName = cocktailName;
     }
 
     // Factory method to create a list of Cocktail objects from JSON response
-    private List<Cocktail> createCocktailsFromJson(String jsonResponse) {
+    private List<Cocktail> createCocktailsFromJson(String jsonResponse) throws IOException {
         final List<Cocktail> cocktails = new ArrayList<>();
 
         if (jsonResponse == null) {
@@ -179,7 +152,7 @@ public class SearchByNameOrIDAccessObject implements SearchDataAccessInterface, 
 
                 // Create a Cocktail object and add it to the list
                 final Cocktail cocktail = cocktailFactory.create(idDrink,
-                        strDrink, strInstructions, photoUrl, ingredients);
+                        strDrink, strInstructions, photoUrl, ingredients, ImageDataAccessObject.fetchImage(photoUrl));
                 cocktails.add(cocktail);
             }
         }

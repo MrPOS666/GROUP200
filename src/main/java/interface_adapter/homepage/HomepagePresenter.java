@@ -2,10 +2,14 @@ package interface_adapter.homepage;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.myFavourite.MyFavouriteState;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
+import interface_adapter.recommendation.RecommendationState;
 import interface_adapter.recommendation.RecommendationViewModel;
+import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import use_case.homepage.HomepageOutputBoundary;
+import use_case.homepage.HomepageOutputData;
 
 /**
  * The Presenter for the Homepage us case.
@@ -31,27 +35,31 @@ public class HomepagePresenter implements HomepageOutputBoundary {
     }
 
     @Override
-    public void switchToSearchView() {
+    public void switchToSearchView(HomepageOutputData homepageOutputData) {
+        final SearchState searchState = searchViewModel.getState();
+        searchState.setUsername(homepageOutputData.getUsername());
         viewManagerModel.setState(searchViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToMyFavouritesView() {
+    public void switchToMyFavouritesView(HomepageOutputData homepageOutputData) {
+        final MyFavouriteState myFavouriteState = myFavouriteViewModel.getState();
+        myFavouriteState.setUsername(homepageOutputData.getUsername());
         viewManagerModel.setState(myFavouriteViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToRecommendationView() {
+    public void switchToRecommendationView(HomepageOutputData homepageOutputData) {
+        final RecommendationState recommendationState = recommendationViewModel.getState();
         viewManagerModel.setState(recommendationViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToChangePasswordView() {
+    public void switchToChangePasswordView(HomepageOutputData homepageOutputData) {
         viewManagerModel.setState(loggedInViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
-
     }
 }

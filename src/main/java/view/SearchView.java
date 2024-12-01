@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,15 +17,15 @@ import javax.swing.event.DocumentListener;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.homepage.HomepageViewModel;
+import interface_adapter.detailPage.DetailPageController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search_by_ingredients.IngredientsController;
 
-import java.util.List;
-import java.util.Map;
-
-
+/**
+ * View for search use cases.
+ */
 public class SearchView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "search";
     private final SearchViewModel searchViewModel;
@@ -37,6 +41,7 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
     private final JButton toHomepage;
     private SearchController searchController;
     private IngredientsController ingredientsController;
+    private DetailPageController detailPageController;
 
     public SearchView(SearchViewModel searchViewModel,
                       HomepageViewModel homepageViewModel,
@@ -101,9 +106,14 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(search)) {
                             final SearchState currentState = searchViewModel.getState();
-                            searchController.execute(
-                                    currentState.getInput()
-                            );
+                            try {
+                                searchController.execute(
+                                        currentState.getInput()
+                                );
+                            }
+                            catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 }
@@ -174,20 +184,29 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
         this.ingredientsController = controller;
     }
 
+    public void setDetailPageController(DetailPageController detailPageController) {
+        this.detailPageController = detailPageController;
+    }
+
     public void searchresults(SearchState state) {
 
+        final String username = state.getUsername();
+
         final List<String> nameList = state.getCocktailNamesList();
-        final List<Map<String, String>> ingredientsList = state.getIngredientsList();
-        final List<Integer> ID = state.getIdList();
-        final List<String> recipeList = state.getRecipeList();
-        final List<String> photoLinkList = state.getPhotoLinkList();
+        final List<Integer> ids = state.getIdList();
+        final List<String> instructions = state.getRecipeList();
+        final List<Map<String, String>> ingredients = state.getIngredientsList();
+        final List<String> photoLinks = state.getPhotoLinkList();
+        final List<BufferedImage> images = state.getImages();
 
         for (int i = 0; i < nameList.size(); i++) {
-            final String name = nameList.get(i);
-            final int id = ID.get(i);
-            final String recipe = recipeList.get(i);
-            final String photoLink = photoLinkList.get(i);
-            final String ingredients = state.getIngredientsToString(ingredientsList.get(i));
+
+            final String cocktailName = nameList.get(i);
+            final Integer id = ids.get(i);
+            final String instruction = instructions.get(i);
+            final Map<String, String> ingredient = ingredients.get(i);
+            final String photolink = photoLinks.get(i);
+            final BufferedImage image = images.get(i);
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();
@@ -198,35 +217,54 @@ public class SearchView extends JPanel implements ActionListener, PropertyChange
             cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
 
             // Create labels for cocktail details
-            final JLabel nameLabel = new JLabel(name);
-            final JLabel IDLabel = new JLabel("ID: " + id);
-            final JLabel photoLinkLabel = new JLabel(photoLink);
+            final JLabel nameLabel = new JLabel(cocktailName);
+            final JLabel IDLabel = new JLabel(id.toString());
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
             IDLabel.setForeground(Color.DARK_GRAY);     // Dark gray for ID label
-            photoLinkLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
-            // Create JLabel for photo link or image
-            final JLabel photoLabel = new JLabel();
-            final ImageIcon photoIcon = new ImageIcon(photoLink);
-            photoLabel.setIcon(photoIcon);  // Display the image
-
-            // Optionally, set a background color for the photo label (for a border around the photo)
-            photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
-            photoLabel.setOpaque(true); // Make sure background color is visible
+            // Add the cocktail image if available
+            final JLabel imageLabel = new JLabel();
+            if (image != null) {
+                // Create an ImageIcon from the BufferedImage
+                final ImageIcon imageIcon = new ImageIcon(image);
+                imageLabel.setIcon(imageIcon); // Set the image in the label
+            }
+            else {
+                imageLabel.setText("Image not available"); // Fallback text
+            }
 
             // Add components to the cocktail panel
             cocktailPanel.add(nameLabel);
             cocktailPanel.add(IDLabel);
-            cocktailPanel.add(photoLinkLabel);
-            cocktailPanel.add(photoLabel);
+            cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
-            cocktailPanel.setPreferredSize(new Dimension(200, 200));
+            cocktailPanel.setPreferredSize(new Dimension(1200, 1200));
 
             // Add the cocktail panel to the main result panel
             resultPanel.add(cocktailPanel);
+
+            JButton detailsButton = new JButton("Details");
+            detailsButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(detailsButton)) {
+                                detailPageController.execute(username,
+                                                            cocktailName,
+                                                            id,
+                                                            instruction,
+                                                            photolink,
+                                                            ingredient,
+                                                            image,
+                                                            searchViewModel.getViewName());
+                            }
+                        }
+                    }
+            );
+
+            resultPanel.add(detailsButton);
 
             // Add space between each cocktail panel
             resultPanel.add(Box.createVerticalStrut(10)); // Add space between cocktails

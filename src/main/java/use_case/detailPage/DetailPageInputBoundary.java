@@ -14,5 +14,11 @@ public interface DetailPageInputBoundary {
     /**
      * Return to the original Page.
      */
-    void returnOrigin();
+    void returnOrigin(String previousViewName);
+
+    /**
+     * Execute the addMyFavourite Use case.
+     * @param detailPageInputData detailPageInputData
+     */
+    void addMyFavourite(DetailPageInputData detailPageInputData);
 }
