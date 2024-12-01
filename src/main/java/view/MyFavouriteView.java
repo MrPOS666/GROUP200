@@ -368,7 +368,6 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
             revalidate();
             repaint();
         }
-        updateCocktailCheckboxes(myFavouriteState.getIdList());
     }
 
     public String getViewName() {
