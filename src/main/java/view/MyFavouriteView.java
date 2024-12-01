@@ -31,9 +31,12 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
 
     private final JPanel resultPanel = new JPanel();
     private final List<JCheckBox> cocktailCheckboxes = new ArrayList<>();
+    private final JLabel deleteOutputField = new JLabel();
 
     private DeleteController deleteController;
     private DetailPageController detailPageController;
+
+    private List<Integer> selectedCocktailIds = new ArrayList<>();
 
     public MyFavouriteView(MyFavouriteViewModel myFavouriteViewModel) {
 
@@ -60,6 +63,8 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         // Result Panel
         resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
 
+        displayCocktails();
+
         select.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -70,6 +75,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                     select.setEnabled(false);
                     cancel.setEnabled(true);
                     updateCocktailCheckboxes(myFavouriteViewModel.getState().getIdList());
+
                 }
             }
         });
@@ -79,16 +85,18 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                     @Override
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(delete)) {
+                            updateCocktailCheckboxes(myFavouriteViewModel.getState().getIdList());
                             System.out.println("Delete button clicked");
-                            final List<Integer> selectedCocktails = myFavouriteViewModel.getState().getSelectedCocktails();
+                            final List<Integer> selectedCocktails = getSelectedCocktails();
                             final String username = myFavouriteViewModel.getState().getUsername();
 
                             if (selectedCocktails == null || selectedCocktails.isEmpty()) {
                                 System.out.println("The cocktails list is empty.");
-                                resetView();
+                                deleteOutputField.setText("Cocktails list is empty.");
                             }
                             else {
                                 deleteController.execute(selectedCocktails, username);
+                                displayCocktails();
                                 resetView();
                             }
                         }
@@ -118,6 +126,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(title);
         this.add(buttons);
+        this.add(deleteOutputField);
         this.add(resultPanel);
 
         displayCocktails();
@@ -132,16 +141,79 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         resultPanel.removeAll();
         cocktailCheckboxes.clear();
 
+        final List<String> names = myFavouriteViewModel.getState().getCocktailNamesList();
+        final List<Integer> ids = myFavouriteViewModel.getState().getIdList();
+        final List<String> instructions = myFavouriteViewModel.getState().getInstructionList();
+        final List<Map<String,String>> ingredients = myFavouriteViewModel.getState().getIngredientsList();
+        final List<String> photos = myFavouriteViewModel.getState().getPhotoLinkList();
+        final List<BufferedImage> images = myFavouriteViewModel.getState().getImageList();
+
+
         for (Integer cocktail : cocktails) {
             final JCheckBox checkbox = new JCheckBox(String.valueOf(cocktail));
+
+            Integer cocktailIndex = ids.indexOf(cocktail);
+            final String name = names.get(cocktailIndex);
+            final String photo = photos.get(cocktailIndex);
+            final String instruction = instructions.get(cocktailIndex);
+            final Integer id = ids.get(cocktailIndex);
+            final Map<String, String> ingredient = ingredients.get(cocktailIndex);
+            final BufferedImage image = images.get(cocktailIndex);
+
+            // Create a panel for each cocktail
+            final JPanel cocktailPanel = new JPanel();
+            cocktailPanel.setLayout(new BoxLayout(cocktailPanel, BoxLayout.Y_AXIS));
+            cocktailPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            // Set the background color for the cocktail panel to yellow
+            cocktailPanel.setBackground(Color.YELLOW); // Yellow background for the cocktail panel
+
+            // Add cocktail details
+            final JLabel nameLabel = new JLabel(name);
+
+            cocktailPanel.add(nameLabel);
+
+            resultPanel.add(cocktailPanel);
+            resultPanel.add(Box.createVerticalStrut(10));
+
+            // Set color for labels
+            nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
+
+            // Add the cocktail image if available
+            final JLabel imageLabel = new JLabel();
+            if (images != null && cocktailIndex < images.size() && images.get(cocktailIndex) != null) {
+                // Create an ImageIcon from the BufferedImage
+                final ImageIcon imageIcon = new ImageIcon(images.get(cocktailIndex));
+                imageLabel.setIcon(imageIcon); // Set the image in the label
+            }
+            else {
+                imageLabel.setText("Image not available"); // Fallback text
+            }
+
+            // Optionally, set a background color for the photo label (for a border around the photo
+
+            // Add components to the cocktail panel
+            cocktailPanel.add(nameLabel);
+
+            cocktailPanel.add(imageLabel);
+
+            cocktailPanel.add(checkbox);
+
+            // add checkbox to checkbox list
             cocktailCheckboxes.add(checkbox);
-            resultPanel.add(checkbox);
+
+            // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
+            cocktailPanel.setPreferredSize(new Dimension(1200, 1200));
+
+            // Add space between each cocktail panel
+            resultPanel.add(Box.createVerticalStrut(10));
         }
 
         addCheckboxSelectionListener();
 
         resultPanel.revalidate();
         resultPanel.repaint();
+
     }
 
     private void addCheckboxSelectionListener() {
@@ -161,14 +233,13 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
      * @return List of selected cocktail names.
      */
     private List<Integer> getSelectedCocktails() {
-        final List<Integer> selectedCocktails = new ArrayList<>();
         for (JCheckBox checkbox : cocktailCheckboxes) {
             if (checkbox.isSelected()) {
                 final int cocktailId = Integer.parseInt(checkbox.getText());
-                selectedCocktails.add(cocktailId);
+                selectedCocktailIds.add(cocktailId);
             }
         }
-        return selectedCocktails;
+        return selectedCocktailIds;
     }
 
     public void setDetailPageController(final DetailPageController detailPageController) {
@@ -179,12 +250,11 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
      * Displays cocktails without checkboxes.
      */
     private void displayCocktails() {
-
+        resultPanel.removeAll();
         final String username = myFavouriteViewModel.getState().getUsername();
 
-        resultPanel.removeAll();
         final List<String> names = myFavouriteViewModel.getState().getCocktailNamesList();
-        final List<Integer> ids = myFavouriteViewModel.getState().getSelectedCocktails();
+        final List<Integer> ids = myFavouriteViewModel.getState().getIdList();
         final List<String> instructions = myFavouriteViewModel.getState().getInstructionList();
         final List<Map<String,String>> ingredients = myFavouriteViewModel.getState().getIngredientsList();
         final List<String> photos = myFavouriteViewModel.getState().getPhotoLinkList();
@@ -208,17 +278,14 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
 
             // Add cocktail details
             final JLabel nameLabel = new JLabel(name);
-            final JLabel photoLabel = new JLabel(photo);
 
             cocktailPanel.add(nameLabel);
-            cocktailPanel.add(photoLabel);
 
             resultPanel.add(cocktailPanel);
             resultPanel.add(Box.createVerticalStrut(10));
 
             // Set color for labels
             nameLabel.setForeground(Color.DARK_GRAY);   // Dark gray for name label
-            photoLabel.setForeground(Color.DARK_GRAY); // Dark gray for photo link label
 
             // Add the cocktail image if available
             final JLabel imageLabel = new JLabel();
@@ -231,17 +298,15 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
                 imageLabel.setText("Image not available"); // Fallback text
             }
 
-            // Optionally, set a background color for the photo label (for a border around the photo)
-            photoLabel.setBackground(Color.LIGHT_GRAY); // Set background color for image label
-            photoLabel.setOpaque(true); // Make sure background color is visible
+            // Optionally, set a background color for the photo label (for a border around the photo
 
             // Add components to the cocktail panel
             cocktailPanel.add(nameLabel);
-            cocktailPanel.add(photoLabel);
+
             cocktailPanel.add(imageLabel);
 
             // Set a fixed size or preferred size for the cocktail panel (useful for UI consistency)
-            cocktailPanel.setPreferredSize(new Dimension(200, 200));
+            cocktailPanel.setPreferredSize(new Dimension(1200, 1200));
 
             // Add space between each cocktail panel
             resultPanel.add(Box.createVerticalStrut(10));
@@ -273,6 +338,7 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         resultPanel.repaint();
     }
 
+
     /**
      * Resets the view to hide the checkboxes and disable delete and cancel buttons.
      */
@@ -281,13 +347,27 @@ public class MyFavouriteView extends JPanel implements ActionListener, PropertyC
         cancel.setEnabled(false); // Disable cancel button
         select.setEnabled(true); // Enable select button
         back.setEnabled(true);
+
+        selectedCocktailIds.clear();
         cocktailCheckboxes.clear();
         displayCocktails();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        resultPanel.removeAll();
+
         final MyFavouriteState myFavouriteState = (MyFavouriteState) evt.getNewValue();
+        if (myFavouriteState != null) {
+            displayCocktails();
+            revalidate();
+            repaint();
+        }
+        else {
+            deleteOutputField.setText("No cocktails are in my favourite.");
+            revalidate();
+            repaint();
+        }
         updateCocktailCheckboxes(myFavouriteState.getIdList());
     }
 
