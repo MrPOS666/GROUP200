@@ -5,8 +5,6 @@ import interface_adapter.homepage.HomepageViewModel;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.change_password.ChangePasswordOutputData;
 
-import javax.swing.text.View;
-
 /**
  * The Presenter for the Change Password Use Case.
  */

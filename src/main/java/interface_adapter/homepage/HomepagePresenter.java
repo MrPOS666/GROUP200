@@ -52,7 +52,6 @@ public class HomepagePresenter implements HomepageOutputBoundary {
 
     @Override
     public void switchToRecommendationView(HomepageOutputData homepageOutputData) {
-        final RecommendationState recommendationState = recommendationViewModel.getState();
         viewManagerModel.setState(recommendationViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

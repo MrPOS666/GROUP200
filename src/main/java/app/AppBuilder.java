@@ -1,13 +1,10 @@
 package app;
 
 import java.awt.CardLayout;
-import java.util.Map;
 
 import javax.swing.*;
 
-import data_access.DBUserDataAccessObject;
 import data_access.DBUserDataAccessObject2;
-import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchByNameOrIDAccessObject;
 import entity.*;
 import interface_adapter.ViewManagerModel;
@@ -37,7 +34,6 @@ import interface_adapter.search_by_ingredients.IngredientsPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import okhttp3.OkHttpClient;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -56,7 +52,6 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
@@ -98,7 +93,7 @@ public class AppBuilder {
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
     private HomepageViewModel homepageViewModel;
-    private SearchViewModel searchViewModel = new SearchViewModel("search");;
+    private SearchViewModel searchViewModel = new SearchViewModel("search");
     private MyFavouriteViewModel myFavouriteViewModel;
     private RecommendationViewModel recommendationViewModel;
     private DetailPageViewModel detailPageViewModel;
@@ -253,7 +248,9 @@ public class AppBuilder {
 
         final HomepageOutputBoundary homepagePresenter = new HomepagePresenter(viewManagerModel,
                 recommendationViewModel, myFavouriteViewModel, searchViewModel, loggedInViewModel);
-        final LogoutOutputBoundary logoutPresenter = new LogoutPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
+        final LogoutOutputBoundary logoutPresenter = new LogoutPresenter(viewManagerModel,
+                                                                        loggedInViewModel,
+                                                                        loginViewModel);
 
         final HomepageInputBoundary homepageInteractor = new HomepageInteractor(homepagePresenter);
         final HomepageController homepageController = new HomepageController(homepageInteractor);
@@ -272,7 +269,8 @@ public class AppBuilder {
      */
     public AppBuilder addDeleteUseCase() {
         if (myFavouriteView == null || myFavouriteViewModel == null) {
-            throw new IllegalStateException("MyFavouriteView and MyFavouriteViewModel must be initialized before adding Delete Use Case.");
+            throw new IllegalStateException("MyFavouriteView and MyFavouriteViewModel "
+                    + "must be initialized before adding Delete Use Case.");
         }
 
         final DeleteOutputBoundary deleteOutputBoundary = new DeletePresenter(myFavouriteViewModel, viewManagerModel, homepageViewModel);
@@ -356,21 +354,6 @@ public class AppBuilder {
         searchView.setIngredientsController(ingredientsController);
         searchView.setDetailPageController(this.detailPageController);
         return this;
-    }
-
-    /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
-     * @return the application
-     */
-    public JFrame build_search() {
-        final JFrame application = new JFrame("Search Example");
-        application.add(cardPanel);
-        application.setContentPane(cardPanel);
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        viewManagerModel.setState(searchView.getViewName());
-        viewManagerModel.firePropertyChanged();
-
-        return application;
     }
 
 }
