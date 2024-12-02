@@ -3,8 +3,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea/easycode.ignore
-
-target/
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/vcs.xml
 
 ### Eclipse ###
 .apt_generated
