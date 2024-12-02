@@ -7,6 +7,9 @@ import java.util.Map;
  * Output Data of Detail Page Use Case.
  */
 public class DetailPageOutputData {
+
+    private final boolean useCaseFailed;
+
     private String username;
     private String cocktailname;
     private Integer cocktailiD;
@@ -15,8 +18,16 @@ public class DetailPageOutputData {
     private Map<String, String> ingredients;
     private BufferedImage image;
     private String previoueViewName;
+    private String message = "";
 
-    public DetailPageOutputData(String username,
+    public DetailPageOutputData(boolean useCaseFailed,
+                                String message) {
+        this.useCaseFailed = useCaseFailed;
+        this.message = message;
+    }
+
+    public DetailPageOutputData(boolean useCaseFailed,
+                                String username,
                                 String cocktailname,
                                 Integer cocktailiD,
                                 String instruction,
@@ -24,6 +35,7 @@ public class DetailPageOutputData {
                                 Map<String, String> ingredients,
                                 BufferedImage image,
                                 String previoueViewName) {
+        this.useCaseFailed = useCaseFailed;
         this.username = username;
         this.cocktailname = cocktailname;
         this.cocktailiD = cocktailiD;
@@ -32,6 +44,18 @@ public class DetailPageOutputData {
         this.ingredients = ingredients;
         this.image = image;
         this.previoueViewName = previoueViewName;
+    }
+
+    public void setMessage(String errorMessage) {
+        this.message = errorMessage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public boolean isUseCaseFailed() {
+        return useCaseFailed;
     }
 
     public String getUsername() {

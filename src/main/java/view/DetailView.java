@@ -21,7 +21,7 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
     public static final String TAHOMA = "Tahoma";
     public static final int LABELFONT = 18;
     public static final int INSFONT = 15;
-    public static final int COLUMNS = 60;
+    public static final int COLUMNS = 40;
 
     private final String viewName = "detailpage";
 
@@ -37,6 +37,7 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
 
     private JLabel nameLabel;
     private JLabel idLabel;
+    private JPanel instructionsPanel;
     private JTextArea instructionTextArea;
     private JLabel imageLabel;
     private JPanel ingredientsPanel;
@@ -58,17 +59,21 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
 
         nameLabel = new JLabel("Name: ");
         idLabel = new JLabel("ID: ");
+        instructionsPanel = new JPanel();
         instructionTextArea = new JTextArea("Instructions: ");
+        instructionsPanel.add(instructionTextArea);
         imageLabel = new JLabel(new ImageIcon());
         ingredientsPanel = new JPanel();
-
-        this.setPanels();
 
         detailPanel.add(nameLabel);
         detailPanel.add(idLabel);
         detailPanel.add(imageLabel);
         detailPanel.add(ingredientsPanel);
-        detailPanel.add(instructionTextArea);
+        detailPanel.add(instructionsPanel);
+
+        detailOutputField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        this.setPanels();
 
         addMyFavourite.addActionListener(
                 new ActionListener() {
@@ -76,12 +81,13 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
                         if (event.getSource().equals(addMyFavourite)) {
                             final DetailPageState currentState = detailPageViewModel.getState();
                             detailPageController.addMyFavourite(currentState.getUsername(),
-                                    currentState.getCocktailname(),
-                                    currentState.getCocktailiD(),
-                                    currentState.getInstruction(),
-                                    currentState.getPhotolink(),
-                                    currentState.getIngredients(),
-                                    currentState.getImage());
+                                                                currentState.getCocktailname(),
+                                                                currentState.getCocktailiD(),
+                                                                currentState.getInstruction(),
+                                                                currentState.getPhotolink(),
+                                                                currentState.getIngredients(),
+                                                                currentState.getImage(),
+                                                                currentState.getPreviousViewName());
                         }
                     }
                 }
@@ -102,8 +108,9 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
         detailPanel.setBackground(Color.GRAY);
         this.add(buttons);
-        this.add(detailPanel);
         this.add(detailOutputField);
+        this.add(detailPanel);
+        this.setSize(1400, 2000);
     }
 
     private void setPanels() {
@@ -114,6 +121,9 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
         idLabel.setBackground(Color.GRAY);
         idLabel.setFont(new Font(TAHOMA, Font.BOLD, LABELFONT));
         idLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        instructionsPanel.setBackground(Color.GRAY);
+        instructionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         instructionTextArea.setBackground(Color.GRAY);
         instructionTextArea.setLineWrap(true);
@@ -142,15 +152,12 @@ public class DetailView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        detailOutputField.removeAll();
-        this.remove(detailOutputField);
+        detailOutputField.setText("");
         final DetailPageState currentState = (DetailPageState) evt.getNewValue();
-        if (!currentState.getDetailPageError().isEmpty()) {
-            detailOutputField.setText(currentState.getDetailPageError());
-            this.add(detailOutputField);
+        if (!currentState.getDetailPageMessage().isEmpty()) {
+            detailOutputField.setText(currentState.getDetailPageMessage());
             revalidate();
             repaint();
-            currentState.setDetailPageError(null);
         }
         else {
             detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));

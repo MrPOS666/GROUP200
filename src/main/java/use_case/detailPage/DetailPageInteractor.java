@@ -39,22 +39,22 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
             final String previousViewName = detailPageInputData.getPreviousViewName();
 
             // Create output data
-            final DetailPageOutputData outputData = new DetailPageOutputData(username,
+            final DetailPageOutputData outputData = new DetailPageOutputData(false,
+                    username,
                     cocktailName,
                     cocktailID,
                     instruction,
                     photolink,
                     ingredients,
                     image,
-                    previousViewName
-            );
+                    previousViewName);
 
             // Send to presenter to prepare the success view
             detailPageOutputPresenter.prepareSuccessView(outputData);
         }
-        catch (Exception e) {
+        catch (DetailPageDataAccessException exception) {
             // Handle any unexpected errors
-            detailPageOutputPresenter.prepareFailView();
+            detailPageOutputPresenter.prepareFailView(new DetailPageOutputData(true, "DAO error"));
         }
     }
 
@@ -89,15 +89,43 @@ public class DetailPageInteractor implements DetailPageInputBoundary {
                 // 5. Update the user in the data layer
                 detailPageDataAccessObject.addMyFavourite(user, favoriteCocktails);
 
+                final DetailPageOutputData outputData = new DetailPageOutputData(false,
+                        detailPageInputData.getUsername(),
+                        detailPageInputData.getCocktailName(),
+                        detailPageInputData.getCocktailID(),
+                        detailPageInputData.getInstruction(),
+                        detailPageInputData.getPhotolink(),
+                        detailPageInputData.getIngredients(),
+                        detailPageInputData.getImage(),
+                        detailPageInputData.getPreviousViewName());
+
+                outputData.setMessage("Successfully added my favourite");
+
+                detailPageOutputPresenter.prepareSuccessView(outputData);
+
                 System.out.println("Successfully added my favourite");
             }
             else {
+                final DetailPageOutputData outputData = new DetailPageOutputData(false,
+                        detailPageInputData.getUsername(),
+                        detailPageInputData.getCocktailName(),
+                        detailPageInputData.getCocktailID(),
+                        detailPageInputData.getInstruction(),
+                        detailPageInputData.getPhotolink(),
+                        detailPageInputData.getIngredients(),
+                        detailPageInputData.getImage(),
+                        detailPageInputData.getPreviousViewName());
+                outputData.setMessage("This cocktail is already in your favourites");
+                detailPageOutputPresenter.prepareFailView(outputData);
                 System.out.println("This cocktail is already in your favourites.");
             }
         }
-        catch (Exception e) {
+        catch (Exception exception) {
             // Handle any errors and pass them to the presenter
-            detailPageOutputPresenter.prepareFailView();
+
+            detailPageOutputPresenter.prepareFailView(
+                    new DetailPageOutputData(true,
+                                    "DAO error" + exception.getMessage()));
         }
     }
 

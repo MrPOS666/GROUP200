@@ -18,7 +18,7 @@ public class DetailPageState {
     private String username = "";
     private String previousViewName = "";
 
-    private String detailPageError = "";
+    private String detailPageMessage = "";
 
     public void setCocktailname(String cocktailname) {
         this.cocktailname = cocktailname;
@@ -52,8 +52,8 @@ public class DetailPageState {
         this.username = username;
     }
 
-    public void setDetailPageError(String detailPageError) {
-        this.detailPageError = detailPageError;
+    public void setDetailPageMessage(String detailPageMessage) {
+        this.detailPageMessage = detailPageMessage;
     }
 
     public String getCocktailname() {
@@ -88,8 +88,8 @@ public class DetailPageState {
         return username;
     }
 
-    public String getDetailPageError() {
-        return detailPageError;
+    public String getDetailPageMessage() {
+        return detailPageMessage;
     }
 
 }

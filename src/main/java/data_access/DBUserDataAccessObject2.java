@@ -226,7 +226,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         final JSONArray favouritesArray = new JSONArray();
         for (Cocktail cocktail : user.getMyFavourite()) {
             final JSONObject cocktailJson = new JSONObject();
-            cocktailJson.put("idDrink", cocktail.getIdDrink());
+            cocktailJson.put(ID_DRINK, cocktail.getIdDrink());
             cocktailJson.put(STR_DRINK, cocktail.getCocktailName());
             cocktailJson.put(STR_INSTRUCTIONS, cocktail.getInstructions());
             cocktailJson.put(PHOTO_URL, cocktail.getPhotoLink());
@@ -324,7 +324,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             final User user = loadUser(username);
             return user != null;
         }
-        catch (DetailPageDataAccessException e) {
+        catch (DetailPageDataAccessException exception) {
             return false;
         }
     }
@@ -334,8 +334,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             saveUser(user);
         }
-        catch (DetailPageDataAccessException e) {
-            throw new RuntimeException("Error saving user: " + e.getMessage());
+        catch (DetailPageDataAccessException exception) {
+            throw new RuntimeException("Error saving user: " + exception.getMessage());
         }
     }
 }
