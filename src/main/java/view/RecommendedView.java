@@ -22,7 +22,7 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
     private final JPanel resultPanel = new JPanel();
     private final JLabel searchOutputField = new JLabel();
 
-    private final JButton refresh;
+    private final JButton back;
 
     private RecommendedController recommendedController;
     private IngredientsController ingredientsController;
@@ -35,15 +35,19 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final JPanel buttons = new JPanel();
-        refresh = new JButton("refresh recommendations");
-        buttons.add(refresh);
+        back = new JButton("back to homepage");
+        buttons.add(back);
 
         // Add Action Listeners Go Here
-
-
-
-
-
+        back.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource() == back) {
+                            recommendedController.switchToHomePageView();
+                        }
+                    }
+                }
+        );
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -139,6 +143,27 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
 
             // Add the cocktail panel to the main result panel
             resultPanel.add(cocktailPanel);
+
+            // Details Button Implementation
+            final JButton detailsButton = new JButton("Details");
+            detailsButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(detailsButton)) {
+                                detailPageController.execute(username,
+                                        cocktailName,
+                                        id,
+                                        (String) info.get(3),
+                                        photolink,
+                                        (Map<String, String>) info.get(2),
+                                        image,
+                                        searchViewModel.getViewName());
+                            }
+                        }
+                    }
+            );
+
+            resultPanel.add(detailsButton);
 
             // Add space between each cocktail panel
             resultPanel.add(Box.createVerticalStrut(10)); // Add space between cocktails
