@@ -1,43 +1,69 @@
 package interface_adapter.recommended;
 
-import view.RecommendedView;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import interface_adapter.ViewModel;
+//import interface_adapter.recommended.RecommendedState;
+//import interface_adapter.recommended.RecommendedViewModel;
+import interface_adapter.homepage.HomepageViewModel;
+import use_case.recommended.RecommendedOutputBoundary;
+import use_case.recommended.RecommendedOutputData;
 
-public class RecommendedPresenter {
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
 
-    private final RecommendedView view;
-    private final RecommendedViewModel viewModel;
+public class RecommendedPresenter implements RecommendedOutputBoundary {
 
-    public RecommendedPresenter(RecommendedView view, RecommendedViewModel viewModel) {
-        this.view = view;
-        this.viewModel = viewModel;
+    private final RecommendedViewModel recommendedViewModel;
+    private final ViewModel viewManagerModel;
+    private final HomepageViewModel homepageViewModel;
 
-        // Set listeners for buttons
-        this.view.setRefreshButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                refreshRecommendations();
-            }
-        });
-
-        this.view.setBackButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                navigateBack();
-            }
-        });
+    public RecommendedPresenter(RecommendedViewModel recommendedViewModel,
+                                ViewModel viewManagerModel,
+                                HomepageViewModel homepageViewModel) {
+        this.recommendedViewModel = recommendedViewModel;
+        this.viewManagerModel = viewManagerModel;
+        this.homepageViewModel = homepageViewModel;
     }
 
-    private void refreshRecommendations() {
-        // Fetch recommendations from the ViewModel (this could be a static or dynamic method)
-        String[] recommendations = viewModel.getRecommendations();
-        // Update the view with the fetched recommendations
-        view.updateDrinkButtons(recommendations);
+    @Override
+    public void prepareSuccessView(RecommendedOutputData response) {
+        final RecommendedState recommendedState = recommendedViewModel.getState();
+        final List<Integer> ids = response.getIdDrink();
+        final List<String> names = response.getCocktailName();
+        final List<String> instructions = response.getInstructions();
+        final List<String> photoLinks = response.getPhotoLink();
+        final List<Map<String, String>> ingredients = response.getIngredients();
+        final String username = response.getUsername();
+
+        recommendedState.setCocktailNamesList(names);
+        recommendedState.setIdList(ids);
+        recommendedState.setIngredientsList(ingredients);
+        recommendedState.setInstructionList(instructions);
+        recommendedState.setPhotoLinkList(photoLinks);
+        recommendedState.setUsername(username);
+
+        recommendedViewModel.setState(recommendedState);
+
+        recommendedViewModel.firePropertyChanged();
+
+        this.viewManagerModel.setState(recommendedViewModel.getViewName());
+        this.viewManagerModel.firePropertyChanged();
     }
 
-    private void navigateBack() {
-        // Handle back navigation, e.g., change to a different view
-        System.out.println("Going back...");
+    @Override
+    public void prepareFailView(String errorMessage) {
+        // On failure, set the error message in the search state
+        final RecommendedState recommendedState = recommendedViewModel.getState();
+        recommendedState.setRecommendedError(errorMessage);
+        recommendedViewModel.firePropertyChanged();
+    }
+
+    /**
+     * Switch to the Homepage View.
+     */
+    @Override
+    public void switchToHomepageView() {
+        viewManagerModel.setState(homepageViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 }
