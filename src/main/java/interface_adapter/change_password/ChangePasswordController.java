@@ -23,4 +23,11 @@ public class ChangePasswordController {
 
         userChangePasswordUseCaseInteractor.execute(changePasswordInputData);
     }
+
+    /**
+     * Change to Homepage View.
+     */
+    public void changeToHomepageView() {
+        userChangePasswordUseCaseInteractor.changeToHomepageView();
+    }
 }
