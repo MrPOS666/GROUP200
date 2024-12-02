@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.CommonUserFactory;
-import entity.UserFactory;
+import data_access.SearchByNameOrIDAccessObject;
+import entity.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -20,7 +20,9 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.myFavourite.MyFavouriteViewModel;
+import interface_adapter.recommended.RecommendedPresenter;
 import interface_adapter.recommended.RecommendedViewModel;
+import interface_adapter.recommended.RecommendedController;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -28,12 +30,17 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.interests.InterestsInputBoundary;
+import use_case.interests.InterestsInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.recommended.RecommendedInputBoundary;
+import use_case.recommended.RecommendedInteractor;
+import use_case.recommended.RecommendedOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -60,6 +67,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final SearchByNameOrIDAccessObject searchDataAccessObject = new SearchByNameOrIDAccessObject(new CommonCocktailFactory());
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -188,6 +196,24 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
         loggedInView.setLogoutController(logoutController);
+        return this;
+    }
+
+    // TODO: Unsure how to instantiate interestsInteractor in AppBuilder
+    public AppBuilder recommendedViewModel() {
+        final RecommendedOutputBoundary recommendedOutputBoundary = new RecommendedPresenter(recommendedViewModel,
+                viewManagerModel,
+                homepageViewModel);
+
+        final InterestsInputBoundary interestsInteractor = new InterestsInteractor(userDataAccessObject);
+
+        final RecommendedInputBoundary recommendedInteractor = new RecommendedInteractor(userDataAccessObject,
+                        searchDataAccessObject,
+                        recommendedOutputBoundary,
+                        interestsInteractor);
+
+        final RecommendedController recommendedController = new RecommendedController(recommendedInteractor);
+        loggedInView.setRecommendedController(recommendedController);
         return this;
     }
 
