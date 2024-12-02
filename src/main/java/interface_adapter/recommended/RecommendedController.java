@@ -44,10 +44,7 @@ public class RecommendedController {
         }
     }
 
-    // TODO: Return to homepage
     public void switchToHomepageView() {
         recommendedInteractor.switchToHomepageView();
     }
-
-    // TODO: getInfo like yuxin
 }

@@ -24,6 +24,5 @@ public class LoginController {
                 username, password);
 
         loginUseCaseInteractor.execute(loginInputData);
-
     }
 }
