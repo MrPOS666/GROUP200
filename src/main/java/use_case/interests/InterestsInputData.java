@@ -1,19 +1,14 @@
 package use_case.interests;
 
-import entity.Cocktail;
-import entity.User;
-
-import java.util.List;
-
 public class InterestsInputData {
 
-    private final User user;
+    private final String username;
 
-    public InterestsInputData(User user) {
-        this.user = user;
+    public InterestsInputData(String username) {
+        this.username = username;
     }
 
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 }

@@ -16,23 +16,21 @@ public class InterestsInteractor implements InterestsInputBoundary {
     @Override
     public void execute(InterestsInputData interestsInputData) {
         // Get favourites
-        final List<Cocktail> favourites = interestsDataAccessObject.getUserFavourites(interestsInputData.getUser());
+        final List<Cocktail> favourites = interestsDataAccessObject.getUser(interestsInputData.getUsername()).getMyFavourite();
 
         for (Cocktail cocktail : favourites) {
-            List<String> tags = interestsDataAccessObject.getCocktailTags(cocktail);
-
-            for (String tag : tags) {
-                if (interestsHashMap.containsKey(tag)) { // +1 value if key already exists
-                    Integer value = interestsHashMap.get(tag) + 1;
-                    interestsHashMap.put(tag, value);
-                } else { // Add new key with value 1
-                    interestsHashMap.put(tag, 1);
+            for (String ingredient : cocktail.getIngredients().keySet()) {
+                if (interestsHashMap.containsKey(ingredient)) { // +1 counter if ingredient in hash
+                    Integer value = interestsHashMap.get(ingredient) + 1;
+                    interestsHashMap.put(ingredient, value);
+                } else { // add to hashmap and set 1
+                    interestsHashMap.put(ingredient, 1);
                 }
             }
         }
     }
 
-    public HashMap<String, Integer> getInterestsMap() {
+    public HashMap<String, Integer> getInterestsHashMap() {
         return new HashMap<>(interestsHashMap);
     }
 }

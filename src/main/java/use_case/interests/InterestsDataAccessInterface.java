@@ -9,11 +9,8 @@ import java.util.List;
 public interface InterestsDataAccessInterface {
     /**
      * Returns the list of the user's favourite cocktails
-     * @param user
+     * @param username
      * @return list of user's favourites
      */
-    List<Cocktail> getUserFavourites(User user);
-
-
-    List<String> getCocktailTags(Cocktail cocktail);
+    User getUser(String username);
 }

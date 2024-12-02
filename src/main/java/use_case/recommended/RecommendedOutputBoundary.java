@@ -5,5 +5,7 @@ import entity.Cocktail;
 import java.util.List;
 
 public interface RecommendedOutputBoundary {
-    void presentRecommendations(List<Cocktail> cocktails);
+    void prepareSuccessView(RecommendedOutputData outputData);
+
+    void prepareFailView(String errorMessage);
 }

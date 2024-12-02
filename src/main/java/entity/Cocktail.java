@@ -36,6 +36,4 @@ public interface Cocktail {
      * @return the instructions.
      */
     String getInstructions();
-
-    Map<String, String> getCocktailTags();
 }

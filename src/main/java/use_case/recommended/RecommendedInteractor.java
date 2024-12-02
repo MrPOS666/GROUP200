@@ -1,85 +1,99 @@
 package use_case.recommended;
 
 import entity.Cocktail;
-import entity.User;
+import use_case.interests.InterestsInteractor;
 
 import java.util.*;
 
-public class RecommendedInteractor {
+public class RecommendedInteractor implements RecommendedInputBoundary {
+    private final RecommendedDataAccessInterfaceU recommendedDataAccessObjectU;
+    private final RecommendedDataAccessInterfaceC recommendedDataAccessObjectC;
+    private final RecommendedOutputBoundary recommendedPresenter;
+    private final InterestsInteractor interestsInteractor;
 
-    private final RecommendedDataAccessInterface userDataAccess; // DAL for API and User
-    private final RecommendedOutputBoundary outputBoundary;
-
-    public RecommendedInteractor(RecommendedDataAccessInterface userDataAccess,
-                                 RecommendedOutputBoundary outputBoundary) {
-        this.userDataAccess = userDataAccess;
-        this.outputBoundary = outputBoundary;
+    public RecommendedInteractor(RecommendedDataAccessInterfaceU recommendedDataAccessInterfaceU,
+                                 RecommendedDataAccessInterfaceC recommendedDataAccessInterfaceC,
+                                 RecommendedOutputBoundary recommendedOutputBoundary,
+                                 InterestsInteractor interestsInteractor) {
+        this.recommendedDataAccessObjectU = recommendedDataAccessInterfaceU;
+        this.recommendedDataAccessObjectC = recommendedDataAccessInterfaceC;
+        this.recommendedPresenter = recommendedOutputBoundary;
+        this.interestsInteractor = interestsInteractor;
     }
 
-    public List<Cocktail> getRecommendations(User user) {
-        HashMap<String, Integer> interests = userDataAccess.getMyInterests(user); //TODO reminder to remove from user directly
-        List<String> selectedTags = selectTags(interests);
+    /**
+     * Creates a collection of lists of cocktail attributes in order of appearance of weight
+     * @param recommendedInputData
+     */
+    @Override
+    public void execute(RecommendedInputData recommendedInputData) {
 
-        Set<Cocktail> uniqueCocktails = new HashSet<>();
-        for (String tag : selectedTags) {
-            List<Cocktail> cocktailsForTag = userDataAccess.getDrinksByTag(tag);
-            Cocktail randomCocktail = getRandomCocktail(cocktailsForTag, uniqueCocktails);
-            if (randomCocktail != null) {
-                uniqueCocktails.add(randomCocktail);
+        final HashMap<String, Integer> interestsHashMap = interestsInteractor.getInterestsHashMap();
+
+        if (interestsHashMap.isEmpty()) {
+            recommendedPresenter.prepareFailView("No user interests found. Unable to generate recommendations.");
+            return;
+        }
+
+        // Weighted List Fields
+        final HashMap<Cocktail, Integer> weightedHashMap = new HashMap<>();
+        int totalWeight = 0;
+
+        // Go through interests, construct weightedHashMap
+        for (String ingredient : interestsHashMap.keySet()) {
+            int weight = interestsHashMap.get(ingredient);
+
+            // Gets all cocktails of that ingredient
+            List<Cocktail> cocktailOfThisIngredient = recommendedDataAccessObjectC.getByIngredients(Collections.singletonList(ingredient));
+
+            for (Cocktail cocktail : cocktailOfThisIngredient) {
+                if (weightedHashMap.containsKey(cocktail)) { // Just add the weight to it
+                    int currentWeight = weightedHashMap.get(cocktail);
+                    weightedHashMap.put(cocktail, currentWeight + weight);
+                } else { // Create new with weight
+                    weightedHashMap.put(cocktail, weight);
+                }
+                totalWeight+=weight;
             }
         }
 
-        while (uniqueCocktails.size() < 6) {
-            String tag = selectedTags.get(new Random().nextInt(selectedTags.size()));
-            List<Cocktail> cocktailsForTag = userDataAccess.getDrinksByTag(tag);
-            Cocktail randomCocktail = getRandomCocktail(cocktailsForTag, uniqueCocktails);
-            if (randomCocktail != null) {
-                uniqueCocktails.add(randomCocktail);
-            }
+        if (weightedHashMap.isEmpty()) {
+            recommendedPresenter.prepareFailView("No recommended cocktails were available based on your interests.");
+            return;
         }
 
-        List<Cocktail> cocktails = new ArrayList<>(uniqueCocktails);
-        outputBoundary.presentRecommendations(cocktails);
-        return cocktails;
-    }
+        // Converts the weighted HashMap to a Cocktail List in order of weight
+        final List<Cocktail> cocktails = getSortedKeysByValue(weightedHashMap);
 
-    private List<String> selectTags(HashMap<String,Integer> interests) {
-        List<String> selectedTags = new ArrayList<>();
-        Random rand = new Random();
+        final List<Integer> ids = new ArrayList<>();
+        final List<String> names = new ArrayList<>();
+        final List<String> instructions = new ArrayList<>();
+        final List<String> photoLinks = new ArrayList<>();
+        final List<Map<String, String>> ingredients = new ArrayList<>();
 
-        for (int i = 0; i<6; i++) {
-            String selectedTag = selectWeightedTag(interests, rand);
-            selectedTags.add(selectedTag);
-        }
-        return selectedTags;
-    }
-
-    private String selectWeightedTag(HashMap<String, Integer> interests, Random rand) {
-        int totalWeight = interests.values().stream().mapToInt(Integer::intValue).sum();
-        int randomWeight = rand.nextInt(totalWeight);
-
-        int cumulativeWeight = 0;
-        for (Map.Entry<String, Integer> entry : interests.entrySet()) {
-            cumulativeWeight += entry.getValue();
-            if (randomWeight < cumulativeWeight) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
-    private Cocktail getRandomCocktail(List<Cocktail> cocktails, Set<Cocktail> uniqueCocktails) {
-        Random rand = new Random();
-        if (cocktails.isEmpty()) {
-            return null;
-        }
-
-        Collections.shuffle(cocktails);
         for (Cocktail cocktail : cocktails) {
-            if (!uniqueCocktails.contains(cocktail)) {
-                return cocktail;
-            }
+            ids.add(cocktail.getIdDrink());
+            names.add(cocktail.getCocktailName());
+            instructions.add(cocktail.getInstructions());
+            photoLinks.add(cocktail.getPhotoLink());
+            ingredients.add(cocktail.getIngredients());
         }
-        return null;
+        recommendedPresenter.prepareSuccessView(new RecommendedOutputData(false, ids, names, instructions, photoLinks, ingredients));
+    }
+
+    private static List<Cocktail> getSortedKeysByValue(HashMap<Cocktail, Integer> map) {
+        // Convert HashMap to List of Entry OBJs
+        List<Map.Entry<Cocktail, Integer>> entryList = new ArrayList<>(map.entrySet());
+
+        // Sort desc
+        entryList.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+
+        // Extract cocktails from sorted entries
+        List<Cocktail> sortedCocktails = new ArrayList<>();
+        for (Map.Entry<Cocktail, Integer> entry : entryList) {
+            sortedCocktails.add(entry.getKey());
+        }
+
+        return sortedCocktails;
     }
 }
