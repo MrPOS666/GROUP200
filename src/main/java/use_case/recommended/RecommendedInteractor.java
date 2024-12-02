@@ -78,7 +78,12 @@ public class RecommendedInteractor implements RecommendedInputBoundary {
             photoLinks.add(cocktail.getPhotoLink());
             ingredients.add(cocktail.getIngredients());
         }
-        recommendedPresenter.prepareSuccessView(new RecommendedOutputData(false, ids, names, instructions, photoLinks, ingredients));
+        recommendedPresenter.prepareSuccessView(new RecommendedOutputData(recommendedInputData.getUsername(), false, ids, names, instructions, photoLinks, ingredients));
+    }
+
+    @Override
+    public void switchToHomepageView() {
+        recommendedPresenter.switchToHomepageView();
     }
 
     private static List<Cocktail> getSortedKeysByValue(HashMap<Cocktail, Integer> map) {

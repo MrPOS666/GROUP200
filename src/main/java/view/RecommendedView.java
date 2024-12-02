@@ -20,7 +20,7 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
     private final RecommendedViewModel recommendedViewModel;
 
     private final JPanel resultPanel = new JPanel();
-    private final JLabel searchOutputField = new JLabel();
+    private final JLabel recommendedOutputField = new JLabel();
 
     private final JButton back;
 
@@ -43,7 +43,7 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource() == back) {
-                            recommendedController.switchToHomePageView();
+                            recommendedController.switchToHomepageView();
                         }
                     }
                 }
@@ -58,10 +58,10 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         resultPanel.removeAll();
-        searchOutputField.removeAll();
+        recommendedOutputField.removeAll();
         final RecommendedState state = (RecommendedState) evt.getNewValue();
         if (state.getRecommendedError() != null) {
-            searchOutputField.setText(state.getRecommendedError());
+            recommendedOutputField.setText(state.getRecommendedError());
             this.add(recommendedOutputField);
             revalidate();
             repaint();
@@ -95,15 +95,12 @@ public class RecommendedView extends JPanel implements ActionListener, PropertyC
         final List<String> nameList = state.getCocktailNamesList();
         final List<Map<String, String>> ingredientsList = state.getIngredientsList();
         final List<Integer> ID = state.getIdList();
-        final List<String> recipeList = state.getRecipeList();
         final List<String> photoLinkList = state.getPhotoLinkList();
 
         for (int i = 0; i < nameList.size(); i++) {
             final String name = nameList.get(i);
             final int id = ID.get(i);
-            final String recipe = recipeList.get(i);
             final String photoLink = photoLinkList.get(i);
-            final String ingredients = state.getIngredientsToString(ingredientsList.get(i));
 
             // Create a new JPanel for each cocktail
             final JPanel cocktailPanel = new JPanel();

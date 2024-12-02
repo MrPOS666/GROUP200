@@ -4,4 +4,6 @@ import java.io.IOException;
 
 public interface RecommendedInputBoundary {
     void execute(RecommendedInputData recommendedInputData) throws IOException;
+
+    void switchToHomepageView();
 }

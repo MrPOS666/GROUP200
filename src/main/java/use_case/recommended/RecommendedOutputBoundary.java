@@ -8,4 +8,6 @@ public interface RecommendedOutputBoundary {
     void prepareSuccessView(RecommendedOutputData outputData);
 
     void prepareFailView(String errorMessage);
+
+    void switchToHomepageView();
 }

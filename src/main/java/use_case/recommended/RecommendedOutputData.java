@@ -2,10 +2,13 @@ package use_case.recommended;
 
 import entity.Cocktail;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
 public class RecommendedOutputData {
+
+    private final String username;
     private final boolean useCaseFailed;
     private final List<Integer> idDrink;
     private final List<String> strDrink;
@@ -14,12 +17,14 @@ public class RecommendedOutputData {
     private final List<Map<String, String>> ingredients;
 
     // Constructor
-    public RecommendedOutputData(boolean useCaseFailed,
+    public RecommendedOutputData(String username,
+                                 boolean useCaseFailed,
                                  List<Integer> idDrink,
                                  List<String> strDrink,
                                  List<String> strInstructions,
                                  List<String> photoUrl,
                                  List<Map<String, String>> ingredients) {
+        this.username = username;
         this.useCaseFailed = useCaseFailed;
         this.idDrink = idDrink;
         this.strDrink = strDrink;
@@ -49,7 +54,7 @@ public class RecommendedOutputData {
         return ingredients;
     }
 
-    public boolean isUseCaseFailed() {
-        return useCaseFailed;
+    public String getUsername() {
+        return username;
     }
 }
