@@ -3,12 +3,12 @@ package data_access;
 import java.io.IOException;
 import java.util.*;
 
-import entity.*;
-import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import entity.*;
+import okhttp3.*;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_favorite.DeleteDataAccessInterface;
 import use_case.delete_favorite.MyfavouritePageDataAccessException;
@@ -28,19 +28,32 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                                                 LogoutUserDataAccessInterface,
                                                 DeleteDataAccessInterface {
 
+    public static final String ID_DRINK = "idDrink";
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final String MODIFY_USER_INFO_ENDPOINT = "/modifyUserInfo";
     private static final String CREATE_USER_ENDPOINT = "/user";
     private static final String GET_USER_ENDPOINT = "/user";
-    private static final MediaType JSON = MediaType.parse("application/json");
+    private static final String APPLICATION_JSON = "application/json";
+    private static final MediaType JSON = MediaType.parse(APPLICATION_JSON);
+
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String INFO = "info";
+    private static final String MY_FAVOURITE = "myFavourite";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String EXCEPTION_OCCURRED = "Exception occurred: ";
+    private static final String STR_DRINK = "strDrink";
+    private static final String STR_INSTRUCTIONS = "strInstructions";
+    private static final String PHOTO_URL = "photoUrl";
+    private static final String INGREDIENTS = "ingredients";
 
     @Override
     public User getUser(String username) {
         try {
             return this.loadUser(username);
         }
-        catch (DetailPageDataAccessException e) {
-            throw new RuntimeException(e);
+        catch (DetailPageDataAccessException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
@@ -49,8 +62,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             this.updateMyFavourite(user, newFavourites);
         }
-        catch (DetailPageDataAccessException e) {
-            throw new RuntimeException(e);
+        catch (DetailPageDataAccessException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
@@ -63,15 +76,15 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
     public void saveUser(User user) throws DetailPageDataAccessException {
         final OkHttpClient client = new OkHttpClient();
         final JSONObject requestBody = new JSONObject();
-        requestBody.put("username", user.getName());
-        requestBody.put("password", user.getPassword());
-        requestBody.put("info", new JSONObject().put("myFavourite", new JSONArray()));
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
+        requestBody.put(INFO, new JSONObject().put(MY_FAVOURITE, new JSONArray()));
 
         final RequestBody body = RequestBody.create(requestBody.toString(), JSON);
         final Request request = new Request.Builder()
                 .url(BASE_URL + CREATE_USER_ENDPOINT)
                 .post(body)
-                .addHeader("Content-Type", "application/json")
+                .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -80,7 +93,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             }
         }
         catch (IOException evt) {
-            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
+            throw new DetailPageDataAccessException(EXCEPTION_OCCURRED + evt.getMessage());
         }
     }
 
@@ -94,26 +107,26 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
     public void updateMyFavourite(User user, List<Cocktail> newFavourites) throws DetailPageDataAccessException {
         final OkHttpClient client = new OkHttpClient();
         final JSONObject requestBody = new JSONObject();
-        requestBody.put("username", user.getName());
-        requestBody.put("password", user.getPassword());
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
 
         final JSONArray favouritesArray = new JSONArray();
         for (Cocktail cocktail : newFavourites) {
             final JSONObject cocktailJson = new JSONObject();
-            cocktailJson.put("idDrink", cocktail.getIdDrink());
-            cocktailJson.put("strDrink", cocktail.getCocktailName());
-            cocktailJson.put("strInstructions", cocktail.getInstructions());
-            cocktailJson.put("photoUrl", cocktail.getPhotoLink());
-            cocktailJson.put("ingredients", new JSONObject(cocktail.getIngredients()));
+            cocktailJson.put(ID_DRINK, cocktail.getIdDrink());
+            cocktailJson.put(STR_DRINK, cocktail.getCocktailName());
+            cocktailJson.put(STR_INSTRUCTIONS, cocktail.getInstructions());
+            cocktailJson.put(PHOTO_URL, cocktail.getPhotoLink());
+            cocktailJson.put(INGREDIENTS, new JSONObject(cocktail.getIngredients()));
             favouritesArray.put(cocktailJson);
         }
-        requestBody.put("info", new JSONObject().put("myFavourite", favouritesArray));
+        requestBody.put(INFO, new JSONObject().put(MY_FAVOURITE, favouritesArray));
 
         final RequestBody body = RequestBody.create(requestBody.toString(), JSON);
         final Request request = new Request.Builder()
                 .url(BASE_URL + MODIFY_USER_INFO_ENDPOINT)
                 .put(body)
-                .addHeader("Content-Type", "application/json")
+                .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -122,7 +135,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             }
         }
         catch (IOException evt) {
-            throw new DetailPageDataAccessException("Exception occurred: " + evt.getMessage());
+            throw new DetailPageDataAccessException(EXCEPTION_OCCURRED + evt.getMessage());
         }
     }
 
@@ -140,13 +153,13 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                 .host("vm003.teach.cs.toronto.edu")
                 .port(20112)
                 .addPathSegment("user")
-                .addQueryParameter("username", username)
+                .addQueryParameter(USERNAME, username)
                 .build();
 
         final Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("Content-Type", "application/json")
+                .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -154,25 +167,25 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
                 final JSONObject responseBody = new JSONObject(response.body().string());
                 final JSONObject userObject = responseBody.getJSONObject("user");
 
-                final String name = userObject.getString("username");
-                final String password = userObject.getString("password");
-                final JSONObject info = userObject.optJSONObject("info");
+                final String name = userObject.getString(USERNAME);
+                final String password = userObject.getString(PASSWORD);
+                final JSONObject info = userObject.optJSONObject(INFO);
 
                 final List<Cocktail> favourites = new ArrayList<>();
-                if (info != null && info.has("myFavourite")) {
-                    final JSONArray favouritesArray = info.getJSONArray("myFavourite");
+                if (info != null && info.has(MY_FAVOURITE)) {
+                    final JSONArray favouritesArray = info.getJSONArray(MY_FAVOURITE);
                     for (int i = 0; i < favouritesArray.length(); i++) {
                         final JSONObject cocktailJson = favouritesArray.getJSONObject(i);
                         final Map<String, String> ingredients = new HashMap<>();
-                        final JSONObject ingredientsJson = cocktailJson.getJSONObject("ingredients");
+                        final JSONObject ingredientsJson = cocktailJson.getJSONObject(INGREDIENTS);
                         for (String key : ingredientsJson.keySet()) {
                             ingredients.put(key, ingredientsJson.getString(key));
                         }
-                        final String photoUrl = cocktailJson.optString("photoUrl");
+                        final String photoUrl = cocktailJson.optString(PHOTO_URL);
                         final CommonCocktail cocktail = new CommonCocktail(
                                 cocktailJson.optInt("idDrink"),
-                                cocktailJson.optString("strDrink"),
-                                cocktailJson.optString("strInstructions"),
+                                cocktailJson.optString(STR_DRINK),
+                                cocktailJson.optString(STR_INSTRUCTIONS),
                                 photoUrl,
                                 ingredients,
                                 ImageDataAccessObject.fetchImage(photoUrl)
@@ -188,7 +201,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             }
         }
         catch (IOException | JSONException e) {
-            throw new DetailPageDataAccessException("Exception occurred: " + e.getMessage());
+            throw new DetailPageDataAccessException(EXCEPTION_OCCURRED + e.getMessage());
         }
     }
 
@@ -203,31 +216,31 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         // Prepare request body
-        final MediaType mediaType = MediaType.parse("application/json");
+        final MediaType mediaType = MediaType.parse(APPLICATION_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put("username", user.getName());
+        requestBody.put(USERNAME, user.getName());
         // Update to the new password
-        requestBody.put("password", newPassword);
+        requestBody.put(PASSWORD, newPassword);
 
         // Transport the current MyFavourite list
         final JSONArray favouritesArray = new JSONArray();
         for (Cocktail cocktail : user.getMyFavourite()) {
             final JSONObject cocktailJson = new JSONObject();
-            cocktailJson.put("idDrink", cocktail.getIdDrink());
-            cocktailJson.put("strDrink", cocktail.getCocktailName());
-            cocktailJson.put("strInstructions", cocktail.getInstructions());
-            cocktailJson.put("photoUrl", cocktail.getPhotoLink());
-            cocktailJson.put("ingredients", new JSONObject(cocktail.getIngredients()));
+            cocktailJson.put(ID_DRINK, cocktail.getIdDrink());
+            cocktailJson.put(STR_DRINK, cocktail.getCocktailName());
+            cocktailJson.put(STR_INSTRUCTIONS, cocktail.getInstructions());
+            cocktailJson.put(PHOTO_URL, cocktail.getPhotoLink());
+            cocktailJson.put(INGREDIENTS, new JSONObject(cocktail.getIngredients()));
             favouritesArray.put(cocktailJson);
         }
-        requestBody.put("info", new JSONObject().put("myFavourite", favouritesArray));
+        requestBody.put(INFO, new JSONObject().put(MY_FAVOURITE, favouritesArray));
 
         // Build HTTP request
         final RequestBody body = RequestBody.create(requestBody.toString(), mediaType);
         final Request request = new Request.Builder()
                 .url("http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo")
                 .method("PUT", body)
-                .addHeader("Content-Type", "application/json")
+                .addHeader(CONTENT_TYPE, APPLICATION_JSON)
                 .build();
 
         try {
@@ -311,7 +324,7 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
             final User user = loadUser(username);
             return user != null;
         }
-        catch (DetailPageDataAccessException e) {
+        catch (DetailPageDataAccessException exception) {
             return false;
         }
     }
@@ -321,8 +334,8 @@ public class DBUserDataAccessObject2 implements DetailPageDataAccessInterface,
         try {
             saveUser(user);
         }
-        catch (DetailPageDataAccessException e) {
-            throw new RuntimeException("Error saving user: " + e.getMessage());
+        catch (DetailPageDataAccessException exception) {
+            throw new RuntimeException("Error saving user: " + exception.getMessage());
         }
     }
 }

@@ -1,20 +1,6 @@
 package app;
 
-import data_access.SearchByNameOrIDAccessObject;
-import entity.CommonCocktailFactory;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchPresenter;
-import interface_adapter.search.SearchViewModel;
-import use_case.search.SearchDataAccessInterface;
-import use_case.search.SearchInputBoundary;
-import use_case.search.SearchInteractor;
-import use_case.search.SearchOutputBoundary;
-import view.SearchView;
-import view.ViewManager;
-
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * The Main class of our application.
@@ -32,8 +18,8 @@ public class Main {
                 .addLoginView()
                 .addSignupView()
                 .addLoggedInView()
-                .addSearchView()
                 .addHomepageView()
+                .addSearchView()
                 .addDetailPageView()
                 .addMyFavouriteView()
                 .addDetailPageView()
@@ -45,6 +31,7 @@ public class Main {
                 .addDeleteUseCase()
                 .addHomepageUseCase()
                 .addSearchUseCase()
+                .addIngredientsUseCase()
                 .build();
 
         application.pack();

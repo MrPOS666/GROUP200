@@ -6,6 +6,7 @@ import interface_adapter.search.SearchViewModel;
 import use_case.search_by_ingredients.IngredientsOutputBoundary;
 import use_case.search_by_ingredients.IngredientsOutputData;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +34,14 @@ public class IngredientsPresenter implements IngredientsOutputBoundary {
         final List<String> instructions = response.getInstructions();
         final List<String> photoLinks = response.getPhotoLink();
         final List<Map<String, String>> ingredients = response.getIngredients();
+        final List<BufferedImage> images = response.getImages();
 
         searchState.setCocktailNamesList(names);
         searchState.setIdList(ids);
         searchState.setIngredientsList(ingredients);
         searchState.setRecipeList(instructions);
         searchState.setPhotoLinkList(photoLinks);
+        searchState.setImages(images);
 
         searchViewModel.firePropertyChanged();
 
