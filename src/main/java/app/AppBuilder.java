@@ -356,20 +356,4 @@ public class AppBuilder {
         searchView.setDetailPageController(this.detailPageController);
         return this;
     }
-
-    /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
-     * @return the application
-     */
-    public JFrame build_search() {
-        final JFrame application = new JFrame("Search Example");
-        application.add(cardPanel);
-        application.setContentPane(cardPanel);
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        viewManagerModel.setState(searchView.getViewName());
-        viewManagerModel.firePropertyChanged();
-
-        return application;
-    }
-
 }
