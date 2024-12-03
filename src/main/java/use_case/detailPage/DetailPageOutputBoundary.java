@@ -12,8 +12,9 @@ public interface DetailPageOutputBoundary {
 
     /**
      * Prepare failure view for Detail Page.
+     * @param detailPageOutputData detailPageOutputData
      */
-    void prepareFailView();
+    void prepareFailView(DetailPageOutputData detailPageOutputData);
 
     /**
      * Return to the original View.

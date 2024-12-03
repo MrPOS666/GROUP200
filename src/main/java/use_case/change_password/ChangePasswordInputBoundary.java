@@ -11,4 +11,8 @@ public interface ChangePasswordInputBoundary {
      */
     void execute(ChangePasswordInputData changePasswordInputData);
 
+    /**
+     * Change to Homepage View.
+     */
+    void changeToHomepageView();
 }

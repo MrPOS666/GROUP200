@@ -7,8 +7,6 @@ import interface_adapter.search.SearchViewModel;
 import use_case.detailPage.DetailPageOutputBoundary;
 import use_case.detailPage.DetailPageOutputData;
 
-import javax.swing.text.View;
-
 /**
  * The Presenter for the Detail Page Presenter.
  */
@@ -45,7 +43,7 @@ public class DetailPagePresenter implements DetailPageOutputBoundary {
         detailPageState.setIngredients(detailPageOutputData.getIngredients());
         detailPageState.setImage(detailPageOutputData.getImage());
         detailPageState.setPreviousViewName(detailPageOutputData.getPrevioueViewName());
-
+        detailPageState.setDetailPageMessage(detailPageOutputData.getMessage());
         this.detailPageViewModel.setState(detailPageState);
 
         detailPageViewModel.firePropertyChanged();
@@ -55,8 +53,15 @@ public class DetailPagePresenter implements DetailPageOutputBoundary {
     }
 
     @Override
-    public void prepareFailView() {
-        System.out.println("error occur in transforming detail page view");
+    public void prepareFailView(DetailPageOutputData detailPageOutputData) {
+        final DetailPageState detailPageState = detailPageViewModel.getState();
+        detailPageState.setDetailPageMessage(detailPageOutputData.getMessage());
+        detailPageViewModel.setState(detailPageState);
+
+        detailPageViewModel.firePropertyChanged();
+
+        viewManagerModel.setState(detailPageViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     @Override

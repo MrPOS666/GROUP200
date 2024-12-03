@@ -4,8 +4,6 @@ import data_access.DBUserDataAccessObject2;
 import data_access.SearchByNameOrIDAccessObject;
 import entity.*;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import use_case.delete_favorite.*;
 import use_case.detailPage.DetailPageDataAccessException;
 
@@ -24,7 +22,7 @@ public class DeleteInteractorTest {
     @Test
     public void successTest() {
 
-        User testUser = new CommonUserFactory().create("Paul1", "207");
+        User testUser = new CommonUserFactory().create("Paul2", "207");
         // Save test user to the mock API
         try {
             dbUserDataAccessObject.saveUserToApi(testUser);

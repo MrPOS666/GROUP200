@@ -57,6 +57,7 @@ public class DetailPageController {
      * @param photolink    photolink of current cocktail.
      * @param ingredients  ingredient map of current cocktail
      * @param image        image of current cocktail
+     * @param previousViewName name of the previous View
      */
     public void addMyFavourite(String username,
                                String cocktailname,
@@ -64,9 +65,10 @@ public class DetailPageController {
                                String instruction,
                                String photolink,
                                Map<String, String> ingredients,
-                               BufferedImage image) {
+                               BufferedImage image,
+                               String previousViewName) {
         final DetailPageInputData detailPageInputData = new DetailPageInputData(username, cocktailname,
-                cocktailiD, instruction, photolink, ingredients, image, "");
+                cocktailiD, instruction, photolink, ingredients, image, previousViewName);
         detailPageInteractor.addMyFavourite(detailPageInputData);
     }
 
