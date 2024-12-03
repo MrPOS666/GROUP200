@@ -1,6 +1,7 @@
 package entity;
 
-import java.util.List;
+import java.awt.image.BufferedImage;
+import java.util.Map;
 
 /**
  * The representation of a cocktail in our program.
@@ -13,20 +14,32 @@ public interface Cocktail {
     String getCocktailName();
 
     /**
-     * Returns the recipe of the cocktail.
-     * @return the name of the recipe.
-     */
-    String getRecipe();
-
-    /**
      * Returns the ingredient of the cocktail.
      * @return the ingredient of the cocktail.
      */
-    List<String> getIngredients();
+    Map<String, String> getIngredients();
 
     /**
      * Returns the photo link of the cocktail.
      * @return the photo link
      */
     String getPhotoLink();
+
+    /**
+     * Returns the id of the cocktail.
+     * @return the id.
+     */
+    int getIdDrink();
+
+    /**
+     * Returns the instructions of the cocktail.
+     * @return the instructions.
+     */
+    String getInstructions();
+
+    /**
+     * Returns the photo of the cocktail.
+     * @return the photo of the Cocktail.
+     */
+    BufferedImage getImage();
 }
