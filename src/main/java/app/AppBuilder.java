@@ -355,5 +355,4 @@ public class AppBuilder {
         searchView.setDetailPageController(this.detailPageController);
         return this;
     }
-
 }
